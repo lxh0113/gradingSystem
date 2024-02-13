@@ -1,0 +1,79 @@
+{
+  "id": "4435386",
+  "name": "智能阅卷xi't",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "15587856",
+      "name": "yuejuanmokuai",
+      "font_class": "yuejuanmokuai",
+      "unicode": "e6f6",
+      "unicode_decimal": 59126
+    },
+    {
+      "icon_id": "6308138",
+      "name": "user-management",
+      "font_class": "user-management",
+      "unicode": "e731",
+      "unicode_decimal": 59185
+    },
+    {
+      "icon_id": "34932631",
+      "name": "icon-account management",
+      "font_class": "a-icon-accountmanagement",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "33600575",
+      "name": "X-artificial-intelligence",
+      "font_class": "X-artificial-intelligence",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "15838485",
+      "name": "home",
+      "font_class": "home",
+      "unicode": "e674",
+      "unicode_decimal": 58996
+    },
+    {
+      "icon_id": "1842132",
+      "name": "paper",
+      "font_class": "paper",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "7241569",
+      "name": "analysis",
+      "font_class": "analysis",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    },
+    {
+      "icon_id": "18476836",
+      "name": "analysis",
+      "font_class": "analysis1",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "32804322",
+      "name": "examination",
+      "font_class": "examination",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
+      "icon_id": "36944429",
+      "name": "chart-relationship",
+      "font_class": "chart-relationship",
+      "unicode": "e707",
+      "unicode_decimal": 59143
+    }
+  ]
+}

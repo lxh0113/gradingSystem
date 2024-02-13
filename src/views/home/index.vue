@@ -18,13 +18,12 @@
     </div>
     <div class="bottom">
         <div class="left">
-            <div class="a" v-for="item in leftList">
-                <RouterLink to="`#{item.to}`">
-                    <el-icon :size="size" :color="color">
-                        <Edit />
-                    </el-icon>
+            <div class="a" v-for="(item,index) in leftList" :key="index">
+                <RouterLink :to="item.to">
+                    <span :class="item.icon"></span>
+                    &nbsp;
                     {{ item.text }}
-            </RouterLink>
+                </RouterLink>
             </div>
             
         </div>
@@ -38,13 +37,39 @@
 <script setup>
 import {ref} from 'vue'
 
-const leftList=[
-    {text:"首页",icon:"",to:"/homePage"},
-    {text:"我的试卷",icon:"",to:"/myTest"},
-    {text:"AI刷题",icon:"",to:"/ai"},
-    {text:"学情分析",icon:"",to:"/learn"},
-    {text:"关系绑定",icon:"",to:"/relationship"}
-]
+//学生左边导航选项
+const studentNavList=ref([
+    {text:"首页",icon:"iconfont icon-home",to:"/student/home"},
+    {text:"我的试卷",icon:"iconfont icon-paper",to:"/student/papers"},
+    {text:"AI刷题",icon:"iconfont icon-X-artificial-intelligence",to:"/student/ai"},
+    {text:"学情分析",icon:"iconfont icon-analysis",to:"/student/analysis"},
+    {text:"关系绑定",icon:"iconfont icon-chart-relationship",to:"/student/relationship"}
+]);
+
+
+const teacherNavList=ref([
+    {text:"首页",icon:"iconfont icon-home",to:"/teacher/home"},
+    {text:"阅卷",icon:"iconfont icon-yuejuanmokuai",to:"/teacher/marking"},
+    {text:"考情分析",icon:"iconfont icon-analysis",to:"/teacher/analysis"},
+    {text:"班级管理",icon:"iconfont icon-user-management",to:"/teacher/management"}
+])
+
+const parentsNavList=ref([
+    {text:"首页",icon:"iconfont icon-home",to:"/parents/home"},
+    {text:"学情分析",icon:"iconfont icon-analysis",to:"/parents/analysis"},
+    {text:"孩子试卷",icon:"iconfont icon-paper",to:"/parents/papers"},
+    {text:"关系绑定",icon:"iconfont icon-chart-relationship",to:"/parents/relationship"}
+])
+
+const schoolAdminNavList=ref([
+    {text:"首页",icon:"iconfont icon-home",to:"/schoolAdmin/home"},
+    {text:"人员管理",icon:"iconfont icon-user-management",to:"/schoolAdmin/management"},
+    {text:"考情分析",icon:"iconfont icon-analysis",to:"/schoolAdmin/analysis"},
+    {text:"试卷管理",icon:"iconfont icon-paper",to:"/schoolAdmin/papers"}
+])
+
+
+const leftList=schoolAdminNavList.value
 </script>
 
 <style lang="scss" scoped>
@@ -76,7 +101,8 @@ const leftList=[
     line-height: 150px;
 
     .logo{
-        flex:3;
+        // flex:3;
+        width:240px;
         height: 150px;
         //background-image: url("../../../public/favicon.ico") no-repeat center;
     }
@@ -120,9 +146,11 @@ const leftList=[
     box-sizing: border-box;
 
     .left{
-        flex:3;
+        // flex:3;
+        width:240px;
         background: #fff;
         line-height: 80px;
+        
 
         .a{
             height: 80px;
@@ -135,9 +163,20 @@ const leftList=[
                 color:black;
                 // background: #3A63F3;
                 margin:10px 10px 10px 10px;
+                font-size: 17px;
+
+                span{
+                    color:#C4C4C4;
+                    font-weight: normal;
+                }
+            }
+
+            .router-link-active{
+ 	            background-color:#EBEFFE;
                 
-                el-icon{
-                    margin-left: 20px;
+                span{
+                    font-weight: bold;
+                    color:#3A63F3;
                 }
             }
         }

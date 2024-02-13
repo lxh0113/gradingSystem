@@ -7,6 +7,8 @@ import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+// import ElementPlus from 'unplugin-element-plus/vite'
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,8 +19,13 @@ export default defineConfig({
       imports: ['vue', 'vue-router']
     }),
     Components({
-      resolvers: [ElementPlusResolver()]
-    })
+      resolvers: [ElementPlusResolver({
+        importStyle:"sass"
+      })]
+    }),
+    // ElementPlus({
+    //   useSource:true,
+    // })
   ],
   resolve: {
     alias: {
@@ -33,5 +40,15 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
-  }
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 这里的路径要和刚刚写的 index.scss 文件路径一致
+        additionalData: `
+          @use "@/styles/element/index.scss" as *;
+        `,
+      },
+    },
+  },
 })
