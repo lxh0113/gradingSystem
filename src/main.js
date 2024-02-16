@@ -4,6 +4,7 @@ import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 import './assets/icon/iconfont.css'
+// import './styles/project/index.scss' as *;
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

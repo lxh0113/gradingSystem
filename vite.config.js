@@ -42,6 +42,11 @@ export default defineConfig({
     }
   },
   css: {
+    // loaderOptions:{
+    //   sass:{
+    //     prependData: `@import "@/styles/project/index.scss";`
+    //   }
+    // },
     preprocessorOptions: {
       scss: {
         // 这里的路径要和刚刚写的 index.scss 文件路径一致

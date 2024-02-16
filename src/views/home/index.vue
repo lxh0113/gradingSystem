@@ -69,11 +69,11 @@ const schoolAdminNavList=ref([
 ])
 
 
-const leftList=schoolAdminNavList.value
+const leftList=studentNavList.value
 </script>
 
 <style lang="scss" scoped>
-
+@import url("@/styles/project/index.scss");
 .backBox{
     @media screen and (min-width: 1440px) and (max-width: 1920px){
         
@@ -103,12 +103,14 @@ const leftList=schoolAdminNavList.value
     .logo{
         // flex:3;
         width:240px;
+        min-width: 240px;
         height: 150px;
         //background-image: url("../../../public/favicon.ico") no-repeat center;
     }
     .projectName{
         flex:2;
         color: #3A63F3;
+        // color:$primary-color;
         font-size:26px;
         font-weight: bold;
     }
@@ -147,7 +149,8 @@ const leftList=schoolAdminNavList.value
 
     .left{
         // flex:3;
-        width:240px;
+        width: 240px;
+        min-width:240px;
         background: #fff;
         line-height: 80px;
         
@@ -186,7 +189,7 @@ const leftList=schoolAdminNavList.value
 
     .right{
         flex:21;
-        background: #fff;
+        // background: #fff;
         margin:10px 10px 10px 10px;
     }
 }
