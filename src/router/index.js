@@ -9,6 +9,8 @@ import StudentPapers from "@/views/student/papers/index.vue"
 import StudentAI from "@/views/student/ai/index.vue"
 import StudentRelationship from "@/views/student/relationship/index.vue"
 import StudentAnalysis from "@/views/student/analysis/index.vue"
+import StudentHomePaperOn from "@/views/student/home/components/studentPaperOn.vue"
+import StudentHomePaperOff from "@/views/student/home/components/studentPaperOff.vue"
 
 //parents 模块
 import ParentsHome from "@/views/parents/home/index.vue";
@@ -29,6 +31,7 @@ import SchoolAdminPaperManagement from "@/views/schoolAdmin/papersManagement/ind
 import SchoolAdminPeopleManagement from "@/views/schoolAdmin/peopleManagement/index.vue";
 
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,7 +43,15 @@ const router = createRouter({
         {
           path:'student',
           children:[
-            {path:'home',component:StudentHome},
+            {
+              path:'home',
+              component:StudentHome,
+              redirect:"/student/home/on",
+              children:[
+                {path:'on',component:StudentHomePaperOn},
+                {path:'off',component:StudentHomePaperOff}
+              ]
+            },
             {path:'papers',component:StudentPapers},
             {path:'ai',component:StudentAI},
             {path:'analysis',component:StudentAnalysis},
