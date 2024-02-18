@@ -14,6 +14,8 @@ import StudentHomePaperOff from "@/views/student/home/components/studentPaperOff
 import StudentPapersOn from "@/views/student/papers/components/studentPapersOn.vue"
 import StudentPapersOff from "@/views/student/papers/components/studentPapersOff.vue"
 import StudentPapersMistakes from "@/views/student/papers/components/studentPapersMistakes.vue"
+import StudentAiGenerate from "@/views/student/ai/components/studentAiGenerate.vue"
+import StudentAiHistory from "@/views/student/ai/components/studentAiHistory.vue"
 
 //parents 模块
 import ParentsHome from "@/views/parents/home/index.vue";
@@ -65,7 +67,15 @@ const router = createRouter({
                 {path:'mistakes',component:StudentPapersMistakes}
               ]
             },
-            {path:'ai',component:StudentAI},
+            {
+              path:'ai',
+              component:StudentAI,
+              redirect:"/student/ai/generate",
+              children:[
+                {path:'generate',component:StudentAiGenerate},
+                {path:'history',component:StudentAiHistory}
+              ]
+            },
             {path:'analysis',component:StudentAnalysis},
             {path:'relationship',component:StudentRelationship}
           ]
