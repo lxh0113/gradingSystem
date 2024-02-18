@@ -28,6 +28,9 @@ import TeacherHome from "@/views/teacher/home/index.vue"
 import TeacherMarking from "@/views/teacher/marking/index.vue"
 import TeacherExamAnalysis from "@/views/teacher/examAnalysis/index.vue"
 import TeacherClassManagement from "@/views/teacher/classManagement/index.vue"
+import TeacherHomeOn from "@/views/teacher/home/components/teacherHomeOn.vue"
+import TeacherHomeOff from "@/views/teacher/home/components/teacherHomeOff.vue"
+
 
 //schoolAdmin 模块
 import SchoolAdminHome from "@/views/schoolAdmin/home/index.vue";
@@ -83,7 +86,11 @@ const router = createRouter({
         {
           path:'parents',
           children:[
-            {path:'home',component:ParentsHome},
+            {
+              path:'home',
+              component:ParentsHome,
+             
+            },
             {path:'papers',component:ParentsChildrenPapers},
             {path:'analysis',component:ParentsStudyAnalysis},
             {path:'relationship',component:ParentsRelationship}
@@ -92,7 +99,15 @@ const router = createRouter({
         {
           path:'/teacher',
           children:[
-            {path:'home',component:TeacherHome},
+            {
+              path:'home',
+              component:TeacherHome,
+              redirect:'/teacher/home/on',
+              children:[
+                {path:'on',component:TeacherHomeOn},
+                {path:'off',component:TeacherHomeOff}
+              ]
+            },
             {path:'marking',component:TeacherMarking},
             {path:'analysis',component:TeacherExamAnalysis},
             {path:'management',component:TeacherClassManagement}
