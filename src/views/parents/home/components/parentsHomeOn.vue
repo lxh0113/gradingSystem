@@ -1,10 +1,8 @@
 <template>
     <div class="bigBox">
       <div class="conditionSearch">
-        <el-input style="max-width: 250px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
-        <el-select class="m-2" placeholder="考试场次" size="large" style="width: 240px;margin-left:30px;" ></el-select>
-        <el-select class="m-2" placeholder="考试年份" size="large" style="width: 240px;margin-left:30px;" ></el-select>
-        <el-select class="m-2" placeholder="考试分数" size="large" style="width: 240px;margin-left:30px;" ></el-select>
+        <el-select class="m-2" placeholder="请选择孩子" size="large" style="width: 240px;margin-right:30px;" ></el-select>
+        <el-input style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
       </div>
       <div class="details">
         <div class="paper" v-for="item in 5">
@@ -26,8 +24,6 @@
   <script setup>
   import { Search } from '@element-plus/icons-vue';
   
-  
-  
   </script>
   
   <style lang="scss" scoped>
@@ -36,8 +32,7 @@
   
     .conditionSearch{
       color:#3A63F3;
-      display: flex;
-
+        display: flex;
     }
   
     .details {

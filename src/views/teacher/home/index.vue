@@ -55,14 +55,19 @@
     </div>
     <div class="bottom">
       <div class="nav">
-      <div class="left">
-        试卷&nbsp;&nbsp;&nbsp;&gt;&gt;
-        <router-link to="/teacher/home/on">
-          进行中
-        </router-link>
-        <router-link to="/teacher/home/off">
-          已结束
-        </router-link>
+        <div class="left">
+            试卷&nbsp;&nbsp;&nbsp;&gt;&gt;
+          <router-link to="/teacher/home/on">
+            进行中
+          </router-link>
+          <router-link to="/teacher/home/off">
+            已结束
+          </router-link>
+      </div>
+      <div class="button">
+        <el-button size="large">
+          +&nbsp;导入试卷
+        </el-button>
       </div>
     </div>
     <div class="paper">
@@ -175,7 +180,10 @@
 
   .nav{
     font-size:20px;
+    display: flex;
+    justify-content: space-between;
     font-weight: bold;
+    line-height: 40px;
     border-bottom: 1px solid #c4c4c4;
     padding-bottom: 15px;
 
@@ -192,6 +200,9 @@
       color:#3A63F3;
     }
 
+    .button{
+      margin: 0px;
+    }
     
   }
 

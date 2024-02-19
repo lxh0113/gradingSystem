@@ -22,6 +22,9 @@ import ParentsHome from "@/views/parents/home/index.vue";
 import ParentsChildrenPapers from "@/views/parents/childrenPapers/index.vue";
 import ParentsRelationship from "@/views/parents/relationship/index.vue";
 import ParentsStudyAnalysis from "@/views/parents/studyAnalysis/index.vue";
+import ParentsHomeOn from "@/views/parents/home/components/parentsHomeOn.vue"
+import ParentsHomeOff from "@/views/parents/home/components/parentsHomeOff.vue"
+
 
 //teacher 模块
 import TeacherHome from "@/views/teacher/home/index.vue"
@@ -30,6 +33,10 @@ import TeacherExamAnalysis from "@/views/teacher/examAnalysis/index.vue"
 import TeacherClassManagement from "@/views/teacher/classManagement/index.vue"
 import TeacherHomeOn from "@/views/teacher/home/components/teacherHomeOn.vue"
 import TeacherHomeOff from "@/views/teacher/home/components/teacherHomeOff.vue"
+import TeacherMarkingAll from "@/views/teacher/marking/components/teacherMarkingAll.vue"
+import TeacherMarkingOn from "@/views/teacher/marking/components/teacherMarkingOn.vue"
+import TeacherMarkingOff from "@/views/teacher/marking/components/teacherMarkingOff.vue"
+import TeacherMarkingDetails from "@/views/teacher/marking/components/teacherMarkingDetails.vue"
 
 
 //schoolAdmin 模块
@@ -89,7 +96,11 @@ const router = createRouter({
             {
               path:'home',
               component:ParentsHome,
-             
+              redirect:'/parents/home/on',
+              children:[
+                {path:'on',component:ParentsHomeOn},
+                {path:'off',component:ParentsHomeOff}
+              ]
             },
             {path:'papers',component:ParentsChildrenPapers},
             {path:'analysis',component:ParentsStudyAnalysis},
@@ -108,7 +119,17 @@ const router = createRouter({
                 {path:'off',component:TeacherHomeOff}
               ]
             },
-            {path:'marking',component:TeacherMarking},
+            {
+              path:'marking',
+              component:TeacherMarking,
+              redirect:'/teacher/marking/all',
+              children:[
+                {path:'all',component:TeacherMarkingAll},
+                {path:'on',component:TeacherMarkingOn},
+                {path:'off',component:TeacherMarkingOff},
+                {path:':id',component:TeacherMarkingDetails}
+              ]
+            },
             {path:'analysis',component:TeacherExamAnalysis},
             {path:'management',component:TeacherClassManagement}
           ]

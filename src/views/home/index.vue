@@ -69,7 +69,7 @@ const schoolAdminNavList=ref([
 ])
 
 
-const leftList=teacherNavList.value
+const leftList=parentsNavList.value
 </script>
 
 <style lang="scss" scoped>

@@ -5,7 +5,7 @@
         <el-select class="m-2" placeholder="批改状态" size="large" style="width: 240px;margin-left:30px;" ></el-select>
       </div>
       <div class="details">
-        <div class="paper" v-for="item in 5">
+        <div class="paper" v-for="item in 5" @click="()=>$router.push('/teacher/marking/1')">
           <div class="top">
               <div>
                   <div class="title">
@@ -21,7 +21,7 @@
           </div>
           <div class="content">
               <div class="text">
-                  批阅完毕，请审核！
+                  智能批阅完成！
               </div>
               <div class="view">
                   查看已批阅试题&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;
@@ -43,7 +43,11 @@
   
   <script setup>
   import { Search } from '@element-plus/icons-vue';
-  
+  import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+
+const router=useRouter()
+const route=useRoute()
   </script>
   
   <style lang="scss" scoped>
