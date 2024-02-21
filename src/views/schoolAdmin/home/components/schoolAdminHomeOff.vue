@@ -5,17 +5,22 @@
     </div>
     <div class="details">
       <div class="paper" v-for="item in 5">
-        <div class="subject">科目：语文</div>
+        <div class="top">
+          <div class="title">2024上学期期中语文试卷</div>
+        </div>
         <div class="correctors">批改人：xxx老师</div>
-        <div class="text">您的试卷正在批改中，请耐心等待！</div>
-        <div class="status">进行中</div>
+        <div class="class">班级：初二一班</div>
+        <div class="text">试卷已结束，你可以查看</div>
+        <div class="bottom">
+          <div class="status">进行中92%</div>
+          <div class="time">2024-1-12 12:22</div>
+        </div>
       </div>
     </div>
 
     <div class="page">
       <el-pagination prev-text="上一页" next-text="下一页" :page-size="20" :pager-count="11" layout="prev, pager, next"  :total="1000" />
     </div>
-
 
   </div>
 </template>
@@ -31,7 +36,7 @@ import { Search } from '@element-plus/icons-vue';
 
   .conditionSearch{
     color:#3A63F3;
-
+      display: flex;
   }
 
   .details {
@@ -56,27 +61,44 @@ import { Search } from '@element-plus/icons-vue';
     padding:20px;
     margin-right: 20px;
     
-    .subject {
+    .top {
       color:#3A63F3;
-      font-weight: bold;
+      // font-weight: bold;
+      display: flex;
+      justify-content: space-between;
       font-size: 20px;
       line-height: 40px;
+
+      .title{
+        font-weight: bold;
+      }
+
+      .look{
+        margin-right: 20px;
+      }
     }
 
-    .correctors{
+    .correctors,.class{
       font-weight: bold;
       font-size: 18px;
-      line-height: 35px;
+      line-height: 40px;
     }
+    
 
     .text{
-      height: 110px;
-      line-height: 110px;
+      height: 60px;
+      line-height: 60px;
       font-size: 18px;
     }
 
-    .status{
+    .bottom{
       color:#787474;
+      display: flex;
+      justify-content: space-between;
+
+      .time{
+        margin-right: 20px;
+      }
     }
   }
 

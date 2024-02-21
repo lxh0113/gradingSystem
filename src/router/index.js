@@ -24,6 +24,8 @@ import ParentsRelationship from "@/views/parents/relationship/index.vue";
 import ParentsStudyAnalysis from "@/views/parents/studyAnalysis/index.vue";
 import ParentsHomeOn from "@/views/parents/home/components/parentsHomeOn.vue"
 import ParentsHomeOff from "@/views/parents/home/components/parentsHomeOff.vue"
+import ParentsChildrenPapersOn from '@/views/parents/childrenPapers/components/parentsChildrenPapersOn.vue';
+import ParentsChildrenPapersOff from '@/views/parents/childrenPapers/components/parentsChildrenPapersOff.vue';
 
 
 //teacher 模块
@@ -44,6 +46,9 @@ import SchoolAdminHome from "@/views/schoolAdmin/home/index.vue";
 import SchoolAdminExamAnalysis from "@/views/schoolAdmin/examAnalysis/index.vue";
 import SchoolAdminPaperManagement from "@/views/schoolAdmin/papersManagement/index.vue";
 import SchoolAdminPeopleManagement from "@/views/schoolAdmin/peopleManagement/index.vue";
+import SchoolAdminHomeOn from "@/views/schoolAdmin/home/components/schoolAdminHomeOn.vue"
+import SchoolAdminHomeOff from "@/views/schoolAdmin/home/components/schoolAdminHomeOff.vue"
+import SchoolAdminHomeWill from "@/views/schoolAdmin/home/components/schoolAdminHomeWill.vue"
 
 
 
@@ -102,7 +107,15 @@ const router = createRouter({
                 {path:'off',component:ParentsHomeOff}
               ]
             },
-            {path:'papers',component:ParentsChildrenPapers},
+            {
+              path:'papers',
+              component:ParentsChildrenPapers,
+              redirect:'/parents/papers/on',
+              children:[
+                {path:'on',component:ParentsChildrenPapersOn},
+                {path:'off',component:ParentsChildrenPapersOff}
+              ]
+            },
             {path:'analysis',component:ParentsStudyAnalysis},
             {path:'relationship',component:ParentsRelationship}
           ]
@@ -137,7 +150,16 @@ const router = createRouter({
         {
           path:'/schoolAdmin',
           children:[
-            {path:'home',component:SchoolAdminHome},
+            {
+              path:'home',
+              component:SchoolAdminHome,
+              redirect:'/schoolAdmin/home/on',
+              children:[
+                {path:'on',component:SchoolAdminHomeOn},
+                {path:'off',component:SchoolAdminHomeOff},
+                {path:'will',component:SchoolAdminHomeWill}
+              ]
+            },
             {path:'management',component:SchoolAdminPeopleManagement},
             {path:'analysis',component:SchoolAdminExamAnalysis},
             {path:'papers',component:SchoolAdminPaperManagement}
