@@ -68,6 +68,7 @@ const schoolAdminNavList=ref([
     {text:"试卷管理",icon:"iconfont icon-paper",to:"/schoolAdmin/papers"}
 ])
 
+<<<<<<< HEAD
 const adminNavList=ref([
     {text:"账号审核",icon:"iconfont icon-home",to:"/admin/accountAudit"},
     {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement"}
@@ -75,6 +76,9 @@ const adminNavList=ref([
 
 
 const leftList=studentNavList.value
+=======
+const leftList=parentsNavList.value
+>>>>>>> ace6779997ea52d32935927f0b41107efcacb9a6
 </script>
 
 <style lang="scss" scoped>

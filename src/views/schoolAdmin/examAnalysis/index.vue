@@ -1,15 +1,19 @@
 <template>
-  <div>
-    这是 校园管理者 考情分析 界面
+  <div class="bigBox">
+    这个地方待定
   </div>
 </template>
 
-<script>
-export default {
+<script setup>
 
-}
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.bigBox{
+  background-color: #fff;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 780px;
+  padding:30px;
+}
 </style>
