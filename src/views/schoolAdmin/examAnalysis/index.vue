@@ -6,8 +6,6 @@
 
 <script setup>
 
-</script>>
-
 </script>
 
 <style lang="scss" scoped>
