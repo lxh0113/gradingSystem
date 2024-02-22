@@ -68,7 +68,6 @@ const schoolAdminNavList=ref([
     {text:"试卷管理",icon:"iconfont icon-paper",to:"/schoolAdmin/papers"}
 ])
 
-
 const leftList=schoolAdminNavList.value
 </script>
 

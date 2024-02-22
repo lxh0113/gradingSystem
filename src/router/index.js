@@ -49,7 +49,8 @@ import SchoolAdminPeopleManagement from "@/views/schoolAdmin/peopleManagement/in
 import SchoolAdminHomeOn from "@/views/schoolAdmin/home/components/schoolAdminHomeOn.vue"
 import SchoolAdminHomeOff from "@/views/schoolAdmin/home/components/schoolAdminHomeOff.vue"
 import SchoolAdminHomeWill from "@/views/schoolAdmin/home/components/schoolAdminHomeWill.vue"
-
+import SchoolAdminPeopleManagementStudent from '@/views/schoolAdmin/peopleManagement/components/schoolAdminPeopleManagementStudent.vue';
+import SchoolAdminPeopleManagementTeacher from '@/views/schoolAdmin/peopleManagement/components/schoolAdminPeopleManagementTeacher.vue';
 
 
 const router = createRouter({
@@ -160,7 +161,15 @@ const router = createRouter({
                 {path:'will',component:SchoolAdminHomeWill}
               ]
             },
-            {path:'management',component:SchoolAdminPeopleManagement},
+            {
+              path:'management',
+              component:SchoolAdminPeopleManagement,
+              redirect:'/schoolAdmin/management/student',
+              children:[
+                {path:'student',component:SchoolAdminPeopleManagementStudent},
+                {path:'teacher',component:SchoolAdminPeopleManagementTeacher}
+              ]
+            },
             {path:'analysis',component:SchoolAdminExamAnalysis},
             {path:'papers',component:SchoolAdminPaperManagement}
           ]
