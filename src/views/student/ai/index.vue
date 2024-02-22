@@ -4,10 +4,10 @@
     <div class="top">
       AI刷题&nbsp;&nbsp;&nbsp;&gt;&gt;
         <router-link to="/student/ai/generate">
-          生成试题
+          进行中
         </router-link>
         <router-link to="/student/ai/history">
-          历史试题
+          已审核
         </router-link>
     </div>
     <div class="bottom">

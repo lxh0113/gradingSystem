@@ -46,6 +46,18 @@ import SchoolAdminPaperManagement from "@/views/schoolAdmin/papersManagement/ind
 import SchoolAdminPeopleManagement from "@/views/schoolAdmin/peopleManagement/index.vue";
 
 
+//admin 模块
+import AdminAccountAudit from "@/views/admin/accountAudit/index.vue";
+import AdminAccountAuditAll from "@/views/admin/accountAudit/components/adminAccountAuditAll.vue";
+import AdminAccountAuditUnderway from "@/views/admin/accountAudit/components/adminAccountAuditUnderway.vue";
+import AdminAccountAuditExamine from "@/views/admin/accountAudit/components/adminAccountAuditExamine.vue";
+import AdminAccountManagement from "@/views/admin/accountManagement/index.vue";
+import AdminAccountManagementAll from "@/views/admin/accountManagement/components/adminAccountManagementAll.vue";
+import AdminAccountManagementUnderway from "@/views/admin/accountManagement/components/adminAccountManagementUnderway.vue";
+import AdminAccountManagementExamine from "@/views/admin/accountManagement/components/adminAccountManagementExamine.vue";
+
+
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -144,7 +156,29 @@ const router = createRouter({
           ]
         },
         {
-          path:'/admin'
+          path:'/admin',
+          children:[
+            {
+              path:'accountAudit',
+              component:AdminAccountAudit,
+              redirect:'/admin/accountAudit/all',
+              children:[
+                {path:'all',component:AdminAccountAuditAll},
+                {path:'underway',component:AdminAccountAuditUnderway},
+                {path:'examine',component:AdminAccountAuditExamine}
+              ]
+            },
+            {
+              path:'accountManagement',
+              component:AdminAccountManagement,
+              redirect:'/admin/accountManagement/all',
+              children:[
+                {path:'all',component:AdminAccountManagementAll},
+                {path:'underway',component:AdminAccountManagementUnderway},
+                {path:'examine',component:AdminAccountManagementExamine}
+              ]
+            },
+          ]
         }
       ]
     },

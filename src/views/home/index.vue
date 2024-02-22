@@ -68,8 +68,13 @@ const schoolAdminNavList=ref([
     {text:"试卷管理",icon:"iconfont icon-paper",to:"/schoolAdmin/papers"}
 ])
 
+const adminNavList=ref([
+    {text:"账号审核",icon:"iconfont icon-home",to:"/admin/accountAudit"},
+    {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement"}
+])
 
-const leftList=parentsNavList.value
+
+const leftList=studentNavList.value
 </script>
 
 <style lang="scss" scoped>
