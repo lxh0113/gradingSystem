@@ -2,7 +2,7 @@
   <div class="backBox">
     <div class="top">
         <div class="logo">
-            logo区域
+            <img src="@/assets/logo2.png" class="logoImg" alt="">
         </div>
         <div class="projectName">
             云阅
@@ -22,7 +22,7 @@
                 <RouterLink :to="item.to">
                     <span :class="item.icon"></span>
                     &nbsp;
-                    {{ item.text }}
+                    <span class="leftName">{{ item.text }}</span>
                 </RouterLink>
             </div>
             
@@ -68,17 +68,13 @@ const schoolAdminNavList=ref([
     {text:"试卷管理",icon:"iconfont icon-paper",to:"/schoolAdmin/papers"}
 ])
 
-<<<<<<< HEAD
 const adminNavList=ref([
     {text:"账号审核",icon:"iconfont icon-home",to:"/admin/accountAudit"},
     {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement"}
 ])
 
 
-const leftList=studentNavList.value
-=======
-const leftList=parentsNavList.value
->>>>>>> ace6779997ea52d32935927f0b41107efcacb9a6
+const leftList=schoolAdminNavList.value
 </script>
 
 <style lang="scss" scoped>
@@ -105,39 +101,68 @@ const leftList=parentsNavList.value
     height: 150px;
     background: #fff;
     display: flex;
-
     text-align: center;
     line-height: 150px;
+    @media screen and (min-width: 375px) and (max-width: 767px) {
+        height: 100px;
+        line-height: 100px;
+        width: 100%;
+        // 固定到顶部
+        position: sticky;
+        z-index: 1; 
+        top: 0;
+    }
 
     .logo{
         // flex:3;
         width:240px;
         min-width: 240px;
         height: 150px;
+        line-height: 240px;
         //background-image: url("../../../public/favicon.ico") no-repeat center;
+        @media screen and (min-width: 375px) and (max-width: 767px) {
+            display: none;
+        }
+
+        .logoImg{
+            width: 100px;
+            height: 100px;
+        }
     }
+
     .projectName{
         flex:2;
         color: #3A63F3;
         // color:$primary-color;
         font-size:26px;
         font-weight: bold;
+        @media screen and (min-width: 375px) and (max-width: 767px) {
+            margin-left: 10%;
+        }
     }
 
     .userInfo{
-        flex:19;
+        flex:17.5;
         display: flex;
         justify-content: right;
-
+        @media screen and (min-width: 375px) and (max-width: 767px) {
+            line-height: 100px;
+            height: 100px;
+            flex: 10;
+        }
         .avatar{
             height: 100%;
-            
 
             img{
                 margin-top:45px;
                 width: 60px;
                 height: 60px;
                 border-radius: 50%;
+                @media screen and (min-width: 375px) and (max-width: 767px) {
+                    margin: 0;
+                    margin-top: 20px;
+                }
+
             }
             
         }
@@ -157,25 +182,45 @@ const leftList=parentsNavList.value
     box-sizing: border-box;
 
     .left{
-        // flex:3;
-        width: 240px;
-        min-width:240px;
         background: #fff;
-        line-height: 80px;
-        
+        width: 240px;
+        @media screen and (min-width: 1440px) and (max-width: 1920px){
+            width: 240px;
+            min-width: 240px;
+        }
+        @media screen and (min-width: 1024px) and (max-width: 1439px) {
+            width: 240px;
+            min-width: 240px;
+        }
+        @media screen and (min-width: 768px) and (max-width: 1023px){
+            width: 100px;
+            min-width: 100px;
+        }
+        @media screen and (min-width: 375px) and (max-width: 767px) {
+            width: 100px;
+            min-width: 100px;
+        }
+
+        transition: all 0.3s;
 
         .a{
             height: 80px;
-
             a{
                 display: block;
                 box-sizing: border-box;
                 text-decoration: none;
                 padding-left: 25%;
+                line-height: 80px;
                 color:black;
                 // background: #3A63F3;
                 margin:10px 10px 10px 10px;
                 font-size: 17px;
+                @media screen and (min-width: 768px) and (max-width: 1023px){
+                    padding-left: 30%;
+                }
+                @media screen and (min-width: 375px) and (max-width: 767px) {
+                    padding-left: 30%;
+                }
 
                 span{
                     color:#C4C4C4;
@@ -189,6 +234,15 @@ const leftList=parentsNavList.value
                 span{
                     font-weight: bold;
                     color:#3A63F3;
+                }
+            }
+
+            .leftName{
+                @media screen and (min-width: 768px) and (max-width: 1023px){
+                    display: none;
+                }
+                @media screen and (min-width: 375px) and (max-width: 767px) {
+                    display: none;
                 }
             }
         }
