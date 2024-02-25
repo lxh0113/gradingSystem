@@ -1,9 +1,9 @@
 <template>
   <div class="container" :class="{'sign-up-mode':signUpMode}">
     <div class="form-warp">
-      <form class="sign-in-form">
-        <h2 class="form-title wow animate__fadeInUp">登录</h2>
-        <el-form size="large" v-if="loginOptions" class="wow animate__fadeInUp">
+      <form class="sign-in-form wow fadeInRight">
+        <h2 class="form-title">登录</h2>
+        <el-form size="large" v-if="loginOptions" class="wow slideInUp">
             <el-form-item>
                 <el-input style="width: 300px;height: 50px;" :prefix-icon="User" placeholder="请输入账号id"></el-input>
             </el-form-item>
@@ -13,7 +13,7 @@
             <div class="submit-btn">立即登录</div>
             <span @click="toEmailLogin" style="color:#6266f5;text-decoration: underline;">忘记密码？邮箱登录</span>
         </el-form>
-        <el-form size="large" v-else class="wow animate__fadeInUp">
+        <el-form size="large" v-else class="wow fadeInUp">
             <el-form-item>
                 <el-input style="width: 300px;height: 50px;" :prefix-icon="User" placeholder="请输入email"></el-input>
             </el-form-item>
@@ -25,14 +25,14 @@
         </el-form>
         
       </form>
-      <form class="sign-up-form">
+      <form class="sign-up-form wow fadeInUp">
         <h2 class="form-title">注册</h2>
         <el-form size="large">
             <el-form-item>
-                <el-input style="width: 300px;height: 50px;" :prefix-icon="Search" placeholder="请输入邮箱"></el-input>
+                <el-input style="width: 300px;height: 50px;" :prefix-icon="User" placeholder="请输入邮箱"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-input style="width: 300px;height: 50px;" type="password" :prefix-icon="Search" placeholder="请输入密码"></el-input>
+                <el-input style="width: 300px;height: 50px;" type="password" :prefix-icon="Lock" placeholder="请输入密码"></el-input>
             </el-form-item>
             <el-form-item style="display: flex;height: 50px;">
                 <el-input style="width: 170px;height: 50px;" placeholder="验证码"></el-input>
