@@ -76,18 +76,12 @@ const adminNavList=ref([
 
 
 const leftList=schoolAdminNavList.value
-<<<<<<< HEAD
-=======
 
-<<<<<<< HEAD
 onMounted(()=>{
     
   new WOW().init()
 })
 
-=======
->>>>>>> d8c5fdca5ac6a611c7b56febc3963d58effcf4d1
->>>>>>> fd3dc9049bed0bc8f502705a8c31c2d6bb8a9dde
 </script>
 
 <style lang="scss" scoped>
