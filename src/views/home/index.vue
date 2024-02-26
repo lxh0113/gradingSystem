@@ -74,11 +74,8 @@ const adminNavList=ref([
 ])
 
 
-const leftList=schoolAdminNavList.value
-<<<<<<< HEAD
-=======
+const leftList=studentNavList.value
 
->>>>>>> d8c5fdca5ac6a611c7b56febc3963d58effcf4d1
 </script>
 
 <style lang="scss" scoped>
