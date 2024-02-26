@@ -6,9 +6,9 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import './assets/icon/iconfont.css'
 // import './styles/project/index.scss' as *;
 
-// import animated from "animate.css";
+// import {animated} from "animate.css";
 // import {WOW} from 'wowjs'
-// import 'wowjs/css/libs/animate.css';
+import 'wowjs/css/libs/animate.css';
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

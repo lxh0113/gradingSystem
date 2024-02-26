@@ -1,6 +1,6 @@
 <template>
   <div class="backBox">
-    <div class="top">
+    <div class="top wow slideInDown">
         <div class="logo">
             <img src="@/assets/logo2.png" class="logoImg" alt="">
         </div>
@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="bottom">
-        <div class="left">
+        <div class="left wow slideInLeft">
             <div class="a" v-for="(item,index) in leftList" :key="index">
                 <RouterLink :to="item.to">
                     <span :class="item.icon"></span>
@@ -27,7 +27,7 @@
             </div>
             
         </div>
-        <div class="right">
+        <div class="right wow slideInRight">
             <RouterView></RouterView>
         </div>
     </div>
@@ -35,7 +35,8 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import {onMounted,ref} from 'vue'
+import WOW from 'wow.js'
 
 //学生左边导航选项
 const studentNavList=ref([
@@ -74,7 +75,12 @@ const adminNavList=ref([
 ])
 
 
-const leftList=studentNavList.value
+const leftList=schoolAdminNavList.value
+
+onMounted(()=>{
+    
+  new WOW().init()
+})
 
 </script>
 
