@@ -65,7 +65,6 @@
   padding: 20px;
 
   .myParents{
-    width: 300px;
     height: 100%;
     // background-color: pink;
     text-align: center;
@@ -73,6 +72,18 @@
     flex-direction: column;
     justify-content: center;
     border-right: 1px solid #c4c4c4;
+    @media screen and (min-width: 1440px) and (max-width: 1920px){
+      width: 300px;
+    }
+    @media screen and (min-width: 1024px) and (max-width: 1439px) {
+      width: 300px;
+    }
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+      width: 300px;
+    }
+    @media screen and (min-width: 375px) and (max-width: 767px) {
+      
+    }
 
     .avatars{
       display: flex;

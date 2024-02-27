@@ -55,6 +55,14 @@ import { Search } from '@element-plus/icons-vue';
     box-sizing: border-box;
     padding:20px;
     margin-right: 20px;
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+      min-width: 320px;
+      margin-right: 8px;
+    }
+    @media screen and (min-width: 375px) and (max-width: 767px) {
+      min-width: 320px;
+      margin-right: 8px;
+    }
     
     .top{
       display: flex;
