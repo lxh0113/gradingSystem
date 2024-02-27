@@ -32,6 +32,7 @@
                       <td>学号</td>
                       <td>姓名</td>
                       <td>批阅老师</td>
+                      <td>考试场次</td>
                       <td>时间</td>
                       <td>操作</td>
                   </tr>
@@ -44,6 +45,7 @@
                       <td>2022111111</td>
                       <td>xxx</td>
                       <td>xxx</td>
+                      <td>第一次月考</td>
                       <td>2024-12-1 12:11</td>
                       <td>
                         <el-button type="primary" plain>查看</el-button>
@@ -76,14 +78,14 @@ import { Delete, Download, Edit, Handbag, Plus, Search, TakeawayBox, Upload } fr
 .bigBox{
   // margin-top:10px;
   min-height: 400px;
-  min-width: 700px;
+  min-width: 320px;
   box-sizing: border-box;
   // padding:30px;
   // background-color: #fff;
 
   .nav{
     font-size:20px;
-    min-width: 700px;
+    min-width: 320px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -100,6 +102,7 @@ import { Delete, Download, Edit, Handbag, Plus, Search, TakeawayBox, Upload } fr
       max-height: 100px;
       min-width: 700px;
       display: flex;
+      flex-wrap: wrap;
     }
   }
 

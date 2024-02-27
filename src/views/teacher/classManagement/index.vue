@@ -1,15 +1,17 @@
 <template>
-  <div>
-    这是老师 班级管理 界面
+  <div class="backBox">
+    这是老师班级管理界面
   </div>
 </template>
 
 <script>
-export default {
 
-}
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.backBox{
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
 </style>

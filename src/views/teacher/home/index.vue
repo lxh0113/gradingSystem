@@ -35,11 +35,11 @@
               <span class=down>123</span>
             </div>
             <div>
-              <span>未批阅</span>
-              <span class="down">15题</span>
+              <span>最高分</span>
+              <span class="down">95</span>
             </div>
             <div>
-              <span>总数</span>
+              <span>平均分</span>
               <span class="down">85.33</span>
             </div>
             
@@ -65,9 +65,7 @@
           </router-link>
       </div>
       <div class="button">
-        <el-button size="large">
-          +&nbsp;导入试卷
-        </el-button>
+        
       </div>
     </div>
     <div class="paper">
@@ -91,16 +89,19 @@
 
   .top{
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-betweens;
-    height: 360px;
+    // height: 360px;
     // background-color: pink;
 
     .left{
-      flex:1;
+      flex:2;
+      height: 360px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      
+      margin-right: 10px;
+      margin-bottom:10px;
 
 
       .papersStatus,.marked{
@@ -165,14 +166,18 @@
     }
 
     .right{
-      width: 400px;
-      background-color: aqua;
-      margin-left: 10px;
+      flex:1;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      height: 360px;
+      min-width: 400px;
+      background-color: #fff;
+      // margin-left: 10px;
     }
   }
 }
 .bottom{
-  margin-top:10px;
+  // margin-top:10px;
   min-height: 400px;
   box-sizing: border-box;
   padding:30px;

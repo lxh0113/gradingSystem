@@ -2,7 +2,7 @@
   <div class="bigBox">
     <div class="top">
       <div class="name">xx市第一次模拟试题</div>
-      <div class="subject">语文</div>
+      <!-- <div class="subject">语文</div> -->
     </div>
     <div class="center">
       <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;" ></el-select>

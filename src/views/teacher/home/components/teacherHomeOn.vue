@@ -2,7 +2,7 @@
   <div class="bigBox">
     <div class="conditionSearch">
       <el-input style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
-      <el-select class="m-2" placeholder="批改状态" size="large" style="width: 240px;margin-left:30px;" ></el-select>
+      <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;margin-left:30px;" ></el-select>
     </div>
     <div class="details">
       <div class="paper" v-for="item in 5">
@@ -11,12 +11,9 @@
                 <div class="title">
                     xx市第一次模拟试卷
                 </div>
-                <div class="subject">
-                    语文
-                </div>
             </div>
             <div class="operation">
-                切换试题
+                批阅
             </div>
         </div>
         <div class="content">
@@ -28,6 +25,9 @@
             </div>
         </div>
         <div class="bottom">
+            <div class="time">
+                2024/1/1 12:00
+              </div>
             <div class="count">
                 123/555
             </div>
@@ -58,9 +58,9 @@ import { Search } from '@element-plus/icons-vue';
   .details {
     // background-color: pink;
     margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(480px,750px));
+    gap:20px;
    
     // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
 }
@@ -68,14 +68,16 @@ import { Search } from '@element-plus/icons-vue';
 .paper {
     background-color: #ebeffe;
     flex: 1;
-    min-width: 600px;
-    max-width: 770px;
+    // min-width: 600px;
+    // max-width: 770px;
     height: 220px;
     margin-bottom: 20px;
     border-radius: 20px;
     box-sizing: border-box;
     padding:20px;
     margin-right: 20px;
+
+    
 
     .top{
         display: flex;
@@ -115,10 +117,15 @@ import { Search } from '@element-plus/icons-vue';
 
     .bottom{
         display: flex;
-        justify-content: right;
+        justify-content: space-between;
         margin-right: 30px;
         font-size: 18px;
+        line-height: 30px;
         color:#9e8b8b;
+
+        .time{
+          font-size: 16px;
+        }
     }
 
     

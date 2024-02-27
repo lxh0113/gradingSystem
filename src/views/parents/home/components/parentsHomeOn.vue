@@ -38,9 +38,9 @@
     .details {
       // background-color: pink;
       margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(480px,750px));
+      gap:20px;
      
       // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
   }
@@ -48,8 +48,8 @@
   .paper {
       background-color: #ebeffe;
       flex: 1;
-      min-width: 600px;
-      max-width: 770px;
+      // min-width: 600px;
+      // max-width: 770px;
       height: 240px;
       margin-bottom: 20px;
       border-radius: 20px;
