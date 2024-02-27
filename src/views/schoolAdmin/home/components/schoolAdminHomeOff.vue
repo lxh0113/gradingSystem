@@ -7,6 +7,9 @@
       <div class="paper" v-for="item in 5">
         <div class="top">
           <div class="title">2024上学期期中语文试卷</div>
+          <div class="look">
+            分析
+          </div>
         </div>
         <div class="correctors">批改人：xxx老师</div>
         <div class="class">班级：初二一班</div>
@@ -42,9 +45,9 @@ import { Search } from '@element-plus/icons-vue';
   .details {
     // background-color: pink;
     margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(480px,750px));
+    gap:20px;
    
     // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
 }
@@ -52,8 +55,8 @@ import { Search } from '@element-plus/icons-vue';
 .paper {
     background-color: #ebeffe;
     flex: 1;
-    min-width: 600px;
-    max-width: 770px;
+    // min-width: 600px;
+    // max-width: 770px;
     height: 240px;
     margin-bottom: 20px;
     border-radius: 20px;

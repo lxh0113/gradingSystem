@@ -12,7 +12,7 @@
           <div class="correctors">批改人：xxx老师</div>
           <div class="class">班级：初二一班</div>
           <div class="text">您的试卷正在批改中，请耐心等待！</div>
-          <div class="status">进行中92%</div>
+          <div class="status">2024/1/2 12:00</div>
         </div>
       </div>
   
@@ -41,9 +41,9 @@
     .details {
       // background-color: pink;
       margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(480px,750px));
+      gap:20px;
      
       // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
   }
@@ -51,14 +51,16 @@
   .paper {
       background-color: #ebeffe;
       flex: 1;
-      min-width: 600px;
-      max-width: 770px;
+      // min-width: 600px;
+      // max-width: 770px;
       height: 240px;
       margin-bottom: 20px;
       border-radius: 20px;
       box-sizing: border-box;
       padding:20px;
       margin-right: 20px;
+
+      transition: all .5s;
       
       .top {
         color:#3A63F3;
@@ -70,10 +72,18 @@
 
         .title{
           font-weight: bold;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          word-break: break-all;
+          white-space: nowrap;
         }
 
         .toTeacher{
           margin-right: 20px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          word-break: break-all;
+          white-space: nowrap;
         }
       }
   

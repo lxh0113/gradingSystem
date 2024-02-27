@@ -5,7 +5,7 @@
     </div>
     <div class="details">
       <div class="paper" v-for="item in 5">
-        <div class="subject">科目：语文</div>
+        <div class="subject">xx市第一次模拟试卷</div>
         <div class="correctors">批改人：xxx老师</div>
         <div class="text">您的试卷正在批改中，请耐心等待！</div>
         <div class="status">进行中</div>
@@ -37,18 +37,16 @@ import { Search } from '@element-plus/icons-vue';
   .details {
     // background-color: pink;
     margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-   
-    // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(480px,750px));
+    gap:20px; 
 }
 
 .paper {
     background-color: #ebeffe;
     flex: 1;
-    min-width: 600px;
-    max-width: 770px;
+    // min-width: 600px;
+    // max-width: 770px;
     height: 240px;
     margin-bottom: 20px;
     border-radius: 20px;

@@ -63,19 +63,17 @@ import { Search } from '@element-plus/icons-vue';
   .details {
       // background-color: pink;
       margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-     
-      // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(480px,700PX));
+      gap:20px;
     }
   
   .paper {
       background-color: #ebeffe;
       flex: 1;
       display: flex;
-      min-width: 600px;
-      max-width: 700px;
+      // min-width: 600px;
+      // max-width: 700px;
       height: 200px;
       margin-bottom: 20px;
       border-radius: 20px;

@@ -1,18 +1,18 @@
 <template>
   <div class="bigBox">
     <div class="top">
-        <el-form label-position="left" size="large" style="min-width: 560px" label-width="120px">
+        <el-form label-position="left" size="large" style="max-width: 640px" label-width="120px">
             <el-form-item label="请输入名称：">
                 <el-col>
                     <el-input name="name" placeholder="试题名称" />
                 </el-col>
             </el-form-item>
-            <el-form-item label="请选择科目：">
-                    <el-select name="subject" placeholder="选择科目"></el-select>
-            </el-form-item>
-            <el-form-item label="生成题目数：">
-                <el-col>
-                    <el-input name="count" placeholder="题目数量"></el-input>
+            <el-form-item label="生成题目：">
+                <el-col style="display: grid;grid-template-columns: 1fr 1fr 1fr 1fr;gap:20px;">
+                    <el-input placeholder="选择题数量"></el-input>
+                    <el-input placeholder="填空题数量"></el-input>
+                    <el-input placeholder="材料题数量"></el-input>
+                    <el-input placeholder="判断题数量"></el-input>
                 </el-col>
             </el-form-item>
             <el-form-item label="上传题目材料：">

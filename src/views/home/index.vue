@@ -19,7 +19,7 @@
     <div class="bottom">
         <div class="left wow slideInLeft">
             <div class="a" v-for="(item,index) in leftList" :key="index">
-                <RouterLink :to="item.to">
+                <RouterLink :to="item.to" :title="item.text">
                     <span :class="item.icon"></span>
                     &nbsp;
                     <span class="leftName">{{ item.text }}</span>
@@ -75,7 +75,7 @@ const adminNavList=ref([
 ])
 
 
-const leftList=schoolAdminNavList.value
+const leftList=adminNavList.value
 
 onMounted(()=>{
     

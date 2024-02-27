@@ -1,15 +1,17 @@
 <template>
-  <div>
-    这是 老师 考情分析 界面
+  <div class="backBox">
+    这是老师考情分析界面
   </div>
 </template>
 
-<script>
-export default {
+<script setup>
 
-}
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.backBox{
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
 </style>

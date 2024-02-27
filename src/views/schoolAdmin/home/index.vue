@@ -8,10 +8,6 @@
             <button class="button">管理</button>
           </div>
           <div class="bottomPeople">
-            <div class="parents">
-              <div class="row1">家长</div>
-              <div class="row2">123</div>
-            </div>
             <div class="teacher">
               <div class="row1">老师</div>
               <div class="row2">432</div>
@@ -82,20 +78,38 @@
 
 <style lang="scss" scoped>
 .top{
-
-  height:360px;
+  // height:360px;
   width: 100%;
   display: flex;
+  flex-wrap:wrap;
   border-radius: 20px;
 
+  @media screen and (min-width: 1440px) and (max-width: 1920px){
+    
+  }
+  @media screen and (min-width: 1024px) and (max-width: 1439px) {
+      
+  }
+  @media screen and (min-width: 768px) and (max-width: 1023px){
+      
+  }
+  @media screen and (min-width: 375px) and (max-width: 767px) {
+      
+  }
+
   .left{
-    flex:1;
+    flex:2;  
+    max-width: 600px;
+    min-width: 300px;
     // height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     box-sizing: border-box;
     margin-right: 10px;
+    margin-bottom: 10px;
+
+    transition: all .5s;
 
     .button{
       padding:5px 30px;
@@ -125,11 +139,21 @@
     .managePeople{
       flex:1;
       display: flex;
+      min-height: 180px;
+      // min-height: 360px;
       flex-direction: column;
-      min-width: 540px;
+      // min-width: 240px;
+      // max-width: 300px;
       background-color: #fff;
       box-sizing: border-box;
       padding:20px;
+
+      @media screen and (min-width: 768px) and (max-width: 1023px){
+        // max-width: 300px;
+      }
+      @media screen and (min-width: 375px) and (max-width: 767px) {
+        // max-width: 300px;
+      }
 
       .topOperation{
         display: flex;
@@ -193,9 +217,10 @@
       display: flex;
 
       .papersStatus{
-        flex:2;
+        flex:3;
         display: flex;
         flex-direction: column;
+        min-height: 120px;
         justify-content: space-between;
         margin-right: 10px;
         background-color: #fff;
@@ -215,7 +240,7 @@
       } 
 
       .importPapers{
-        flex:1;
+        flex:2;
         background-color: #fff;
         display: flex;
         flex-direction: column;
@@ -227,25 +252,48 @@
   }
 
   .center{
+    flex:1;
     min-width: 360px;
     background-color: #fff;
     // background-color: aqua;
-    margin-right: 10px;;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    min-height: 360px;
+    transition: all .5s;
   }
 
   .right{
-    min-width: 640px;
+    flex:2;
+    min-width: 500px;
     background-color: #fff;
+    min-height: 360px;
+    margin-bottom: 10px;
+    // max-width: 800px;
+
+    @media screen and (min-width: 1024px) and (max-width: 1439px) {
+      // margin-top:10px;
+    }
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+      margin-right: 10px;
+    }
+    @media screen and (min-width: 375px) and (max-width: 767px) {
+      margin-right: 10px;
+    }
+
+    transition: all .5s;
+
+
     // background-color: plum;
   }
 }
 
 .bottom{
-  margin-top:10px;
-  min-height: 420px;
+  // margin-top:10px;
+  min-height: 350px;
   box-sizing: border-box;
   padding:30px;
   background-color: #fff;
+  // margin-right: 10px;
 
   .title{
     font-size:20px;

@@ -2,7 +2,6 @@
   <div class="bigBox">
     <div class="condition">
         <el-input style="max-width: 250px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
-        <el-select class="m-2" placeholder="考试场次" size="large" style="width: 240px;margin-left:30px;" ></el-select>
         <el-date-picker class="m-2" placeholder="生成时间" size="large" style="width: 240px;margin-left:30px;" ></el-date-picker>
     </div>
     <div class="details">
@@ -10,7 +9,6 @@
             <div class="top">
                 <div class="title">
                     <div class="name">第一次总结模拟试题</div>
-                    <div class="subject">语文</div>
                 </div>
                 <div class="time">2024/2/18 12:00:00</div>
             </div>
@@ -46,18 +44,16 @@
     .details {
       // background-color: pink;
       margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-     
-      // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(480px,750px));
+      gap:20px
     }
   
   .paper {
       background-color: #ebeffe;
       flex: 1;
-      min-width: 600px;
-      max-width: 770px;
+      // min-width: 600px;
+      // max-width: 770px;
       height: 240px;
       margin-bottom: 20px;
       border-radius: 20px;
