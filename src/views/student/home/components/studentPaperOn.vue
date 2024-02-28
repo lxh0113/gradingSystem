@@ -53,6 +53,14 @@ import { Search } from '@element-plus/icons-vue';
     box-sizing: border-box;
     padding:20px;
     margin-right: 20px;
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+      min-width: 320px;
+      margin-right: 0;
+    }
+    @media screen and (min-width: 375px) and (max-width: 767px) {
+      min-width: 320px;
+      margin-right: 0;
+    }
     
     .subject {
       color:#3A63F3;
