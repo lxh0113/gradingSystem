@@ -8,12 +8,14 @@
               云阅
           </div>
           <div class="userInfo">
-              <el-badge is-dot class="item">
-                  <el-button class="share-button" :icon="BellFilled" type="primary" />
-              </el-badge>
-              <div class="avatar">
-                  <img src="@/assets/avatar.jpeg" alt="">
-              </div>
+                <el-badge is-dot class="item">
+                    <el-button class="share-button" :icon="BellFilled" type="primary" />
+                </el-badge>
+                <div class="avatar">
+                    <el-button plain @click="open">
+                        <img src="@/assets/avatar.jpeg" alt="">
+                    </el-button>
+                </div>
           </div>
       </div>
       <div class="bottom">
@@ -38,7 +40,7 @@
   import {onMounted,ref} from 'vue'
   import WOW from 'wow.js'
   import { BellFilled } from '@element-plus/icons-vue'
-  
+  import { ElMessageBox } from 'element-plus'
   //学生左边导航选项
   const studentNavList=ref([
       {text:"首页",icon:"iconfont icon-home",to:"/student/home"},

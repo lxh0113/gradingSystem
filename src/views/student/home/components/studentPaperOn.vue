@@ -4,7 +4,7 @@
       <el-input style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
     </div>
     <div class="details">
-      <div class="paper" v-for="item in 5">
+      <div class="paper" v-for="item in 5" :key="item">
         <div class="subject">xx市第一次模拟试卷</div>
         <div class="correctors">批改人：xxx老师</div>
         <div class="text">您的试卷正在批改中，请耐心等待！</div>
@@ -53,14 +53,6 @@ import { Search } from '@element-plus/icons-vue';
     box-sizing: border-box;
     padding:20px;
     margin-right: 20px;
-    @media screen and (min-width: 768px) and (max-width: 1023px){
-      min-width: 320px;
-      margin-right: 0;
-    }
-    @media screen and (min-width: 375px) and (max-width: 767px) {
-      min-width: 320px;
-      margin-right: 0;
-    }
     
     .subject {
       color:#3A63F3;
