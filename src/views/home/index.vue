@@ -75,7 +75,7 @@ const adminNavList=ref([
 ])
 
 
-const leftList=adminNavList.value
+const leftList=studentNavList.value
 
 onMounted(()=>{
     
