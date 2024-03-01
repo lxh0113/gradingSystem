@@ -122,8 +122,6 @@ const cancelDebounce = debounce(collapseOperation, 500);
 window.addEventListener('resize', cancelDebounce);
 
 
-
-
 const isCollapse = ref(true)
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath)
@@ -138,6 +136,7 @@ const handleClose = (key, keyPath) => {
   onMounted(()=>{
       
     new WOW().init()
+    collapseOperation()
   })
   
   </script>
