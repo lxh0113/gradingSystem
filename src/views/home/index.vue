@@ -131,7 +131,7 @@
             </tbody>
         </table>
         <div style="height: 20px;"></div>
-        <el-dialog draggable="true" top="30vh"  v-model="innerVisible" width="500" title="修改" append-to-body>
+        <el-dialog draggable="true" top="30vh" style="width: 400px;"  v-model="innerVisible" width="500" title="修改" append-to-body>
           <div v-if="modifyUserInfoStatus===1">
             <el-form>
                 <el-form-item>
@@ -150,6 +150,11 @@
                 <el-form-item>
                     <el-input size="large" placeholder="请输入邮箱">
                     </el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input style="width: 228px;" size="large" placeholder="请输入验证码">
+                    </el-input>
+                    <el-button type="primary" style="margin-left:30px;" size="large">获取验证码</el-button>
                 </el-form-item>
                 <br>
                 <div style="display: flex;justify-content: right;" >
