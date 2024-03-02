@@ -34,7 +34,7 @@
                 
                 
                 <div class="homeAvatar">
-                    <el-button plain @click="open" class="avatarOpen">
+                    <el-button plain  @click="outerVisible = true" class="avatarOpen">
                         <img src="@/assets/avatar.jpeg" alt="">
                     </el-button>
                 </div>
@@ -72,6 +72,94 @@
             </div>
         </div>
     </div>
+
+    <el-dialog draggable="true" v-model="outerVisible" title="个人信息设置" width="720">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        头像
+                    </td>
+                    <td>
+                        <img class="homeUserInfoAvatar" src="@/assets/avatar.jpeg" alt="">
+                    </td>
+                    <td>
+                        <el-button>选择文件</el-button>
+                        <el-button style="margin-left: 20px;" type="primary" @click="submitUpload">
+                          上传
+                        </el-button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        账号id
+                    </td>
+                    <td>
+                        {{ userInfoForm.account }}
+                    </td>
+                    <td>
+                        <!-- <el-button>
+                            复制
+                        </el-button> -->
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        名字
+                    </td>
+                    <td>
+                        {{ userInfoForm.name }}
+                    </td>
+                    <td>
+                        <el-button @click="()=>{innerVisible=true;modifyUserInfoStatus=1}">
+                            修改
+                        </el-button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        邮箱
+                    </td>
+                    <td>
+                        {{ userInfoForm.email }}
+                    </td>
+                    <td>
+                        <el-button @click="()=>{innerVisible=true;modifyUserInfoStatus=2}">修改</el-button>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <div style="height: 20px;"></div>
+        <el-dialog draggable="true" top="30vh"  v-model="innerVisible" width="500" title="修改" append-to-body>
+          <div v-if="modifyUserInfoStatus===1">
+            <el-form>
+                <el-form-item>
+                    <el-input size="large" placeholder="请输入新名字">
+                    </el-input>
+                </el-form-item>
+                <br>
+                <div style="display: flex;justify-content: right;" >
+                    <el-button @click="innerVisible=false">取消</el-button>
+                    <el-button @click="innerVisible=false" type="primary">修改</el-button>
+                </div>
+            </el-form>
+          </div>
+          <div v-else>
+            <el-form>
+                <el-form-item>
+                    <el-input size="large" placeholder="请输入邮箱">
+                    </el-input>
+                </el-form-item>
+                <br>
+                <div style="display: flex;justify-content: right;" >
+                    <el-button @click="innerVisible=false">取消</el-button>
+                    <el-button @click="innerVisible=false" type="primary">修改</el-button>
+                </div>
+            </el-form>
+          </div>
+        </el-dialog>
+  </el-dialog>
   </template>
   
   <script setup>
@@ -79,6 +167,12 @@
     import WOW from 'wow.js'
     import { BellFilled } from '@element-plus/icons-vue'
     import { ElMessageBox } from 'element-plus'
+
+    const outerVisible = ref(false)
+    const innerVisible = ref(false)
+
+    //这个是修改什么的状态变量 1代表修改名字，2代表修改邮箱
+    const modifyUserInfoStatus=ref(1)
 
     //学生左边导航选项
     const studentNavList=ref([
@@ -118,17 +212,24 @@
         {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement",isHaveNext:false,childrenList:[]}
     ])
 
-    const leftList=studentNavList.value
-
+    const userInfoForm = ref({
+      account:'12345678',
+      name:'lxh0113',
+      avatar:'@/assets/avatar.jpeg',
+      email:'3358654275@qq.com',
+      parents:[
+        {}
+      ]
+    })
 
     const open = () => {
-    ElMessageBox({
-        title: 'Message',
-        message: h('p', null, [
-        h('span', null, 'Message can be '),
-        h('i', { style: 'color: teal' }, 'VNode'),
-        ]),
-    })
+        ElMessageBox({
+            title: 'Message',
+            message: h('p', null, [
+            h('span', null, 'Message can be '),
+            h('i', { style: 'color: teal' }, 'VNode'),
+            ]),
+        })
     }
 
     const collapseOperation = () => {
@@ -160,7 +261,6 @@
     window.addEventListener('resize', cancelDebounce);
 
 
-<<<<<<< HEAD
 const isCollapse = ref(true)
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath)
@@ -177,23 +277,6 @@ const handleClose = (key, keyPath) => {
     new WOW().init()
     collapseOperation()
   })
-=======
-
-
-    const isCollapse = ref(true)
-    const handleOpen = (key, keyPath) => {
-        console.log(key, keyPath)
-    }
-    const handleClose = (key, keyPath) => {
-        console.log(key, keyPath)
-    }
-    
-    
-  
-    onMounted(()=>{
-        new WOW().init()
-    })
->>>>>>> d9c9ea1f11ccb01900cb022f2100b132b0e9ef44
   
   </script>
   
@@ -398,6 +481,65 @@ const handleClose = (key, keyPath) => {
 
             .shareDropdownSpan{
                 cursor: pointer;
+            }
+        }
+    }
+
+    // table,tr,td{
+    //     border-bottom: 1px solid #eaecf0;
+    //     // border-collapse: collapse;
+    // }
+
+    // table{
+        
+    // }
+
+    table{
+        border:1px solid #eceffe;
+        border-radius: 10px;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        width: 100%;
+        // border-collapse: collapse;
+        
+        tr:last-child{
+            border:0px;
+        }
+        
+        tr{
+            display: flex;
+            justify-content: space-between;
+            height: 80px;
+            line-height: 80px;
+            border-bottom:1px solid #eceffe;
+            margin-left: 20px;
+            margin-right: 20px;
+            // border-collapse: collapse;
+            // background-color: #3A63F3;
+
+            td{
+                flex:1;
+                
+            }
+
+            td:nth-child(1),
+            td:nth-child(2){
+                display: flex;
+                justify-content: left;
+            }
+
+            td:nth-child(3){
+                display:flex;
+                justify-content: right;
+                align-items: center;
+                // background-color: palegoldenrod;
+            }
+
+            .homeUserInfoAvatar{
+                width: 50px;
+                height: 50px;
+                margin-top:15px;
+                border-radius: 50%;
             }
         }
     }
