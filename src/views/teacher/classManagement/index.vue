@@ -1,6 +1,6 @@
 <template>
   <div class="backBox">
-    这是老师班级管理界面
+    
   </div>
 </template>
 

@@ -440,8 +440,11 @@ const handleClose = (key, keyPath) => {
     
     .homeBottom{
         display: flex;
+        // justify-content: stretch;
         width: 100%;
-        min-height: 798px;
+        height: 100%;
+        // height: calc(100% - 80px);
+        min-height: 900px;
         box-sizing: border-box;
     
         .homeLeft{

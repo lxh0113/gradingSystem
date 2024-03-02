@@ -16,6 +16,9 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
+// 导入echarts
+import * as echarts from 'echarts';//引入echarts
+
 const app = createApp(App)
 
 app.use(createPinia().use(piniaPluginPersistedstate))
@@ -26,6 +29,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
 
+// echarts 使用
+app.config.globalProperties.$echarts = echarts;//全局使用
 // app.use(animated);
 
 // app.mixin({
