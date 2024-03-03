@@ -49,8 +49,8 @@
           </div>
         </div>
       </div>
-      <div class="right">
-        这个位置是待定的图表
+      <div class="rightChart">
+        
       </div>
     </div>
     <div class="bottom">
@@ -76,7 +76,57 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
+
+let internalInstance = getCurrentInstance();
+let echarts = internalInstance.appContext.config.globalProperties.$echarts
+  
+
+
+const setChart=()=>{
+  const dom = document.querySelector('.rightChart');
+  const myChart = echarts.init(dom);
+
+  // 指定图表的配置项和数据
+  var option = {
+    title: {
+      text: '阅卷图表'
+    },
+    color:'#748eed',
+    tooltip: {},
+    xAxis: {
+      data: ['2024/1/1', '2024/1/2', '2024/1/3', '2024/1/4', '2024/1/5', '2024/1/6']
+    },
+    yAxis: {},
+    series: [
+      {
+        name: '销量',
+        type: 'bar',
+        data: [5, 20, 36, 10, 10, 20]
+      }
+    ]
+  };
+  
+  // 使用刚指定的配置项和数据显示图表。
+  myChart.setOption(option);
+
+  window.addEventListener('resize',()=>{
+    myChart.resize()
+  })
+
+  onUnmounted(() => {
+      myChart.dispose();
+  });
+}
+
+const init=()=>{
+
+}
+
+onMounted(()=>{
+  setChart()
+})
 
 </script>
 
@@ -165,14 +215,17 @@
       }
     }
 
-    .right{
+    .rightChart{
       flex:1;
       margin-right: 10px;
       margin-bottom: 10px;
       height: 360px;
       min-width: 400px;
       background-color: #fff;
+      box-sizing: border-box;
+      padding:20px;
       // margin-left: 10px;
+      
     }
   }
 }

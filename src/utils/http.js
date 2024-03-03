@@ -1,82 +1,57 @@
+// axios基础的封装
 import axios from 'axios'
-import {ElMessage} from "element-plus";
-import 'element-plus/theme-chalk/el-message.css'
-
-import {useRouter} from "vue-router";
-import router from "@/router";
-
-const http=axios.create(
-    {
-        baseURL:'http://localhost:5173',
-        // timeout:5000,
-        headers: {
-            'Content-type': 'application/json',
-            'contentType': 'application/x-www-form-urlencoded'
-        }
-    }
-)
-// axios.defaults.headers.set('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+import { ElMessage } from 'element-plus'
+// import router from '@/router/index.js'
+import {useUserStore} from "@/stores/user.js";
+const http = axios.create({
+    baseURL: 'http://localhost:8079/',
+    timeout: 5000
+})
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = false;
 
-//axios 拦截器
-http.interceptors.request.use(
-    (config)=>{
-        // //config.headers.token='12345'
+// 拦截器
 
-        // const token=localStorage.getItem("token");
-        // const long_token=localStorage.getItem("long_token");
-
-        // console.log(token)
-        // console.log(long_token)
-
-        // if(token) config.headers.token=token
-        // if(long_token) config.headers.long_token=long_token
-
-        return config;
-    },
-    function (error){
-
-        // if(error?.response?.status===401)
-        // {
-        //     alert("身份验证失败")
-        // }
-
-        return Promise.reject(error)
+// axios请求拦截器
+const user=JSON.parse(localStorage.getItem("user"))
+http.interceptors.request.use(config => {
+    if(user!==null){
+        console.log(user.token)
+        config.headers.set("Authorization",user.token.shortToken)
     }
-)
+    return config
+}, e => Promise.reject(e))
 
-
-http.interceptors.response.use(
-    (response) => {
-
-        // console.log(response.headers.token)
-
-        // if(response?.headers?.token)
-        // {
-        //     localStorage.setItem('token',response.headers.token);
-        //     localStorage.setItem('long_token',response.headers.long_token);
-        //     ElMessage.success("放入成功")
-        // }
-        // if(response?.status===298)
-        // {
-        //     ElMessage.error("登录失败，请重新登录")
-        //     location.href='/login'
-        // }
-        return response;
-    },
-    (e) => {
-        // const router = useRouter()
-        // ElMessage({
-        //     type: 'warning',
-        //     message: "错误"
-        // })
-        // if (e?.response?.status === 401) {
-        //     location.href='/login'
-        //     // location.href="http://localhost:5173/login"
-        // }
-        return Promise.reject(e)
+// axios响应式拦截器
+http.interceptors.response.use(res => res, e => {
+    const userStore=useUserStore()
+    console.log(e.response)
+    const status=e.response.status
+    switch (status){
+       case 400 :
+            ElMessage({type:'warning',message:e.response.data.message})
+            break
+        case 401 :
+            refreshToken()
+            return resend(e.response.config);
+            break
+        case 402 :
+            userStore.clearInfoAndToken()
+            router.push("/login")
+            break
     }
-)
 
+    return Promise.reject(e)
+})
+const resend= (req)=>{
+    let originalRequest=req
+    return http({
+        method:originalRequest.method,
+        url:originalRequest.url,
+        data:originalRequest.data
+    })
+}
+const refreshToken=()=>{
+    user.token.shortToken=user.token.refreshToken;
+}
 export default http

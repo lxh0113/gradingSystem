@@ -3,42 +3,46 @@
     <div class="form-warp">
       <form class="sign-in-form wow fadeInRight">
         <h2 class="form-title">登录</h2>
-        <el-form size="large" v-if="loginOptions" class="wow slideInUp">
-            <el-form-item>
-                <el-input style="width: 300px;height: 50px;" :prefix-icon="User" placeholder="请输入账号id"></el-input>
+        <el-form :model="loginData" :rules="loginRules" size="large" v-if="loginOptions" class="wow slideInUp">
+            <el-form-item prop="account">
+                <el-input v-model="loginData.account" style="width: 300px;height: 50px;" :prefix-icon="User" placeholder="请输入账号id"></el-input>
             </el-form-item>
-            <el-form-item>
-                <el-input style="width: 300px;height: 50px;" type="password" :prefix-icon="Lock" placeholder="请输入密码"></el-input>
+            <el-form-item prop="password">
+                <el-input v-model="loginData.password" style="width: 300px;height: 50px;" type="password" :prefix-icon="Lock" placeholder="请输入密码"></el-input>
             </el-form-item>
-            <div class="submit-btn">立即登录</div>
+            <div class="submit-btn" @click="login">立即登录</div>
             <span @click="toEmailLogin" style="color:#6266f5;text-decoration: underline;">忘记密码？邮箱登录</span>
         </el-form>
-        <el-form size="large" v-else class="wow fadeInUp">
-            <el-form-item>
-                <el-input style="width: 300px;height: 50px;" :prefix-icon="User" placeholder="请输入email"></el-input>
+        <el-form :model="modifyData" :rules="modifyRules" size="large" v-else class="wow fadeInUp">
+            <el-form-item prop="email">
+                <el-input v-model="modifyData.email" style="width: 300px;height: 50px;" :prefix-icon="User" placeholder="请输入email"></el-input>
             </el-form-item>
-            <el-form-item>
-                <el-input style="width: 300px;height: 50px;" type="password" :prefix-icon="Lock" placeholder="请输入新密码"></el-input>
+            <el-form-item prop="password">
+                <el-input v-model="modifyData.password" style="width: 300px;height: 50px;" type="password" :prefix-icon="Lock" placeholder="请输入新密码"></el-input>
             </el-form-item>
-            <div class="submit-btn">邮箱登录</div>
+            <el-form-item prop="code" style="display: flex;height: 50px;">
+                <el-input v-model="modifyData.code" :prefix-icon="Unlock" style="width: 170px;height: 50px;" placeholder="验证码"></el-input>
+                <el-button @click="getModifyCode" type="primary" plain style="padding:12px 19px;height: 50px;margin-left:20px">获取验证码</el-button>
+            </el-form-item>
+            <div class="submit-btn" @click="emailLogin">邮箱登录</div>
             <span @click="toIdLogin" style="color:#6266f5;text-decoration: underline;">账号id登录</span>
         </el-form>
         
       </form>
-      <form class="sign-up-form wow fadeInUp">
+      <form class="sign-up-form">
         <h2 class="form-title">注册</h2>
-        <el-form size="large">
-            <el-form-item>
-                <el-input style="width: 300px;height: 50px;" :prefix-icon="User" placeholder="请输入邮箱"></el-input>
+        <el-form :model="registerData" :rules="registerRules" size="large">
+            <el-form-item prop="email">
+                <el-input v-model="registerData.email" style="width: 300px;height: 50px;" :prefix-icon="User" placeholder="请输入邮箱"></el-input>
             </el-form-item>
-            <el-form-item>
-                <el-input style="width: 300px;height: 50px;" type="password" :prefix-icon="Lock" placeholder="请输入密码"></el-input>
+            <el-form-item prop="password">
+                <el-input v-model="registerData.password" style="width: 300px;height: 50px;" type="password" :prefix-icon="Lock" placeholder="请输入密码"></el-input>
             </el-form-item>
-            <el-form-item style="display: flex;height: 50px;">
-                <el-input style="width: 170px;height: 50px;" placeholder="验证码"></el-input>
-                <el-button type="primary" plain style="padding:12px 19px;height: 50px;margin-left:20px">获取验证码</el-button>
+            <el-form-item prop="code" style="display: flex;height: 50px;">
+                <el-input v-model="registerData.code" :prefix-icon="Unlock" style="width: 170px;height: 50px;" placeholder="验证码"></el-input>
+                <el-button @click="getRegisterCode" type="primary" plain style="padding:12px 19px;height: 50px;margin-left:20px">获取验证码</el-button>
             </el-form-item>
-            <div class="submit-btn">注册</div>
+            <div @click="register" class="submit-btn">注册</div>
         </el-form>
       </form>
     </div>
@@ -61,7 +65,7 @@
 </template>
 
 <script setup>
-import { Clock, Lock, Search, User } from '@element-plus/icons-vue';
+import { Clock, Lock, Search, Unlock, User } from '@element-plus/icons-vue';
 import { ElMain } from 'element-plus';
 import {onMounted, ref} from 'vue'
 import WOW from 'wow.js'
@@ -69,6 +73,42 @@ import WOW from 'wow.js'
 // id 还是邮箱登录 true 是id,false 是邮箱
 const loginOptions=ref(true)
 const signUpMode=ref(false)
+
+const loginData=ref({
+  account:'',password:''
+})
+
+const registerData=ref({
+  email:'',code:'',password:''
+})
+
+const modifyData=ref({
+  email:'',password:'',code:''
+})
+
+const loginRules={
+  account:[{required:true,message:'请输入账号',trigger:'blur'}],
+  password:[{required:true,message:'请输入密码',trigger:'blur'},
+            {pattern:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/,message:'密码必须是8到16位包含大小写字母数字',trigger:'blur'}]
+}
+
+const registerRules={
+  email:[{required:true,message:'邮箱不能为空',trigger:'blur'},
+         {type:'email',message:'请输入正确邮箱',trigger:'blur'}],
+  password:[{required:true,message:'请输入密码',trigger:'blur'},
+            {pattern:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/,message:'密码必须是8到16位包含大小写字母数字',trigger:'blur'}],
+  code:[{required:true,message:'验证码不能为空',trigger:'blur'},
+        {pattern:/^[0-9A-Za-z]{6}$/,message:'验证码错误',trigger:'blur'}]
+}
+
+const modifyRules={
+  email:[{required:true,message:'邮箱不能为空',trigger:'blur'},
+         {type:'email',message:'请输入正确邮箱',trigger:'blur'}],
+  password:[{required:true,message:'请输入密码',trigger:'blur'},
+            {pattern:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/,message:'密码必须是8到16位包含大小写字母数字',trigger:'blur'}],
+  code:[{required:true,message:'验证码不能为空',trigger:'blur'},
+        {pattern:/^[0-9A-Za-z]{6}$/,message:'验证码错误',trigger:'blur'}]
+}
 
 const toIdLogin=()=>{
     loginOptions.value=true
@@ -85,6 +125,19 @@ const toRegister=()=>{
 const toLogin=()=>{
     signUpMode.value=false
 }
+
+const login=()=>{
+
+}
+
+const register=()=>{
+
+}
+
+const modify=()=>{
+
+}
+
 
 onMounted(()=>{
   new WOW().init()
@@ -145,7 +198,7 @@ onMounted(()=>{
   align-items: center;
   justify-content: space-around;
 //   background: #ebeffe;
-  gap: 36px;
+  gap: 30px;
   /* 将两个 form 布局在 grid 同一位置 */
   grid-row: 1 / 2;
   grid-column: 1 / 2;

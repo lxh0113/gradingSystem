@@ -39,9 +39,6 @@
                   <div class="title">
                       xx市第一次模拟试卷
                   </div>
-                  <div class="subject">
-                      语文
-                  </div>
               </div>
               <div class="operation">
                   错题分析

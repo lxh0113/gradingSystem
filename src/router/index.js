@@ -157,7 +157,13 @@ const router = createRouter({
               ]
             },
             {path:'analysis',component:TeacherExamAnalysis},
-            {path:'management',component:TeacherClassManagement}
+            {
+              path:'management/:id',
+              component:TeacherClassManagement
+              // children:[
+              //   {path:':id',}
+              // ]
+            }
           ]
         },
         {
