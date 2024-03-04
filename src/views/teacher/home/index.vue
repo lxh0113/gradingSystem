@@ -1,5 +1,5 @@
 <template>
-  <div class="backBox">
+  <div class="wow fadeInRight backBox">
     <div class="top">
       <div class="left">
         <div class="papersStatus">

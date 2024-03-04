@@ -1,13 +1,11 @@
 <template>
-  <div>
-    这是家长 学情分析 界面
+  <div class="backBox">
+    
   </div>
 </template>
 
-<script>
-export default {
+<script setup>
 
-}
 </script>
 
 <style>

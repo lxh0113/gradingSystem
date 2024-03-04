@@ -73,7 +73,95 @@
 </template>
 
 <script setup>
+import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
 
+let internalInstance = getCurrentInstance();
+let echarts = internalInstance.appContext.config.globalProperties.$echarts
+
+
+const setChart=()=>{
+const dom1 = document.querySelector('.center');
+const myChart1 = echarts.init(dom1);
+const dom2 = document.querySelector('.right');
+const myChart2 = echarts.init(dom2);
+// 指定图表的配置项和数据
+var option1 = {
+  title: {
+    text: '批阅情况'
+  },
+  legend:{
+  },
+  color:['#748eed','#91cc75','#fac858'],
+  series: [
+    {
+      type:'pie',
+      data:[
+        {
+          value:345,name:'批阅'
+        },
+        {
+          value:654,name:'未批阅'
+        }
+      ]
+    }
+  ]
+};
+var option2 = {
+  title: {
+    text: '一周内批阅情况'
+  },
+  legend:{
+  },
+  color:['#fac858'],
+  tooltip: {},
+  xAxis: {
+    data: ['2024/1/1', '2024/1/2', '2024/1/3', '2024/1/4', '2024/1/5', '2024/1/6','2024/1/7']
+  },
+  yAxis: {},
+  series: [
+    {
+      name: '批阅数量',
+      type: 'bar',
+      data: [123, 0, 56, 70, 94, 0,80],
+      label: {
+      show: true,
+      position: 'top',
+      textStyle: {
+        fontSize: 14
+      }
+      },
+      emphasis:{
+        label:{
+          show:true
+        }
+      }
+    }
+  ]
+};
+  
+  // 使用刚指定的配置项和数据显示图表。
+  myChart1.setOption(option1);
+  myChart2.setOption(option2)
+
+  window.addEventListener('resize',()=>{
+    // alert(1)
+    myChart1.resize()
+    myChart2.resize()
+  })
+
+  onUnmounted(() => {
+      myChart1.dispose();
+      myChart2.dispose()
+  });
+}
+
+const init=()=>{
+
+}
+
+onMounted(()=>{
+  setChart()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -249,6 +337,12 @@
 
       }
     }
+  }
+
+  .center,
+  .right{
+    box-sizing: border-box;
+    padding:20px;
   }
 
   .center{

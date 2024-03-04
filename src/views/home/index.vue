@@ -74,56 +74,56 @@
     </div>
 
     <el-dialog draggable="true" v-model="outerVisible" title="个人信息设置" width="720">
-        <table>
+        <table class="table">
             <tbody>
-                <tr>
-                    <td>
+                <tr class="tr">
+                    <td class="td">
                         头像
                     </td>
-                    <td>
+                    <td class="td">
                         <img class="homeUserInfoAvatar" src="@/assets/avatar.jpeg" alt="">
                     </td>
-                    <td>
+                    <td class="td">
                         <el-button>选择文件</el-button>
                         <el-button style="margin-left: 20px;" type="primary" @click="submitUpload">
                           上传
                         </el-button>
                     </td>
                 </tr>
-                <tr>
-                    <td>
+                <tr class="tr">
+                    <td class="td">
                         账号id
                     </td>
-                    <td>
+                    <td class="td">
                         {{ userInfoForm.account }}
                     </td>
-                    <td>
+                    <td class="td">
                         <!-- <el-button>
                             复制
                         </el-button> -->
                     </td>
                 </tr>
-                <tr>
-                    <td>
+                <tr class="tr">
+                    <td class="td">
                         名字
                     </td>
-                    <td>
+                    <td class="td">
                         {{ userInfoForm.name }}
                     </td>
-                    <td>
+                    <td class="td">
                         <el-button @click="()=>{innerVisible=true;modifyUserInfoStatus=1}">
                             修改
                         </el-button>
                     </td>
                 </tr>
-                <tr>
-                    <td>
+                <tr class="tr">
+                    <td class="td">
                         邮箱
                     </td>
-                    <td>
+                    <td class="td">
                         {{ userInfoForm.email }}
                     </td>
-                    <td>
+                    <td class="td">
                         <el-button @click="()=>{innerVisible=true;modifyUserInfoStatus=2}">修改</el-button>
                     </td>
                 </tr>
@@ -275,7 +275,7 @@ const handleClose = (key, keyPath) => {
 }
   
   
-  const leftList=teacherNavList.value
+  const leftList=schoolAdminNavList.value
   
   onMounted(()=>{
       
@@ -502,7 +502,7 @@ const handleClose = (key, keyPath) => {
         
     // }
 
-    table{
+    .table{
         border:1px solid #eceffe;
         border-radius: 10px;
         border-collapse: collapse;
@@ -510,11 +510,11 @@ const handleClose = (key, keyPath) => {
         width: 100%;
         // border-collapse: collapse;
         
-        tr:last-child{
+        .tr:last-child{
             border:0px;
         }
         
-        tr{
+        .tr{
             display: flex;
             justify-content: space-between;
             height: 80px;
@@ -525,18 +525,18 @@ const handleClose = (key, keyPath) => {
             // border-collapse: collapse;
             // background-color: #3A63F3;
 
-            td{
+            .td{
                 flex:1;
                 
             }
 
-            td:nth-child(1),
-            td:nth-child(2){
+            .td:nth-child(1),
+            .td:nth-child(2){
                 display: flex;
                 justify-content: left;
             }
 
-            td:nth-child(3){
+            .td:nth-child(3){
                 display:flex;
                 justify-content: right;
                 align-items: center;

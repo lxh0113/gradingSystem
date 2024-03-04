@@ -1,5 +1,5 @@
 <template>
-  <div class="backBox">
+  <div class="wow fadeInRight backBox">
     <div class="bigBox">
       <div class="nav">
         <div class="left">
@@ -23,8 +23,12 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {onMounted, ref} from 'vue'
 
+onMounted(()=>{
+  
+})
 </script>
 
 <style lang="scss" scoped>

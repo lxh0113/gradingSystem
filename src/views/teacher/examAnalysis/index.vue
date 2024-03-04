@@ -1,5 +1,5 @@
 <template>
-  <div class="backBox">
+  <div class="wow fadeInRight backBox">
     <!-- <div class="title">
       考情分析
     </div> -->
@@ -171,6 +171,7 @@ const setChart=()=>{
   myChart2.setOption(option2)
 
   window.addEventListener('resize',()=>{
+    // alert(1)
     myChart1.resize()
     myChart2.resize()
   })
