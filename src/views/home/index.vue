@@ -32,7 +32,6 @@
                     </template>
                 </el-dropdown>
                 
-                
                 <div class="homeAvatar">
                     <el-button plain  @click="outerVisible = true" class="avatarOpen">
                         <img src="@/assets/avatar.jpeg" alt="">
