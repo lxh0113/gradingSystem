@@ -4,8 +4,8 @@ export const loginAPI=(account,password)=>{
     return http({
         url:'/user/login',
         method:'GET',
-        data:{
-            account,email:null,password
+        params:{
+            account,password
         }
     })
 }
@@ -16,6 +16,16 @@ export const registerAPI=(email,code,password)=>{
         method:'POST',
         data:{
             email,code,password
+        }
+    })
+}
+
+export const modifyAPI=(email,password,code)=>{
+    return http({
+        url:'/user/forgetPW',
+        method:'POST',
+        params:{
+            email,password,code
         }
     })
 }

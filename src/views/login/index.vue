@@ -69,11 +69,13 @@ import { Clock, Lock, Search, Unlock, User } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import {onMounted, ref} from 'vue'
 import WOW from 'wow.js'
-import { loginAPI,getCodeAPI,registerAPI } from '@/apis/login';
+import { useUserStore } from '@/stores/userStore';
+import { loginAPI,getCodeAPI,registerAPI,modifyAPI } from '@/apis/login';
 
 // id 还是邮箱登录 true 是id,false 是邮箱
 const loginOptions=ref(true)
 const signUpMode=ref(false)
+const userStore=useUserStore();
 
 const loginData=ref({
   account:'',password:''
@@ -131,7 +133,11 @@ const login=async()=>{
   const res = await loginAPI(loginData.value.account,loginData.value.password);
   if(res.data.code==200)
   {
+    userStore.setUserInfo(res.data.data)
     ElMessage.success(res.data.message)
+    setTimeout(()=>{
+      location.href='http://192.168.50.114:5173/'
+    },2000)
   }
   else{
     ElMessage.error(res.data.message)
@@ -143,19 +149,35 @@ const register=async()=>{
 
   if(res.data.code==200)
   {
+    userStore.setUserInfo(res.data.data)
     ElMessage.success(res.data.message)
+    setTimeout(()=>{
+      location.href='http://192.168.50.114:5173/'
+    },2000)
   }
   else {
     ElMessage.error(res.data.message)
   }
 }
 
-const modify=()=>{
+const modify=async()=>{
+  const res=await modifyAPI(modifyData.value.email,modifyData.value.password,modifyData.code)
 
+  if(res.data.code===200)
+  {
+    userStore.setUserInfo(res.data.data)
+    ElMessage.success(res.data.message)
+    setTimeout(()=>{
+      location.href='http://192.168.50.114:5173/'
+    },2000)
+  }
+  else {
+    ElMessage.error(res.data.message)
+  }
 }
 
 const getModifyCode=async()=>{
-  alert(1)
+  // alert(1)
   const res=await getCodeAPI(modifyData.value.email);
 
   console.log(res)
