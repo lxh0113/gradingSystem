@@ -66,9 +66,10 @@
 
 <script setup>
 import { Clock, Lock, Search, Unlock, User } from '@element-plus/icons-vue';
-import { ElMain } from 'element-plus';
+import { ElMessage } from 'element-plus';
 import {onMounted, ref} from 'vue'
 import WOW from 'wow.js'
+import { loginAPI,getCodeAPI,registerAPI } from '@/apis/login';
 
 // id 还是邮箱登录 true 是id,false 是邮箱
 const loginOptions=ref(true)
@@ -126,16 +127,45 @@ const toLogin=()=>{
     signUpMode.value=false
 }
 
-const login=()=>{
-
+const login=async()=>{
+  const res = await loginAPI(loginData.value.account,loginData.value.password);
+  if(res.data.code==200)
+  {
+    ElMessage.success(res.data.message)
+  }
+  else{
+    ElMessage.error(res.data.message)
+  }
 }
 
-const register=()=>{
+const register=async()=>{
+  const res=await registerAPI(registerData.value.email,registerData.value.code,registerData.value.password);
 
+  if(res.data.code==200)
+  {
+    ElMessage.success(res.data.message)
+  }
+  else {
+    ElMessage.error(res.data.message)
+  }
 }
 
 const modify=()=>{
 
+}
+
+const getModifyCode=async()=>{
+  alert(1)
+  const res=await getCodeAPI(modifyData.value.email);
+
+  console.log(res)
+}
+
+const getRegisterCode=async()=>{
+  alert(1)
+  const res=await getCodeAPI(registerData.value.email);
+
+  console.log(res)
 }
 
 

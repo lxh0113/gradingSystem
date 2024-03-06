@@ -2,19 +2,26 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 // import router from '@/router/index.js'
-import {useUserStore} from "@/stores/user.js";
+import {useUserStore} from "@/stores/userStore.js";
 const http = axios.create({
-    baseURL: 'http://localhost:8079/',
+    baseURL: 'http://localhost:8079',
     timeout: 5000
+    // headers: {
+    //     'Content-type': 'application/json',
+    //     'contentType': 'application/x-www-form-urlencoded'
+    // }
 })
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-// axios.defaults.withCredentials = false;
+axios.defaults.withCredentials = true;
 
 // 拦截器
 
 // axios请求拦截器
 const user=JSON.parse(localStorage.getItem("user"))
 http.interceptors.request.use(config => {
+
+    // res.header("Access-Control-Allow-Origin", "*");
+
     if(user!==null){
         console.log(user.token)
         config.headers.set("Authorization",user.token.shortToken)
@@ -25,6 +32,7 @@ http.interceptors.request.use(config => {
 // axios响应式拦截器
 http.interceptors.response.use(res => res, e => {
     const userStore=useUserStore()
+    console.log(e)
     console.log(e.response)
     const status=e.response.status
     switch (status){

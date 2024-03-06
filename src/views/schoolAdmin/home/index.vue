@@ -36,7 +36,7 @@
             <div class="text">
               导入试卷
             </div>
-            <button class="button">
+            <button @click="dialogVisible = true" class="button" >
               导入
             </button>
           </div>
@@ -70,6 +70,19 @@
     </div>
     </div>
   </div>
+
+  <el-dialog v-model="dialogVisible" title="导入试卷" width="700px" draggable>
+    <span>请分别上传评分标准，空白试卷和您所需要批阅的试卷</span>
+    
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">
+          确认
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -77,7 +90,7 @@ import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
 
 let internalInstance = getCurrentInstance();
 let echarts = internalInstance.appContext.config.globalProperties.$echarts
-
+const dialogVisible = ref(false)
 
 const setChart=()=>{
 const dom1 = document.querySelector('.center');
