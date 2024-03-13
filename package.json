@@ -18,7 +18,6 @@
     "element-plus": "^2.5.5",
     "json5": "^2.2.3",
     "luckyexcel": "^1.0.1",
-    "mockjs": "^1.1.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.0",
     "sass": "^1.70.0",
@@ -33,8 +32,10 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.3",
+    "mockjs": "^1.1.0",
     "unplugin-auto-import": "^0.16.7",
     "unplugin-vue-components": "^0.25.2",
-    "vite": "^5.1.1"
+    "vite": "^5.1.1",
+    "vite-plugin-mock": "^3.0.1"
   }
 }
