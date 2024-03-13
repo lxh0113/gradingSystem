@@ -131,13 +131,15 @@ const toLogin=()=>{
 
 const login=async()=>{
   const res = await loginAPI(loginData.value.account,loginData.value.password);
+  console.log(res)
   if(res.data.code==200)
   {
-    userStore.setUserInfo(res.data.data)
+    userStore.setUserInfo(res.data.data,res.headers.getAuthorization,res.headers.getAuthorization-Refresh)
+    localStorage.setItem('Authorization',res.headers.getAuthorization)
     ElMessage.success(res.data.message)
-    setTimeout(()=>{
-      location.href='http://192.168.50.114:5173/'
-    },2000)
+    // setTimeout(()=>{
+    //   location.href='http://192.168.50.114:5173/'
+    // },2000)
   }
   else{
     ElMessage.error(res.data.message)

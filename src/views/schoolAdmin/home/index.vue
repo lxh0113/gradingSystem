@@ -72,8 +72,69 @@
   </div>
 
   <el-dialog v-model="dialogVisible" title="导入试卷" width="700px" draggable>
-    <span>请分别上传评分标准，空白试卷和您所需要批阅的试卷</span>
-    
+    <span style="color:red">请分别上传评分标准，空白试卷和您所需要批阅的试卷</span>
+    <table>
+      <tbody>
+        <tr>
+          <td>空白试卷</td>
+          <td>
+            示例
+          </td>
+          <td>
+            <el-upload ref="upload" class="upload-demo" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+              :limit="1" :on-exceed="handleExceed" :auto-upload="false">
+              <template v-slot:trigger>
+                <el-button type="primary">选择文件</el-button>
+              </template>
+              <!-- <el-button class="ml-3" type="success" @click="submitUpload">
+                upload to server
+              </el-button> -->
+              <!-- <template v-slot:tip>
+                <div class="el-upload__tip text-red">
+                  limit 1 file, new file will cover the old file
+                </div>
+              </template> -->
+            </el-upload>
+          </td>
+        </tr>
+        <tr>
+          <td>评分标准</td>
+          <td>示例</td>
+          <td>
+            <el-upload ref="upload" class="upload-demo" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+              :limit="1" :on-exceed="handleExceed" :auto-upload="false">
+              <template v-slot:trigger>
+                <el-button type="primary">选择文件</el-button>
+              </template>
+              <!-- <el-button class="ml-3" type="success" @click="submitUpload">
+                upload to server
+              </el-button> -->
+              <!-- <template v-slot:tip>
+                <div class="el-upload__tip text-red">
+                  limit 1 file, new file will cover the old file
+                </div>
+              </template> -->
+            </el-upload>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            所需批阅试卷压缩包
+          </td>
+          <td>示例</td>
+          <td>
+            <el-upload ref="upload" class="upload-demo" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+              :limit="1" :on-exceed="handleExceed" :auto-upload="false">
+              <template v-slot:trigger>
+                <el-button type="primary">选择文件</el-button>
+              </template>
+             
+            </el-upload>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
@@ -87,18 +148,21 @@
 
 <script setup>
 import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
+import { genFileId } from 'element-plus'
+
+const upload = ref(null)
 
 let internalInstance = getCurrentInstance();
 let echarts = internalInstance.appContext.config.globalProperties.$echarts
 const dialogVisible = ref(false)
 
 const setChart=()=>{
-const dom1 = document.querySelector('.center');
-const myChart1 = echarts.init(dom1);
-const dom2 = document.querySelector('.right');
-const myChart2 = echarts.init(dom2);
-// 指定图表的配置项和数据
-var option1 = {
+  const dom1 = document.querySelector('.center');
+  const myChart1 = echarts.init(dom1);
+  const dom2 = document.querySelector('.right');
+  const myChart2 = echarts.init(dom2);
+  // 指定图表的配置项和数据
+  var option1 = {
   title: {
     text: '批阅情况'
   },
@@ -118,8 +182,8 @@ var option1 = {
       ]
     }
   ]
-};
-var option2 = {
+  };
+  var option2 = {
   title: {
     text: '一周内批阅情况'
   },
@@ -150,27 +214,36 @@ var option2 = {
       }
     }
   ]
-};
-  
-  // 使用刚指定的配置项和数据显示图表。
-  myChart1.setOption(option1);
-  myChart2.setOption(option2)
+  };
 
-  window.addEventListener('resize',()=>{
-    // alert(1)
-    myChart1.resize()
-    myChart2.resize()
-  })
+    // 使用刚指定的配置项和数据显示图表。
+    myChart1.setOption(option1);
+    myChart2.setOption(option2)
 
-  onUnmounted(() => {
-      myChart1.dispose();
-      myChart2.dispose()
-  });
+    window.addEventListener('resize',()=>{
+      // alert(1)
+      myChart1.resize()
+      myChart2.resize()
+    })
+
+    onUnmounted(() => {
+        myChart1.dispose();
+        myChart2.dispose()
+    });
 }
 
-const init=()=>{
-
+const handleExceed = (files) => {
+  upload.value.clearFiles()
+  const file = files[0]
+  file.uid = genFileId()
+  upload.value.handleStart(file)
 }
+
+const submitUpload = () => {
+  upload.value.submit()
+}
+
+
 
 onMounted(()=>{
   setChart()
@@ -419,11 +492,51 @@ onMounted(()=>{
     .router-link-active{
       text-decoration: underline;
       color:#3A63F3;
-    }
-
-    
+    } 
   }
-
- 
 }
+
+table{
+      border:1px solid #eceffe;
+      border-radius: 10px;
+      border-collapse: collapse;
+      box-sizing: border-box;
+      width: 100%;
+      margin-top:20px;
+      // border-collapse: collapse;
+      
+      tr:last-child{
+          border:0px;
+      }
+      
+      tr{
+          display: flex;
+          justify-content: space-between;
+          height: 100px;
+          line-height: 100px;
+          border-bottom:1px solid #eceffe;
+          margin-left: 20px;
+          margin-right: 20px;
+          // border-collapse: collapse;
+          // background-color: #3A63F3;
+          td{
+              flex:1;
+              
+          }
+          td:nth-child(1),
+          td:nth-child(2){
+              display: flex;
+              justify-content: left;
+          }
+          td:nth-child(3){
+            // background-color: #3a63f3;
+              line-height: normal;
+              display:flex;
+              justify-content: center;
+              // justify-content: right;
+              align-items: center;
+              // background-color: palegoldenrod;
+          }
+        }
+      }
 </style>

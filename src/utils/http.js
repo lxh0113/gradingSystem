@@ -18,6 +18,7 @@ axios.defaults.withCredentials = true;
 
 // axios请求拦截器
 const user=JSON.parse(localStorage.getItem("user"))
+
 http.interceptors.request.use(config => {
 
     // res.header("Access-Control-Allow-Origin", "*");

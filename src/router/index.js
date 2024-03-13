@@ -39,6 +39,7 @@ import TeacherMarkingAll from "@/views/teacher/marking/components/teacherMarking
 import TeacherMarkingOn from "@/views/teacher/marking/components/teacherMarkingOn.vue"
 import TeacherMarkingOff from "@/views/teacher/marking/components/teacherMarkingOff.vue"
 import TeacherMarkingDetails from "@/views/teacher/marking/components/teacherMarkingDetails.vue"
+import TeacherViewStudent from '@/views/teacher/classManagement/components/TeacherViewStudent.vue';
 
 
 //schoolAdmin 模块
@@ -62,6 +63,7 @@ import AdminAccountManagementAll from "@/views/admin/accountManagement/component
 import AdminAccountManagementUnderway from "@/views/admin/accountManagement/components/adminAccountManagementUnderway.vue";
 import AdminAccountManagementExamine from "@/views/admin/accountManagement/components/adminAccountManagementExamine.vue";
 
+import Test from '@/mock/test.vue';
 
 
 
@@ -73,6 +75,9 @@ const router = createRouter({
       name: 'home',
       component: Home,
       children:[
+        {
+          path:'test',component:Test
+        },
         {
           path:'student',
           children:[
@@ -153,13 +158,19 @@ const router = createRouter({
                 {path:'all',component:TeacherMarkingAll},
                 {path:'on',component:TeacherMarkingOn},
                 {path:'off',component:TeacherMarkingOff},
-                {path:':id',component:TeacherMarkingDetails}
+                {
+                  path:':id',
+                  component:TeacherMarkingDetails
+                }
               ]
             },
             {path:'analysis',component:TeacherExamAnalysis},
             {
-              path:'management/:id',
-              component:TeacherClassManagement
+              path:'management/:classId',
+              component:TeacherClassManagement,
+              children:[
+                {path:':studentId',component:TeacherViewStudent}
+              ]
               // children:[
               //   {path:':id',}
               // ]

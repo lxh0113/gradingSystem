@@ -1,5 +1,5 @@
 <template>
-    <div class="bigBox">
+    <div class="bigBox wow fadeInUp">
       <div class="conditionSearch">
         <el-input style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
         <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;margin-left:30px;" ></el-select>
