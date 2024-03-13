@@ -1,8 +1,35 @@
 <template>
-  <div class="bigBox">
+  <div class="bigBox wow fadeInUp">
     <div class="top">
-      <div class="name">xx市第一次模拟试题</div>
-      <!-- <div class="subject">语文</div> -->
+      <div class="content">
+        <el-dropdown @command="handleCommand">
+          <span class="name el-dropdown-link">
+            xx市第一次模拟试题<el-icon class="el-icon--right"><arrow-down /></el-icon>
+          </span>
+        
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="a">xx市第二次模拟试题</el-dropdown-item>
+              <el-dropdown-item command="b">xx市第三次模拟试题</el-dropdown-item>
+              <el-dropdown-item command="c">xx市第四次模拟试题</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
+        <div>
+          <el-button style="border-radius: 50%;width: 30px;height: 30px;" :icon="ArrowLeft">
+          </el-button>
+
+          <el-button style="margin-left: 30px;border-radius: 50%;width: 30px;height: 30px;" :icon="ArrowRight">
+          </el-button>
+        </div>
+
+      </div>
+
+      <!-- <div class="name">xx市第一次模拟试题</div>
+      <div class="content">
+        
+      </div> -->
     </div>
     <div class="center">
       <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;" ></el-select>
@@ -13,8 +40,8 @@
       <table>
         <thead>
           <tr>
-            <td>试卷编号</td>
-            <td>科目</td>
+            <td>学号</td>
+            <td>姓名</td>
             <td>分数</td>
             <td>评语</td>
             <td>批阅状态</td>
@@ -25,7 +52,7 @@
         <tbody>
           <tr>
             <td>20041524</td>
-            <td>语文</td>
+            <td>lxh</td>
             <td class="score">85</td>
             <td>出雕塑品和via成都v和比赛于不是阿凡达和</td>
             <td>已批阅</td>
@@ -38,7 +65,7 @@
 
           <tr>
             <td>20041524</td>
-            <td>语文</td>
+            <td>lxh</td>
             <td class="score">---</td>
             <td>暂无</td>
             <td>正在批阅</td>
@@ -54,7 +81,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ArrowLeft,ArrowRight } from '@element-plus/icons-vue';
+
 
 </script>
 
@@ -65,12 +94,22 @@
   .top{
     display: flex;
     justify-content: flex-start;
+    align-items: center;
     font-size:19px;
     color:#3a63f3;
 
+    .content{
+      display: flex;
+      min-width: 420px;
+      justify-content: space-between;
+      align-items: center;
+      // background-color: #ce6509;
+    }
+
     .name{
       text-decoration: underline;
-      
+      font-size: 20px;
+      color:#3a63f3
     }
 
     .subject{

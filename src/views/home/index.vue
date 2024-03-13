@@ -34,7 +34,7 @@
                 
                 <div class="homeAvatar">
                     <el-button plain  @click="outerVisible = true" class="avatarOpen">
-                        <img src="@/assets/avatar.jpeg" alt="">
+                        <img :src="userInfoForm?.avatar" alt="">
                     </el-button>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                         头像
                     </td>
                     <td class="td">
-                        <img class="homeUserInfoAvatar" src="@/assets/avatar.jpeg" alt="">
+                        <img class="homeUserInfoAvatar" :src="userInfoForm?.avatar" alt="">
                     </td>
                     <td class="td">
                         <el-button>选择文件</el-button>
@@ -123,7 +123,7 @@
                         {{ userInfoForm.email }}
                     </td>
                     <td class="td">
-                        <el-button @click="()=>{innerVisible=true;modifyUserInfoStatus=2}">修改</el-button>
+                        <el-button @click="()=>{innerVisible=true;modifyUserInfoStatus=2}">{{ userInfoForm.email?"修改":"绑定" }}</el-button>
                     </td>
                 </tr>
 
@@ -134,24 +134,24 @@
           <div v-if="modifyUserInfoStatus===1">
             <el-form>
                 <el-form-item>
-                    <el-input size="large" placeholder="请输入新名字">
+                    <el-input v-model="newName" size="large" placeholder="请输入新名字">
                     </el-input>
                 </el-form-item>
                 <br>
                 <div style="display: flex;justify-content: right;" >
                     <el-button @click="innerVisible=false">取消</el-button>
-                    <el-button @click="innerVisible=false" type="primary">修改</el-button>
+                    <el-button @click="changeName" type="primary">修改</el-button>
                 </div>
             </el-form>
           </div>
           <div v-else>
             <el-form>
                 <el-form-item>
-                    <el-input size="large" placeholder="请输入邮箱">
+                    <el-input :model="newEmail.email" size="large" placeholder="请输入邮箱">
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-input style="width: 228px;" size="large" placeholder="请输入验证码">
+                    <el-input :model="newEmail.code" style="width: 228px;" size="large" placeholder="请输入验证码">
                     </el-input>
                     <el-button type="primary" style="margin-left:30px;" size="large">获取验证码</el-button>
                 </el-form-item>
@@ -167,14 +167,19 @@
 </template>
   
 <script setup>
-import { onMounted, ref, h } from 'vue'
+import { onMounted, ref, h, shallowReactive } from 'vue'
 import WOW from 'wow.js'
 import { BellFilled } from '@element-plus/icons-vue'
-import { ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import {useUserStore} from '@/stores/userStore.js'
+import { bindEmailAPI, changeAvatarAPI, changeNameAPI } from '@/apis/user'
+
 const outerVisible = ref(false)
 const innerVisible = ref(false)
 //这个是修改什么的状态变量 1代表修改名字，2代表修改邮箱
 const modifyUserInfoStatus=ref(1)
+const userStore=useUserStore()
+
 //学生左边导航选项
 const studentNavList=ref([
     {text:"首页",icon:"iconfont icon-home",to:"/student/home",isHaveNext:false,childrenList:[]},
@@ -212,24 +217,45 @@ const adminNavList=ref([
     {text:"账号审核",icon:"iconfont icon-home",to:"/admin/accountAudit",isHaveNext:false,childrenList:[]},
     {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement",isHaveNext:false,childrenList:[]}
 ])
-const userInfoForm = ref({
-  account:'12345678',
-  name:'lxh0113',
-  avatar:'@/assets/avatar.jpeg',
-  email:'3358654275@qq.com',
-  parents:[
-    {}
-  ]
+const userInfoForm = ref(null)
+const newName=ref("")
+const newEmail=ref({
+    email:'',
+    code:''
 })
-const open = () => {
-    ElMessageBox({
-        title: 'Message',
-        message: h('p', null, [
-        h('span', null, 'Message can be '),
-        h('i', { style: 'color: teal' }, 'VNode'),
-        ]),
-    })
+
+
+const changeName=async()=>{
+    const res=await changeNameAPI(newName.value)
+
+    if(res.data.code==200)
+    {
+        userStore.changeName(newName.value)
+    }
+    else {
+        ElMessage.error("修改失败")
+    }
+
+    innerVisible=false
 }
+
+
+const bindEmail=async()=>{
+    const res=await bindEmailAPI(newEmail.email,newEmail.value.code);
+
+    if(res.data.code===200)
+    {
+        userStore.changeEmail(newEmail.value.email)
+    }
+    else {
+        ElMessage.error("修改失败")
+    }
+}
+
+const changeAvatar=async()=>{
+    // const res=await changeAvatarAPI(userInfoForm.value.account,avatar)
+}
+
 const collapseOperation = () => {
     const windowInfo = {
         width: window.innerWidth,
@@ -241,6 +267,7 @@ const collapseOperation = () => {
     }
     else isCollapse.value=false
 };
+
 const debounce = (fn, delay) => {
     let timer;
     return function() {
@@ -265,12 +292,18 @@ const handleClose = (key, keyPath) => {
 }
   
   
-const leftList=schoolAdminNavList.value
+const leftList=teacherNavList.value
+
+const initData=()=>{
+    userInfoForm.value=userStore.getUserInfo()||{account:'',email:'',avatar:'',name:''}
+}
 
 onMounted(()=>{
     
   new WOW().init()
   collapseOperation()
+
+  initData()
 })
   
 </script>
@@ -474,13 +507,7 @@ onMounted(()=>{
           }
       }
   }
-  // table,tr,td{
-  //     border-bottom: 1px solid #eaecf0;
-  //     // border-collapse: collapse;
-  // }
-  // table{
-      
-  // }
+
   .table{
       border:1px solid #eceffe;
       border-radius: 10px;
