@@ -1,13 +1,13 @@
 <template> 
-    <div>
+  <div>
+  
+  </div>
+</template>
    
-    </div>
-   </template>
-   
-   <script setup>
-   import axios from 'axios'
-   
-   import Mock from 'mockjs'
+<script setup>
+  import axios from 'axios'
+  
+  import Mock from 'mockjs'
   var Random = Mock.Random;
   Random.natural()
   var data = Mock.mock('test/data', 'get', {
@@ -40,8 +40,8 @@
   }
   getData()
    
-   </script>
+</script>
    
-  <style scoped>
-   
-  </style>
+<style scoped>
+  
+</style>
