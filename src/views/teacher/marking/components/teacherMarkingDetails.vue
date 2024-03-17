@@ -19,17 +19,10 @@
         <div>
           <el-button style="border-radius: 50%;width: 30px;height: 30px;" :icon="ArrowLeft">
           </el-button>
-
           <el-button style="margin-left: 30px;border-radius: 50%;width: 30px;height: 30px;" :icon="ArrowRight">
           </el-button>
         </div>
-
       </div>
-
-      <!-- <div class="name">xx市第一次模拟试题</div>
-      <div class="content">
-        
-      </div> -->
     </div>
     <div class="center">
       <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;" ></el-select>
@@ -39,42 +32,41 @@
     <div class="bottom">
       <table>
         <thead>
-          <tr>
+          <tr class="fontWeight">
             <td>学号</td>
             <td>姓名</td>
             <td>分数</td>
-            <td>评语</td>
+            <td class="width1">评语</td>
             <td>批阅状态</td>
-            <td>时间</td>
-            <td>操作</td>
+            <td class="width1">操作</td>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>20041524</td>
-            <td>lxh</td>
-            <td class="score">85</td>
-            <td>出雕塑品和via成都v和比赛于不是阿凡达和</td>
-            <td>已批阅</td>
-            <td>2024-1-4 12：12</td>
-            <td>
-              <span>批阅</span>
-              <span>查看</span>
-            </td>
-          </tr>
+          <div  v-for="item in studentList" :key="item">
+            <tr v-if="item.state==true">
+              <td>{{ item.studentNumber }}</td>
+              <td>{{ item.name }}</td>
+              <td class="score">{{ item.score }}</td>
+              <td class="width1">{{ item.comment }}</td>
+              <td>已批阅</td>
+              <td class="width1">
+                <span>批阅</span>
+                <span>查看</span>
+              </td>
+            </tr>
 
-          <tr>
-            <td>20041524</td>
-            <td>lxh</td>
-            <td class="score">---</td>
-            <td>暂无</td>
-            <td>正在批阅</td>
-            <td>---------</td>
-            <td>
-              <span>批阅</span>
-              <span>查看</span>
-            </td>
-          </tr>
+            <tr v-if="item.state==false">
+              <td>{{ item.studentNumber }}</td>
+              <td>{{ item.name }}</td>
+              <td>---</td>
+              <td  class="width1">暂无</td>
+              <td >正在批阅</td>
+              <td  class="width1">
+                <span>批阅</span>
+                <span>查看</span>
+              </td>
+            </tr>
+          </div>
         </tbody>
       </table>
     </div>
@@ -82,8 +74,27 @@
 </template>
 
 <script setup>
-import { ArrowLeft,ArrowRight } from '@element-plus/icons-vue';
+  import { ArrowLeft,ArrowRight } from '@element-plus/icons-vue';
+  import { useRoute,useRouter } from "vue-router"
+  import { examPaperGetAllEP } from '../../../../mock/teacher/marking.js';
+  import axios from 'axios'
 
+  const Router=useRouter()
+  const route = useRoute();
+
+  const studentList=ref([])
+  onMounted(async()=>{
+      console.log(route.params.id)
+      //获取相关试卷的对应学生
+      axios.get('/examPaper/getAllEP').then(res => {
+            console.log(res.data)
+            studentList.value=res.data.data
+            console.log(studentList.value)
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+  })
 
 </script>
 
@@ -134,6 +145,11 @@ import { ArrowLeft,ArrowRight } from '@element-plus/icons-vue';
       // background-color: #3a63f3;
       width: 100%;
       font-size: 16px;
+
+      .fontWeight{
+        font-weight: 600;
+      }
+
       tr{
         display: flex;
         width: 100%;
@@ -154,9 +170,14 @@ import { ArrowLeft,ArrowRight } from '@element-plus/icons-vue';
           font-size: 18px;
         }
 
-        td:nth-child(7){
+        .width1{
+          flex: 1.5;
+        }
+
+        td:nth-child(6){
           display: flex;
           justify-content: space-evenly;
+          cursor: pointer;
 
           span:nth-child(1){
             color:#3a63f3;

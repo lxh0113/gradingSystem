@@ -10,7 +10,7 @@
           <span style="margin-left: 10px;">软件一班</span>
         </div>
         <el-scrollbar height="600px">
-          <router-link v-for="(item,index) in 60" :to="'/teacher/management/1/'+index"  class="li">
+          <router-link v-for="(item,index) in 60" :key="item" :to="'/teacher/management/1/'+index"  class="li">
             <el-icon style="margin-left:10px;color:#3a63f3"><Avatar /></el-icon>
             <span style="margin-left: 10px;">李泽言</span>
           </router-link>

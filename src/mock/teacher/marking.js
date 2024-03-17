@@ -7,9 +7,11 @@ export var examPaperGetAllE = Mock.mock('/examPaper/getAllE', 'get', {
     success: true,
     'data|3-15': [{
         'id': '@natural(1, 100)',
-        'title': '@csentence(3, 5)',
+        'title': '@ctitle(3, 5)',
         'score': '@natural(0, 1010)',
-        'date': '@datetime("yy-MM-dd a HH:mm:ss")',
+        'date': function() {
+            return Mock.mock('@datetime("yyyy-MM-dd HH:mm", "now")');
+        },
         'path': Random.image('200x100', '#894FC4', '#FFF', 'png', '!'),
         'amount': {
             'total': '@natural(10, 200)',
@@ -20,3 +22,22 @@ export var examPaperGetAllE = Mock.mock('/examPaper/getAllE', 'get', {
     }]
 })
 
+
+export var examPaperGetAllEP = Mock.mock('/examPaper/getAllEP', 'get', {
+    success: true,
+    'data|4-15': [{
+        'id': '@natural(1, 100)',
+        'name': '@cname()',
+        'studentNumber': '@natural(1,100)',
+        'path': Random.dataImage("200x100", "Hello Mock.js!"),
+        'score': '@natural(0, 100)',
+        'comment': '@csentence(5,20)',
+        'state': '@boolean',
+        'pages': {
+            'id': '@natural(1, 100)',
+            'pageNumber': '@natural(1, 10)',
+            'content': '@cparagraph',
+            'path': Random.dataImage("200x200", "Hello Mock.js!"),
+        }    
+    }]
+})
