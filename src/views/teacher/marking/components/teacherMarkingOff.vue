@@ -5,7 +5,7 @@
         <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;margin-left:30px;" ></el-select>
       </div>
       <div class="details">
-        <div class="paper" v-for="item in 5" @click="()=>$router.push('/teacher/marking/1')">
+        <div class="paper" v-for="item in 5" :key="item" @click="()=>$router.push('/teacher/marking/1')">
           <div class="top">
               <div>
                   <div class="title">
@@ -51,85 +51,85 @@ const route=useRoute()
 </script>
 
 <style lang="scss" scoped>
-.bigBox{
-    margin-top:20px;
+    .bigBox{
+        margin-top:20px;
 
-    .conditionSearch{
-        color:#3A63F3;
-        display: flex;
+        .conditionSearch{
+            color:#3A63F3;
+            display: flex;
+        }
+
+    .details {
+        // background-color: pink;
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(480px,750px));
+        gap:20px;
+    
+        // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
     }
 
-  .details {
-    // background-color: pink;
-    margin-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(480px,750px));
-    gap:20px;
-   
-    // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
-}
-
-.paper {
-  background-color: #ebeffe;
-  flex: 1;
-//   min-width: 600px;
-//   max-width: 770px;
-  height: 220px;
-  margin-bottom: 20px;
-  border-radius: 20px;
-  box-sizing: border-box;
-  padding:20px;
-  margin-right: 20px;
-  transition: all .5s;
+    .paper {
+        background-color: #ebeffe;
+        flex: 1;
+        //   min-width: 600px;
+        //   max-width: 770px;
+        height: 220px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+        box-sizing: border-box;
+        padding:20px;
+        margin-right: 20px;
+        transition: all .5s;
 
 
-  .top{
-      display: flex;
-      justify-content: space-between;
-      div{
-          display: flex;
-      }
-      .title,.subject{
-          font-weight: bold;
-          color:#3A63F3;
-          font-size:20px;
-      }
-      .subject{
-          margin-left:40px;
-      }
-      .operation{
-          font-weight: bold;
-          margin-right: 20px;
-          font-size: 18px;
-      }
-  }
-  .content{
-      .text{
-          line-height: 80px;
-      }
-      .view{
-          line-height: 50px;
-          font-weight: bold;
-      }
-  }
-  .bottom{
-      display: flex;
-      justify-content: space-between;
-      margin-right: 30px;
-      font-size: 18px;
-      line-height: 30px;
-      color:#9e8b8b;
-      .time{
-          font-size: 16px;
-      }
-  }
-  
-  }
+        .top{
+            display: flex;
+            justify-content: space-between;
+            div{
+                display: flex;
+            }
+            .title,.subject{
+                font-weight: bold;
+                color:#3A63F3;
+                font-size:20px;
+            }
+            .subject{
+                margin-left:40px;
+            }
+            .operation{
+                font-weight: bold;
+                margin-right: 20px;
+                font-size: 18px;
+            }
+        }
+        .content{
+            .text{
+                line-height: 80px;
+            }
+            .view{
+                line-height: 50px;
+                font-weight: bold;
+            }
+        }
+        .bottom{
+            display: flex;
+            justify-content: space-between;
+            margin-right: 30px;
+            font-size: 18px;
+            line-height: 30px;
+            color:#9e8b8b;
+            .time{
+                font-size: 16px;
+            }
+        }
+        
+        }
 
-  .page{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-}
+        .page{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
 </style>

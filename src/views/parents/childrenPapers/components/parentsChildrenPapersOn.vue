@@ -5,7 +5,7 @@
         <el-input style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
       </div>
       <div class="details">
-        <div class="paper" v-for="item in 5">
+        <div class="paper" v-for="item in 5" :key="item">
           <div class="subject">科目：语文</div>
           <div class="correctors">批改人：xxx老师</div>
           <div class="text">您的试卷正在批改中，请耐心等待！</div>

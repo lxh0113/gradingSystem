@@ -217,6 +217,10 @@ const adminNavList=ref([
     {text:"账号审核",icon:"iconfont icon-home",to:"/admin/accountAudit",isHaveNext:false,childrenList:[]},
     {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement",isHaveNext:false,childrenList:[]}
 ])
+
+const leftList=teacherNavList.value
+
+
 const userInfoForm = ref(null)
 const newName=ref("")
 const newEmail=ref({
@@ -292,7 +296,11 @@ const handleClose = (key, keyPath) => {
 }
   
   
+<<<<<<< HEAD
 const leftList=parentsNavList.value
+=======
+
+>>>>>>> fa1c4f3925a79eeb542c415a1e4aab5fa3a322c9
 
 const initData=()=>{
     userInfoForm.value=userStore.getUserInfo()||{account:'',email:'',avatar:'',name:''}
