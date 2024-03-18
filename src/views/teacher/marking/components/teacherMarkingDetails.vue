@@ -42,33 +42,6 @@
           </tr>
         </thead>
         <tbody>
-<<<<<<< HEAD
-          <tr>
-            <td>20041524</td>
-            <td>lxh</td>
-            <td class="score">85</td>
-            <td>出雕塑品和via成都v和比赛于不是阿凡达和</td>
-            <td>已批阅</td>
-            <td>2024-1-4 12：12</td>
-            <td>
-              <span @click="isOpenNormal = !isOpenNormal">批阅</span>
-              <span>查看</span>
-            </td>
-          </tr>
-
-          <tr>
-            <td>20041524</td>
-            <td>lxh</td>
-            <td class="score">---</td>
-            <td>暂无</td>
-            <td>正在批阅</td>
-            <td>---------</td>
-            <td>
-              <span @click="isOpenNormal = !isOpenNormal">批阅</span>
-              <span>查看</span>
-            </td>
-          </tr>
-=======
           <div  v-for="item in studentList" :key="item">
             <tr v-if="item.state==true">
               <td>{{ item.studentNumber }}</td>
@@ -89,12 +62,11 @@
               <td  class="width1">暂无</td>
               <td >正在批阅</td>
               <td  class="width1">
-                <span>批阅</span>
+                <span @click="isOpenNormal = !isOpenNormal">批阅</span>
                 <span>查看</span>
               </td>
             </tr>
           </div>
->>>>>>> fa1c4f3925a79eeb542c415a1e4aab5fa3a322c9
         </tbody>
       </table>
     </div>
@@ -165,31 +137,21 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
 import { ArrowLeft,ArrowRight } from '@element-plus/icons-vue';
 import { ref } from 'vue'
+import { useRoute,useRouter } from "vue-router"
+import { examPaperGetAllEP } from '../../../../mock/teacher/marking.js';
+import axios from 'axios'
 
 const isOpenNormal = ref(false);
 const showImagePreview=ref(false)
 
+const Router=useRouter()
+const route = useRoute();
+
 let url = ref(['@/assets/testPaper.png']);
 
- 
-const showViewer = ref(false);
-
-const closePreview=()=>{
-  showImagePreview.value=false
-}
-=======
-  import { ArrowLeft,ArrowRight } from '@element-plus/icons-vue';
-  import { useRoute,useRouter } from "vue-router"
-  import { examPaperGetAllEP } from '../../../../mock/teacher/marking.js';
-  import axios from 'axios'
-
-  const Router=useRouter()
-  const route = useRoute();
-
-  const studentList=ref([])
+const studentList=ref([])
   onMounted(async()=>{
       console.log(route.params.id)
       //获取相关试卷的对应学生
@@ -201,8 +163,13 @@ const closePreview=()=>{
         .catch((err) => {
             console.log(err);
         });
-  })
->>>>>>> fa1c4f3925a79eeb542c415a1e4aab5fa3a322c9
+})
+
+const showViewer = ref(false);
+
+const closePreview=()=>{
+  showImagePreview.value=false
+}
 
 </script>
 
