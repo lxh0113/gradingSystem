@@ -78,7 +78,7 @@ const signUpMode=ref(false)
 const userStore=useUserStore();
 
 const loginData=ref({
-  account:'',password:''
+  account:'18734848',password:'123'
 })
 
 const registerData=ref({
@@ -134,8 +134,9 @@ const login=async()=>{
   console.log(res)
   if(res.data.code==200)
   {
-    userStore.setUserInfo(res.data.data,res.headers.getAuthorization,res.headers.getAuthorization-Refresh)
-    localStorage.setItem('Authorization',res.headers.getAuthorization)
+    console.log(res.headers)
+    userStore.setUserInfo(res.data.data,res.headers.Authorization,res.headers['Authorization-Refresh'])
+    // localStorage.setItem('Authorization',res.headers.getAuthorization)
     ElMessage.success(res.data.message)
     // setTimeout(()=>{
     //   location.href='http://192.168.50.114:5173/'

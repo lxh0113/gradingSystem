@@ -76,6 +76,14 @@ import { Search } from '@element-plus/icons-vue';
     box-sizing: border-box;
     padding:20px;
     margin-right: 20px;
+    
+
+    transition: all .5s;
+
+    &:hover{
+      transform: translateY(-5px);
+      box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    }
 
     
 

@@ -9,19 +9,22 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 // import ElementPlus from 'unplugin-element-plus/vite'
 
+import { DevUiResolver } from 'unplugin-vue-components/resolvers'
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
-      resolvers: [ElementPlusResolver()],
-      imports: ['vue', 'vue-router']
+      resolvers: [ElementPlusResolver({importStyle: 'sass'})],
+      imports: ['vue', 'vue-router'],
+      importStyle: 'sass'
     }),
     Components({
-      resolvers: [ElementPlusResolver({
-        importStyle:"sass"
-      })]
+      resolvers: [
+        ElementPlusResolver({importStyle: 'sass'}),
+        DevUiResolver()]
     }),
     // ElementPlus({
     //   useSource:true,

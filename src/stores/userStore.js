@@ -1,16 +1,17 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useUserStore = defineStore('userStore', () => {
+export const useUserStore = defineStore('user', () => {
     
-    // const 
-
-    const user=ref(null)
+    const user=ref({})
 
     const setUserInfo=(user,shortToken,refreshToken)=>{
+        console.log(user)
+        console.log(shortToken)
+        console.log(refreshToken)
         user.value=user;
-        user.value.token.shortToken;
-        user.value.token.refreshToken;
+        // user.value.token=shortToken;
+        // user.value.token=refreshToken;
     }
 
     const getUserInfo=()=>{
@@ -36,6 +37,7 @@ export const useUserStore = defineStore('userStore', () => {
 
 
     return {
+        user,
         setUserInfo,
         getUserInfo,
         changeName,
@@ -44,9 +46,5 @@ export const useUserStore = defineStore('userStore', () => {
         clearInfoAndToken
     }
 },{
-    persist:{
-        enabled:true,
-        key:"user",
-        // storage:sessionStorage,
-    }
+    persist:true
 })

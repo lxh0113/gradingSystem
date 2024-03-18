@@ -76,24 +76,36 @@
     <table>
       <tbody>
         <tr>
+          <td>
+            考试名称
+          </td>
+          <td>
+            示例：xx学校第一次月考
+          </td>
+          <td>
+            <el-input v-model="uploadPaper.title" size="large" style="width: 200px;height: 40px;" placeholder="请输入标题"></el-input>
+          </td>
+        </tr>
+        <!-- <tr>
+          <td>
+            考试对象
+          </td>
+          <td></td>
+          <td>
+            <el-input size="large" style="width: 300px;height: 40px;" placeholder="请输入标题"></el-input>
+          </td>
+        </tr> -->
+        <tr>
           <td>空白试卷</td>
           <td>
             示例
           </td>
           <td>
-            <el-upload ref="upload" class="upload-demo" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+            <el-upload ref="blankPapers" :on-change="changeBlankPapers" class="upload-demo" action="#"
               :limit="1" :on-exceed="handleExceed" :auto-upload="false">
               <template v-slot:trigger>
                 <el-button type="primary">选择文件</el-button>
               </template>
-              <!-- <el-button class="ml-3" type="success" @click="submitUpload">
-                upload to server
-              </el-button> -->
-              <!-- <template v-slot:tip>
-                <div class="el-upload__tip text-red">
-                  limit 1 file, new file will cover the old file
-                </div>
-              </template> -->
             </el-upload>
           </td>
         </tr>
@@ -101,19 +113,11 @@
           <td>评分标准</td>
           <td>示例</td>
           <td>
-            <el-upload ref="upload" class="upload-demo" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+            <el-upload ref="gradingCriteria" :on-change="changeGradingCriteria" class="upload-demo" action="#"
               :limit="1" :on-exceed="handleExceed" :auto-upload="false">
               <template v-slot:trigger>
                 <el-button type="primary">选择文件</el-button>
               </template>
-              <!-- <el-button class="ml-3" type="success" @click="submitUpload">
-                upload to server
-              </el-button> -->
-              <!-- <template v-slot:tip>
-                <div class="el-upload__tip text-red">
-                  limit 1 file, new file will cover the old file
-                </div>
-              </template> -->
             </el-upload>
           </td>
         </tr>
@@ -123,7 +127,7 @@
           </td>
           <td>示例</td>
           <td>
-            <el-upload ref="upload" class="upload-demo" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+            <el-upload ref="zip" class="upload-demo" :on-change="changeZip" action="#"
               :limit="1" :on-exceed="handleExceed" :auto-upload="false">
               <template v-slot:trigger>
                 <el-button type="primary">选择文件</el-button>
@@ -138,7 +142,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">
+        <el-button @click="submitUpload" type="primary">
           确认
         </el-button>
       </div>
@@ -148,9 +152,19 @@
 
 <script setup>
 import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
-import { genFileId } from 'element-plus'
+import { ElMessage, genFileId } from 'element-plus'
+import { getMaxMinAveAPI } from '@/apis/exam.js'
 
-const upload = ref(null)
+const uploadPaper=ref({
+  title:'',
+  blankPapers:null,
+  gradingCriteria:null,
+  zip:null
+})
+
+const blankPapers = ref(null)
+const gradingCriteria=ref(null)
+const zip=ref(null)
 
 let internalInstance = getCurrentInstance();
 let echarts = internalInstance.appContext.config.globalProperties.$echarts
@@ -239,14 +253,66 @@ const handleExceed = (files) => {
   upload.value.handleStart(file)
 }
 
+const changeBlankPapers=(uploadFile)=>{
+  uploadPaper.value.blankPapers=uploadFile
+  console.log(uploadFile)
+}
+
+const changeGradingCriteria=(uploadFile)=>{
+  uploadPaper.value.gradingCriteria=uploadFile
+  console.log(uploadFile)
+}
+
+const changeZip=(uploadFile)=>{
+  uploadPaper.value.zip=uploadFile
+  console.log(uploadFile)
+}
+
 const submitUpload = () => {
-  upload.value.submit()
+
+  if(uploadPaper.value.title.trim()==='')
+  {
+    ElMessage.error("请填写标题")
+    return;
+  }
+  console.log(blankPapers)
+  if(uploadPaper.value.blankPapers===null)
+  {
+    ElMessage.error("请上传空白试卷")
+    return;
+  }
+  if(uploadPaper.value.gradingCriteria===null)
+  {
+    ElMessage.error("请上传评分标准")
+    return
+  }
+  if(uploadPaper.value.zip.value===null)
+  {
+    ElMessage.error("请上传压缩包")
+    return ;
+  }
+
+  //发送请求过去
+
+  dialogVisible.value = false
 }
 
 
+const getClass=async()=>{
+  const res=await getMaxMinAveAPI(1);
+  console.log(res)
+  if(res.data.code===200)
+  {
+    ElMessage.success("获取成功")
+  }
+  else {
+    ElMessage.error("获取失败")
+  }
+}
 
 onMounted(()=>{
   setChart()
+  // getClass();
 })
 </script>
 
@@ -521,7 +587,6 @@ table{
           // background-color: #3A63F3;
           td{
               flex:1;
-              
           }
           td:nth-child(1),
           td:nth-child(2){
@@ -532,7 +597,9 @@ table{
             // background-color: #3a63f3;
               line-height: normal;
               display:flex;
-              justify-content: center;
+              justify-content: left;
+              overflow: hidden;
+              max-width: 200px;
               // justify-content: right;
               align-items: center;
               // background-color: palegoldenrod;

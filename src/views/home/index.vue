@@ -236,7 +236,7 @@ const changeName=async()=>{
         ElMessage.error("修改失败")
     }
 
-    innerVisible=false
+    innerVisible.value=false
 }
 
 
@@ -292,7 +292,7 @@ const handleClose = (key, keyPath) => {
 }
   
   
-const leftList=teacherNavList.value
+const leftList=parentsNavList.value
 
 const initData=()=>{
     userInfoForm.value=userStore.getUserInfo()||{account:'',email:'',avatar:'',name:''}
