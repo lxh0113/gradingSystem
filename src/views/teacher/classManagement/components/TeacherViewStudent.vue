@@ -59,7 +59,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in 4">
+                            <tr v-for="item in 4" :key="item">
                                 <td>
                                     第一次月考
                                 </td>
@@ -81,62 +81,63 @@
 </template>
 
 <script setup>
-import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
+    import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
 
-const tags = ref([
-  { name: '大大咧咧'},
-  { name: '大大咧咧'},
-  { name: '大大咧咧'}
-])
+    const tags = ref([
+        { name: '大大咧咧'},
+        { name: '大大咧咧'},
+        { name: '大大咧咧'}
+    ])
 
-let internalInstance = getCurrentInstance();
-let echarts = internalInstance.appContext.config.globalProperties.$echarts
+    let internalInstance = getCurrentInstance();
+    let echarts = internalInstance.appContext.config.globalProperties.$echarts
 
 
-const setChart=()=>{
-  const dom1 = document.querySelector('.chart');
-  const myChart1 = echarts.init(dom1);
+    const setChart=()=>{
+    const dom1 = document.querySelector('.chart');
+    const myChart1 = echarts.init(dom1);
 
-  // 指定图表的配置项和数据
-  var option1 = {
-    title: {
-      text: '班级历史平均分成绩分布'
-    },
-    legend:{
+    // 指定图表的配置项和数据
+    var option1 = {
+        title: {
+        text: '班级历史平均分成绩分布'
+        },
+        legend:{
 
-    },
-    color:['#748eed','#91cc75','#fac858'],
-    tooltip: {},
-    xAxis: {
-      data: ['第一次月考', '第二次月考', '第三次月考', '第四次月考', '第五次月考', '第六次月考']
-    },
-    yAxis: {},
-    series: [
-      {
-        name: 'lxh',
-        type: 'line',
-        data: [60, 70, 67, 80, 77, 76],
-        label: {
-        show: true,
-        position: 'top',
-        textStyle: {
-          fontSize: 14
+        },
+        color:['#748eed','#91cc75','#fac858'],
+        tooltip: {},
+        xAxis: {
+        data: ['第一次月考', '第二次月考', '第三次月考', '第四次月考', '第五次月考', '第六次月考']
+        },
+        yAxis: {},
+        series: [
+        {
+            name: 'lxh',
+            type: 'line',
+            data: [60, 70, 67, 80, 77, 76],
+            label: {
+            show: true,
+            position: 'top',
+            textStyle: {
+            fontSize: 14
+            }
+            }
         }
-        }
-      }
-    ]
-  };
+        ]
+    };
 
-  // 使用刚指定的配置项和数据显示图表。
-  myChart1.setOption(option1);
+    // 使用刚指定的配置项和数据显示图表。
+    myChart1.setOption(option1);
 
-  window.addEventListener('resize',()=>{
-    myChart1.resize()
-  })
+    window.addEventListener('resize',()=>{
+        myChart1.resize()
+    })
 
-  onUnmounted(() => {
-      myChart1.dispose();
-  });
+    onUnmounted( ()=>{
+        myChart1.dispose();
+    })
+
 }
 
 

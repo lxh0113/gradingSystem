@@ -95,7 +95,7 @@
         阅卷
       </div>
       <el-scrollbar>
-        <div class="questions" v-for="item in 4">
+        <div class="questions" :key="item" v-for="item in 4">
           <div class="question">
           1．下列哪个语句在Python中是非法的？
         </div>
