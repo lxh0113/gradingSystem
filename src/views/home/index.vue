@@ -49,9 +49,9 @@
                                 &nbsp;&nbsp;&nbsp;
                                 <span v-if="!isCollapse">{{ item.text }}</span>
                             </template>
-                        <!-- <el-menu-item-group> -->
-                            <el-menu-item v-for="i in item.childrenList" :index="item.to+'/'+i.to" :key="i">
-                                <span>{{ i.text  }}</span>
+                        <!-- <el-menu-item-group>  -->
+                            <el-menu-item v-for="i in item.childrenList" :index="item.to +'/'+i.id" :key="i">
+                                <span>{{ i.name }}</span>
                             </el-menu-item>
                         <!-- </el-menu-item-group> -->
                         </el-sub-menu>
@@ -172,13 +172,19 @@ import WOW from 'wow.js'
 import { BellFilled } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {useUserStore} from '@/stores/userStore.js'
+import axios from 'axios'
 import { bindEmailAPI, changeAvatarAPI, changeNameAPI } from '@/apis/user'
+import {userISC} from '@/mock/home/index.js'
+// import { userISC } from '..././mock/home/index.js';
+import { examPaperGetAllEP } from '@/mock/teacher/marking.js';
 
 const outerVisible = ref(false)
 const innerVisible = ref(false)
 //这个是修改什么的状态变量 1代表修改名字，2代表修改邮箱
 const modifyUserInfoStatus=ref(1)
 const userStore=useUserStore()
+var teacherChildrenList=ref([])
+var studentList=ref([])
 
 //学生左边导航选项
 const studentNavList=ref([
@@ -194,9 +200,13 @@ const teacherNavList=ref([
     {text:"首页",icon:"iconfont icon-home",to:"/teacher/home",isHaveNext:false,childrenList:[]},
     {text:"阅卷",icon:"iconfont icon-yuejuanmokuai",to:"/teacher/marking",isHaveNext:false,childrenList:[]},
     {text:"考情分析",icon:"iconfont icon-analysis",to:"/teacher/analysis",isHaveNext:false,childrenList:[]},
-    {text:"班级管理",icon:"iconfont icon-user-management",to:"/teacher/management",isHaveNext:true,childrenList:[
-        {text:"软件一班",to:"1"},{text:"软件二班",to:"2"},{text:"软件三班",to:"3"},{text:"软件四班",to:"4"}
-    ]}
+    {text:"班级管理",icon:"iconfont icon-user-management",to:"/teacher/management",isHaveNext:true,get childrenList() {
+            return teacherChildrenList.value;
+        }}
+    // [
+    //     {text:"软件一班",to:"1"},{text:"软件二班",to:"2"},{text:"软件三班",to:"3"},{text:"软件四班",to:"4"}
+    // ]
+    
 ])
 
 const parentsNavList=ref([
@@ -219,7 +229,10 @@ const adminNavList=ref([
 ])
 
 const leftList=teacherNavList.value
+<<<<<<< HEAD
 
+=======
+>>>>>>> 648803296dbd6f70c0bbdb02f7feddd700c21f3e
 
 const userInfoForm = ref(null)
 const newName=ref("")
@@ -299,14 +312,28 @@ const initData=()=>{
     userInfoForm.value=userStore.getUserInfo()||{account:'',email:'',avatar:'',name:''}
 }
 
-onMounted(()=>{
-    
-  new WOW().init()
-  collapseOperation()
+onMounted(async()=>{
+    new WOW().init()
+    collapseOperation()
 
-  initData()
+    initData()
+
+    //判断是否是教师端，需要获取全部班级，用于点击班级管理
+    for(let i=0;i<leftList.length;i++){
+        console.log(leftList[i])
+        //说明是教师端，发送请求获取班级
+        if(leftList[i].isHaveNext===true){
+            axios.get('/user/ISC').then(res => {
+                console.log(res.data)
+                teacherChildrenList.value=res.data.data
+                console.log(teacherChildrenList.value)
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }
+    }
 })
-  
 </script>
   
 <style lang="scss">

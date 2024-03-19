@@ -10,9 +10,9 @@
           <span style="margin-left: 10px;">软件一班</span>
         </div>
         <el-scrollbar height="600px">
-          <router-link v-for="(item,index) in 60" :key="item" :to="'/teacher/management/1/'+index"  class="li">
+          <router-link v-for="(item,index) in studentList" :key="item" :to="'/teacher/management/1/'+index"  class="li">
             <el-icon style="margin-left:10px;color:#3a63f3"><Avatar /></el-icon>
-            <span style="margin-left: 10px;">李泽言</span>
+            <span style="margin-left: 10px;">{{ item.name }}</span>
           </router-link>
         </el-scrollbar>
       </div>
@@ -24,16 +24,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'; // Import ref from Vue
-import { useRoute,useRouter } from 'vue-router';
+  import { onMounted,ref } from 'vue'; // Import ref from Vue
+  import { useRoute,useRouter } from 'vue-router';
+  import axios from 'axios'
+  import {studentGetStudents} from '@/mock/teacher/classManagement.js'
 
-const router=useRouter()
-const route=useRoute()
-const listData = ref([]);
+  const router=useRouter()
+  const route=useRoute()
 
-for (let i = 0; i < 60; i++) {
-  listData.value.push({ name: '李泽言' });
-}
+  const studentList=ref([])
+  onMounted(async ()=> {
+      //获取班级学生
+      axios.get('/student/getStudents').then(res => {
+          console.log(res.data)
+          studentList.value=res.data.data
+          console.log(studentList.value)
+      })
+      .catch((err) => {
+          console.log(err);
+      });
+      
+  });
+
 </script>
 
 
