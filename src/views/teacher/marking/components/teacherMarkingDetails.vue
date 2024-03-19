@@ -62,7 +62,7 @@
               <td  class="width1">暂无</td>
               <td >正在批阅</td>
               <td  class="width1">
-                <span @click="isOpenNormal = !isOpenNormal">批阅</span>
+                <span @click="toPaper(1)">批阅</span>
                 <span>查看</span>
               </td>
             </tr>
@@ -72,84 +72,16 @@
     </div>
   </div>
 
-  <d-fullscreen class="fullScreen" v-model="isOpenNormal" :z-index="20">
-    <div v-if="isOpenNormal" class="left">
-          <el-scrollbar style="display: flex;max-width:1000px;justify-content: center;align-items: center;" height="800px">
-            
-            <img @click="()=>showImagePreview=true" class="imagePapers" src="@/assets/testPaper.png" alt="">
-            <!-- <el-image
-              :src="url"
-              :zoom-rate="1.2"
-              :initial-index="4"
-              class="originalImg"
-              @click="()=>{showViewer = true}"
-            />
-            <div class="demo-image__preview">
-                <el-image-viewer hide-on-click-modal @close="()=>{showViewer = false}" v-if="showViewer" :url-list="previewList" />
-            </div> -->
-          </el-scrollbar>
-    </div>
-
-    <div class="right" v-if="isOpenNormal">
-      <div class="title">
-        阅卷
-      </div>
-      <el-scrollbar>
-        <div class="questions" v-for="item in 4">
-          <div class="question">
-          1．下列哪个语句在Python中是非法的？
-        </div>
-        <div class="options">
-          <div class="option">
-            A、x = y = z = 1"
-          </div>
-          <div class="option">
-            B、x = (y = z + 1)
-          </div>
-          <div class="option">
-            C、x, y = y, x
-          </div>
-          <div class="option">
-            D、x += y x=x+y
-          </div>
-        </div>
-        <div class="details">
-          <div class="answer">
-            答案：B
-          </div>
-          <div class="score">
-            分值：2
-          </div>
-        </div>
-        <div class="analysis">
-          本题考查Python的语法规则。选项B中的赋值语句是不合法的，因为Python不允许在赋值表达式中嵌套赋值。
-        </div>
-        <hr>
-        </div>
-      </el-scrollbar>
-    </div>
-    <!-- <div class="demo-fullscreen-container">
-      <d-button @click="isOpenNormal = !isOpenNormal">返回</d-button>
-    </div> -->
-  </d-fullscreen>
-
-  <el-image-viewer v-if="showImagePreview" :url-list="url" initial-index="1" hide-on-click-modal @close="closePreview" style="z-index: 3000"/>
 </template>
 
 <script setup>
-import { ArrowLeft,ArrowRight } from '@element-plus/icons-vue';
 import { ref } from 'vue'
 import { useRoute,useRouter } from "vue-router"
 import { examPaperGetAllEP } from '../../../../mock/teacher/marking.js';
 import axios from 'axios'
 
-const isOpenNormal = ref(false);
-const showImagePreview=ref(false)
-
-const Router=useRouter()
+const router=useRouter();
 const route = useRoute();
-
-let url = ref(['@/assets/testPaper.png']);
 
 const studentList=ref([])
   onMounted(async()=>{
@@ -165,10 +97,8 @@ const studentList=ref([])
         });
 })
 
-const showViewer = ref(false);
-
-const closePreview=()=>{
-  showImagePreview.value=false
+const toPaper=(id)=>{
+  router.push('/paper/'+id)
 }
 
 </script>
@@ -277,95 +207,6 @@ const closePreview=()=>{
 .demo-image__error .el-image {
   width: 100%;
   height: 200px;
-}
-
-.fullScreen{
-
-  display: flex;
-  // position: relative;
-  justify-content: space-between;
-
-  .left{
-    // background-color: antiquewhite;
-    margin-left: 10px;
-    flex:1;
-    min-width: 520px;
-    display: flex;
-    height: 100%;
-    // background-color: #ce6509;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .right{
-    // position:fixed;
-    // background-color: aqua;
-    max-width: 600px;
-    min-width: 420px;
-    padding-left: 20px;
-    padding-right: 10px;
-    
-    box-sizing: border-box;
-
-    .questions{
-      // width: 400px;
-      box-sizing: border-box;
-      margin-right: 20px;
-
-      .title{
-        color: #3a63f3;
-        font-size: 20px;
-        line-height: 60px;
-        // margin-left: 20px;
-      }
-
-      .question{
-        border:1px solid #dcdfe6;
-        padding:10px;
-        border-radius: 10px;
-      }
-
-      .options{
-        display: flex;
-        flex-direction: column;
-
-        .option{
-          padding:10px;
-          background-color: #eceffe;
-          margin-top:10px;
-          border-radius: 10px;
-        }
-      }
-    
-      .details{
-        display: flex;
-        justify-content: space-between;
-        padding:10px;
-        font-weight: bold;
-        font-size: 16px;
-      
-        .answer{
-          color:red;
-        }
-      
-        .score{
-          color:green;
-        }
-      }
-    
-      .analysis{
-        border: 1px solid #3a63f3;
-        padding:10px;
-        border-radius: 10px;
-      }
-    }
-
-  }
-
-  .imagePapers{
-    width: 500px;
-    height: fit-content;
-  }
 }
 
 </style>

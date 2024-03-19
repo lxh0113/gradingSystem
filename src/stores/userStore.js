@@ -1,17 +1,24 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', () => {
     
-    const user=ref({})
+    const user=ref({
+        account:'123',
+        gender:'12'
+    })
 
-    const setUserInfo=(user,shortToken,refreshToken)=>{
-        console.log(user)
-        console.log(shortToken)
-        console.log(refreshToken)
-        user.value=user;
-        // user.value.token=shortToken;
-        // user.value.token=refreshToken;
+    const setUserInfo=(userInfo,shortToken,refreshToken)=>{
+        // console.log(user)
+        // console.log(shortToken)
+        // console.log(refreshToken)
+        user.value=null
+        user.value={
+            ...userInfo,
+            shortToken,
+            refreshToken
+        };
+        console.log(user.value)
     }
 
     const getUserInfo=()=>{
@@ -32,7 +39,11 @@ export const useUserStore = defineStore('user', () => {
 
     const clearInfoAndToken=()=>{
         user.value=null
-        localStorage.clear()
+        // localStorage.clear()
+    }
+
+    const changeToken=()=>{
+        user.value.shortToken=user.value.refreshToken
     }
 
 
@@ -43,7 +54,8 @@ export const useUserStore = defineStore('user', () => {
         changeName,
         changeAvatar,
         changeEmail,
-        clearInfoAndToken
+        clearInfoAndToken,
+        changeToken
     }
 },{
     persist:true

@@ -18,7 +18,29 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {getALLMyPaperAPI} from '@/apis/examPaper.js'
+import { ElMessage } from 'element-plus';
+import {ref,onMounted} from 'vue'
+
+const paperList=ref([])
+
+const getMyPapers=async()=>{
+  const res=await getALLMyPaperAPI();
+  console.log(res)
+  if(res.data.code===200)
+  {
+    paperList.value=res.data.data
+    ElMessage.success("获取成功")
+  }
+  else {
+    ElMessage.error("获取失败")
+  }
+}
+
+onMounted(()=>{
+  getMyPapers()
+})
 
 </script>
 

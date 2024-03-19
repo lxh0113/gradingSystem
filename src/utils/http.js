@@ -3,6 +3,10 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 // import router from '@/router/index.js'
 import {useUserStore} from "@/stores/userStore.js";
+import { useRoute,useRouter } from 'vue-router';
+
+const route=useRoute()
+
 const http = axios.create({
     baseURL: 'http://localhost:8079',
     timeout: 5000
@@ -17,15 +21,15 @@ axios.defaults.withCredentials = true;
 // 拦截器
 
 // axios请求拦截器
-const user=JSON.parse(localStorage.getItem("user"))
+
 
 http.interceptors.request.use(config => {
 
-    // res.header("Access-Control-Allow-Origin", "*");
-
+    const userStore=useUserStore()
+    const user=userStore.getUserInfo()
     if(user!==null){
-        console.log(user.token)
-        config.headers.set("Authorization",user.token.shortToken)
+        // console.log(user.shortToken)
+        config.headers.set("Authorization",user.shortToken)
     }
     return config
 }, e => Promise.reject(e))
@@ -33,6 +37,9 @@ http.interceptors.request.use(config => {
 // axios响应式拦截器
 http.interceptors.response.use(res => res, e => {
     const userStore=useUserStore()
+    const router=useRouter()
+
+
     console.log(e)
     console.log(e.response)
     const status=e.response.status
@@ -46,7 +53,7 @@ http.interceptors.response.use(res => res, e => {
             break
         case 402 :
             userStore.clearInfoAndToken()
-            router.push("/login")
+            router.push('/login')
             break
     }
 
@@ -61,6 +68,7 @@ const resend= (req)=>{
     })
 }
 const refreshToken=()=>{
-    user.token.shortToken=user.token.refreshToken;
+    const userStore=useUserStore()
+    userStore.changeToken()
 }
 export default http

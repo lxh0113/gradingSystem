@@ -16,3 +16,10 @@ export const getALLStudentPaperAPI=(examPaperId)=>{
         }
     })
 }
+
+export const getALLMyPaperAPI=()=>{
+    return http({
+        url:"/examPaper/getMyAllE",
+        method:"GET"
+    })
+}

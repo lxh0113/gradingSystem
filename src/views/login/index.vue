@@ -69,13 +69,18 @@ import { Clock, Lock, Search, Unlock, User } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import {onMounted, ref} from 'vue'
 import WOW from 'wow.js'
-import { useUserStore } from '@/stores/userStore';
+import { useUserStore } from '@/stores/userStore.js';
 import { loginAPI,getCodeAPI,registerAPI,modifyAPI } from '@/apis/login';
+import {useRoute,useRouter} from 'vue-router'
 
 // id 还是邮箱登录 true 是id,false 是邮箱
 const loginOptions=ref(true)
 const signUpMode=ref(false)
+const router=useRouter()
+const route=useRoute()
+
 const userStore=useUserStore();
+
 
 const loginData=ref({
   account:'18734848',password:'123'
@@ -135,12 +140,13 @@ const login=async()=>{
   if(res.data.code==200)
   {
     console.log(res.headers)
-    userStore.setUserInfo(res.data.data,res.headers.Authorization,res.headers['Authorization-Refresh'])
-    // localStorage.setItem('Authorization',res.headers.getAuthorization)
+    
+    userStore.setUserInfo(res.data.data,res.headers.authorization,res.headers['authorization-refresh'])
+
     ElMessage.success(res.data.message)
-    // setTimeout(()=>{
-    //   location.href='http://192.168.50.114:5173/'
-    // },2000)
+    setTimeout(()=>{
+      router.push('/')
+    },2000)
   }
   else{
     ElMessage.error(res.data.message)
@@ -152,10 +158,10 @@ const register=async()=>{
 
   if(res.data.code==200)
   {
-    userStore.setUserInfo(res.data.data)
+    userStore.setUserInfo(res.data.data,res.headers.authorization,res.headers['authorization-refresh'])
     ElMessage.success(res.data.message)
     setTimeout(()=>{
-      location.href='http://192.168.50.114:5173/'
+      router.push('/')
     },2000)
   }
   else {

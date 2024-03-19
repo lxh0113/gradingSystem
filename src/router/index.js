@@ -65,6 +65,9 @@ import AdminAccountManagementExamine from "@/views/admin/accountManagement/compo
 
 import Test from '@/mock/test.vue';
 
+// 公共部分
+import PaperView from '@/views/common/paperView.vue';
+
 
 
 const router = createRouter({
@@ -234,6 +237,10 @@ const router = createRouter({
       path:'/login',
       name:'login',
       component: Login
+    },
+    {
+      path:'/paper/:id',
+      component:PaperView
     },
     {
       path:'/register',
