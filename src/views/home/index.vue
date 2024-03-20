@@ -50,7 +50,7 @@
                                 <span v-if="!isCollapse">{{ item.text }}</span>
                             </template>
                         <!-- <el-menu-item-group>  -->
-                            <el-menu-item v-for="i in item.childrenList" :index="item.to +'/'+i.id" :key="i">
+                            <el-menu-item v-for="i in item.childrenList" :index="item.to +'/'+i.id" :key="i" @click="classOneClick(i.id)">
                                 <span>{{ i.name }}</span>
                             </el-menu-item>
                         <!-- </el-menu-item-group> -->
@@ -169,20 +169,31 @@
 <script setup>
 import { onMounted, ref, h, shallowReactive } from 'vue'
 import WOW from 'wow.js'
+import axios from 'axios'
 import { BellFilled } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+
 import {useUserStore} from '@/stores/userStore.js'
-import axios from 'axios'
+import {useClassStore} from '@/stores/classStore.js'
+import {useClassListStore} from '@/stores/classListStore.js'
+import {useStudentListStore} from '@/stores/studentListStore.js'
+
 import { bindEmailAPI, changeAvatarAPI, changeNameAPI } from '@/apis/user'
+
 import {userISC} from '@/mock/home/index.js'
-// import { userISC } from '..././mock/home/index.js';
 import { examPaperGetAllEP } from '@/mock/teacher/marking.js';
+import {studentGetStudents} from '@/mock/teacher/classManagement.js'
 
 const outerVisible = ref(false)
 const innerVisible = ref(false)
 //这个是修改什么的状态变量 1代表修改名字，2代表修改邮箱
 const modifyUserInfoStatus=ref(1)
+
 const userStore=useUserStore()
+const classStore=useClassStore()
+const classListStore=useClassListStore()
+const studentListStore=useStudentListStore()
+
 var teacherChildrenList=ref([])
 var studentList=ref([])
 
@@ -229,10 +240,6 @@ const adminNavList=ref([
 ])
 
 const leftList=teacherNavList.value
-<<<<<<< HEAD
-
-=======
->>>>>>> 648803296dbd6f70c0bbdb02f7feddd700c21f3e
 
 const userInfoForm = ref(null)
 const newName=ref("")
@@ -327,6 +334,8 @@ onMounted(async()=>{
                 console.log(res.data)
                 teacherChildrenList.value=res.data.data
                 console.log(teacherChildrenList.value)
+                classListStore.classList=res.data.data
+                console.log(classListStore.classList)
             })
             .catch((err) => {
                 console.log(err);
@@ -334,6 +343,26 @@ onMounted(async()=>{
         }
     }
 })
+
+//教师端点击班级事件
+function classOneClick(classId){
+    //获取班级学生
+    axios.get('/student/getStudents').then(res => {
+          console.log(res.data)
+          studentListStore.studentList=res.data.data
+          console.log(studentListStore.studentList)
+      })
+      .catch((err) => {
+          console.log(err);
+      });
+      classListStore.classList.filter(item => {
+        console.log(item)
+        if (item.id == classId) {
+            classStore.classOne=item
+        }
+      });
+      console.log(classStore.classOne)
+}
 </script>
   
 <style lang="scss">

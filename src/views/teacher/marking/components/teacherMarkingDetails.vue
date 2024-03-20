@@ -72,71 +72,7 @@
     </div>
   </div>
 
-<<<<<<< HEAD
-=======
-  <d-fullscreen class="fullScreen" v-model="isOpenNormal" :z-index="20">
-    <div v-if="isOpenNormal" class="left">
-          <el-scrollbar style="display: flex;max-width:1000px;justify-content: center;align-items: center;" height="800px">
-            
-            <img @click="()=>showImagePreview=true" class="imagePapers" src="@/assets/testPaper.png" alt="">
-            <!-- <el-image
-              :src="url"
-              :zoom-rate="1.2"
-              :initial-index="4"
-              class="originalImg"
-              @click="()=>{showViewer = true}"
-            />
-            <div class="demo-image__preview">
-                <el-image-viewer hide-on-click-modal @close="()=>{showViewer = false}" v-if="showViewer" :url-list="previewList" />
-            </div> -->
-          </el-scrollbar>
-    </div>
 
-    <div class="right" v-if="isOpenNormal">
-      <div class="title">
-        阅卷
-      </div>
-      <el-scrollbar>
-        <div class="questions" :key="item" v-for="item in 4">
-          <div class="question">
-          1．下列哪个语句在Python中是非法的？
-        </div>
-        <div class="options">
-          <div class="option">
-            A、x = y = z = 1"
-          </div>
-          <div class="option">
-            B、x = (y = z + 1)
-          </div>
-          <div class="option">
-            C、x, y = y, x
-          </div>
-          <div class="option">
-            D、x += y x=x+y
-          </div>
-        </div>
-        <div class="details">
-          <div class="answer">
-            答案：B
-          </div>
-          <div class="score">
-            分值：2
-          </div>
-        </div>
-        <div class="analysis">
-          本题考查Python的语法规则。选项B中的赋值语句是不合法的，因为Python不允许在赋值表达式中嵌套赋值。
-        </div>
-        <hr>
-        </div>
-      </el-scrollbar>
-    </div>
-    <!-- <div class="demo-fullscreen-container">
-      <d-button @click="isOpenNormal = !isOpenNormal">返回</d-button>
-    </div> -->
-  </d-fullscreen>
-
-  <el-image-viewer v-if="showImagePreview" :url-list="url" initial-index="1" hide-on-click-modal @close="closePreview" style="z-index: 3000"/>
->>>>>>> 648803296dbd6f70c0bbdb02f7feddd700c21f3e
 </template>
 
 <script setup>

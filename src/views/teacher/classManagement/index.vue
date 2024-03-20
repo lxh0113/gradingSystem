@@ -5,18 +5,27 @@
     </div>
     <div class="bottom">
       <div class="left">
-        <div class="class">
+        <div class="class" @click="classOneClick">
           <el-icon style="color:#3a63f3" size="large"><Folder /></el-icon>
-          <span style="margin-left: 10px;">软件一班</span>
+          <span style="margin-left: 10px; cursor: pointer;">{{ classStore.classOne.name }}</span>
         </div>
         <el-scrollbar height="600px">
-          <router-link v-for="(item,index) in studentList" :key="item" :to="'/teacher/management/1/'+index"  class="li">
+          <router-link v-for="(item,index) in studentListStore.studentList" :key="item" :to="'/teacher/management/'+route.params.classId+'/'+index"  class="li">
             <el-icon style="margin-left:10px;color:#3a63f3"><Avatar /></el-icon>
             <span style="margin-left: 10px;">{{ item.name }}</span>
           </router-link>
         </el-scrollbar>
       </div>
-      <div class="right">
+      <div class="right" v-if="route.params.studentId==undefined">
+        <div class="defaultBox">
+          <div class="rightTitle">
+                详情
+            </div>
+            <div class="chart">
+            </div>
+        </div>
+      </div>
+      <div class="right" v-else>
         <router-view></router-view>
       </div>
     </div>
@@ -24,28 +33,63 @@
 </template>
 
 <script setup>
-  import { onMounted,ref } from 'vue'; // Import ref from Vue
+  import { onMounted,onUnmounted,ref,getCurrentInstance } from 'vue'; // Import ref from Vue
   import { useRoute,useRouter } from 'vue-router';
   import axios from 'axios'
-  import {studentGetStudents} from '@/mock/teacher/classManagement.js'
+  import {useClassStore} from '@/stores/classStore.js'
+  import {useStudentListStore} from '@/stores/studentListStore.js'
 
   const router=useRouter()
   const route=useRoute()
+  const classStore=useClassStore()
+  const studentListStore=useStudentListStore()
 
-  const studentList=ref([])
+  let internalInstance = getCurrentInstance();
+  let echarts = internalInstance.appContext.config.globalProperties.$echarts
+
+  const setChart=()=>{
+    const dom1 = document.querySelector('.chart');
+    const myChart1 = echarts.init(dom1);
+    // 指定图表的配置项和数据
+    var option1 = {
+        title: {
+          text: '班级历史平均分成绩分布'
+        },
+        legend:{
+
+        },
+        color:['#748eed','#91cc75','#fac858'],
+        tooltip: {},
+        xAxis: {
+          data: ['第一次月考', '第二次月考', '第三次月考', '第四次月考', '第五次月考', '第六次月考']
+        },
+        yAxis: {},
+        series: [{
+            name: 'lxh',
+            type: 'line',
+            data: [60, 70, 67, 80, 77, 76],
+            label: {
+              show: true,
+              position: 'top',
+              textStyle: {
+                fontSize: 14
+              }
+            }
+        }]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart1.setOption(option1);
+    window.addEventListener('resize',()=>{
+        myChart1.resize()
+    })
+  }
   onMounted(async ()=> {
-      //获取班级学生
-      axios.get('/student/getStudents').then(res => {
-          console.log(res.data)
-          studentList.value=res.data.data
-          console.log(studentList.value)
-      })
-      .catch((err) => {
-          console.log(err);
-      });
-      
+      setChart()
   });
-
+  //点击班级，显示班级详情
+  function classOneClick(){
+    router.push('/teacher/management/'+route.params.classId)
+  }
 </script>
 
 
@@ -113,6 +157,25 @@
     .right{
       flex:1;
       margin-left: 20px;
+      .defaultBox{
+        background-color: white;
+        .rightTitle{
+            color:#3a63f3;
+            // margin-left: 30px;
+            padding-left: 20px;
+            line-height: 50px;
+            height: 50px;
+            font-size: 20px;
+            margin-bottom: 20px;
+            // border-bottom: 1px solid #c4c4c4;
+            
+        }
+
+        .chart{
+            height: 500px;
+            padding-left: 20px;
+        }
+      }
     }
   }
 }
