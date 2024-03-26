@@ -5,20 +5,9 @@ export const useStudentListStore = defineStore('studentList', () => {
     
     const studentList=ref([])
 
-    const setUserInfo=(userInfo,shortToken,refreshToken)=>{
-        user.value=null
-        user.value={
-            ...userInfo,
-            shortToken,
-            refreshToken
-        };
-        console.log(user.value)
-    }
-
 
     return {
-        studentList,
-        setUserInfo,
+        studentList
     }
 },{
     persist:true
