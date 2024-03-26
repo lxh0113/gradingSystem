@@ -17,9 +17,9 @@
     <div class="paper">
       <div class="top">
           <div class="searchInput">
-            <el-select placeholder="试卷状态" size="large" style="width: 150px;margin-right:30px;" ></el-select>
-            <el-select placeholder="年级" size="large" style="width: 150px;margin-right:30px;" ></el-select>
-            <el-select placeholder="班级" size="large" style="width: 150px;margin-right:30px;" ></el-select>
+            <el-input size="large" style="width: 200px;margin-right:30px;" placeholder="请输入试卷标题" :prefix-icon="Search"></el-input>
+            <el-select placeholder="试卷状态" size="large" style="width: 150px;" ></el-select>
+            
           </div>
       </div>
       <div class="bottom">
@@ -29,10 +29,9 @@
                       <td>
                           <el-checkbox size="large" />
                       </td>
-                      <td>学号</td>
-                      <td>姓名</td>
                       <td>批阅老师</td>
-                      <td>考试场次</td>
+                      <td>试卷标题</td>
+                      <td>批阅状态</td>
                       <td>时间</td>
                       <td>操作</td>
                   </tr>
@@ -42,10 +41,10 @@
                       <td>
                         <el-checkbox size="large" />
                       </td>
-                      <td>2022111111</td>
-                      <td>xxx</td>
+                      
                       <td>xxx</td>
                       <td>第一次月考</td>
+                      <td>已批阅</td>
                       <td>2024-12-1 12:11</td>
                       <td>
                         <el-button type="primary" plain>查看</el-button>
@@ -69,7 +68,7 @@ import { Delete, Download, Edit, Handbag, Plus, Search, TakeawayBox, Upload } fr
 
 .backBox{
   width: 100%;
-  min-height: 760px;
+  height: 100%;
   background-color: #fff;
   box-sizing: border-box;
   padding:30px;
@@ -116,6 +115,7 @@ import { Delete, Download, Edit, Handbag, Plus, Search, TakeawayBox, Upload } fr
   
       .searchInput{
         display: flex;
+        align-items: center;
         height: 60px;
         justify-content: flex-start;
         // margin-top:20px;

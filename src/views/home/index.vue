@@ -197,6 +197,7 @@ import { genFileId } from 'element-plus';
 let upload = ref();
 let file=null
 import {studentGetStudents} from '@/mock/teacher/classManagement.js'
+import { getMyClassAPI } from '@/apis/exam'
 
 const outerVisible = ref(false)
 const innerVisible = ref(false)
@@ -225,7 +226,8 @@ const teacherNavList=ref([
     {text:"首页",icon:"iconfont icon-home",to:"/teacher/home",isHaveNext:false,childrenList:[]},
     {text:"阅卷",icon:"iconfont icon-yuejuanmokuai",to:"/teacher/marking",isHaveNext:false,childrenList:[]},
     {text:"考情分析",icon:"iconfont icon-analysis",to:"/teacher/analysis",isHaveNext:false,childrenList:[]},
-    {text:"班级管理",icon:"iconfont icon-user-management",to:"/teacher/management",isHaveNext:true,get childrenList() {
+    {text:"班级管理",icon:"iconfont icon-user-management",to:"/teacher/management",isHaveNext:true,
+        get childrenList() {
             return teacherChildrenList.value;
         }}
     // [
@@ -254,7 +256,7 @@ const adminNavList=ref([
 ])
 
 
-const leftList=schoolAdminNavList.value
+const leftList=teacherNavList.value
 
 const userInfoForm = ref(null)
 const newName=ref("")
@@ -373,21 +375,11 @@ onMounted(async()=>{
     initData()
 
     //判断是否是教师端，需要获取全部班级，用于点击班级管理
-    for(let i=0;i<leftList.length;i++){
-        console.log(leftList[i])
-        //说明是教师端，发送请求获取班级
-        if(leftList[i].isHaveNext===true){
-            axios.get('/user/ISC').then(res => {
-                console.log(res.data)
-                teacherChildrenList.value=res.data.data
-                console.log(teacherChildrenList.value)
-                classListStore.classList=res.data.data
-                console.log(classListStore.classList)
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        }
+    if(userInfoForm.value.identity==="teacher")
+    {
+        const res=await getMyClassAPI(userInfoForm.value.account);
+        console.log(res.data.data)
+        teacherChildrenList.value=res.data.data
     }
 })
 

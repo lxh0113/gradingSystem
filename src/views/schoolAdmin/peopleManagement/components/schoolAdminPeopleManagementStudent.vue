@@ -3,8 +3,6 @@
     <div class="top">
         <div class="searchInput">
             <el-input style="max-width: 240px;height:40px;" :prefix-icon="Search" placeholder="搜索id或者学号姓名"></el-input>
-            <el-select placeholder="年级" size="large" style="width: 100px;margin-left: 30px;" ></el-select>
-            <el-select placeholder="班级" size="large" style="width: 100px;margin-left: 30px;" ></el-select>
         </div>
         <div class="button">
             <el-button size="large" :icon="Download">导入</el-button>

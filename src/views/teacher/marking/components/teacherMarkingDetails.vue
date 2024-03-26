@@ -27,7 +27,6 @@
     <div class="center">
       <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;" ></el-select>
       <el-select class="m-2" placeholder="批改状态" size="large" style="width: 240px;margin-left:30px;" ></el-select>
-      <el-select class="m-2" placeholder="分数段" size="large" style="width: 240px;margin-left:30px;" ></el-select>
     </div>
     <div class="bottom">
       <table>
@@ -42,25 +41,25 @@
           </tr>
         </thead>
         <tbody>
-          <div  v-for="item in studentList" :key="item">
-            <tr v-if="item.state==true">
+          <div  v-for="item in studentList" :key="item.id">
+            <tr v-if="item.state===true">
               <td>{{ item.studentNumber }}</td>
               <td>{{ item.name }}</td>
               <td class="score">{{ item.score }}</td>
               <td class="width1">{{ item.comment }}</td>
-              <td>已批阅</td>
+              <td style="color:#f56c6c">已批阅</td>
               <td class="width1">
-                <span>批阅</span>
+                <span style="opacity: 0;">批阅</span>
                 <span>查看</span>
               </td>
             </tr>
 
-            <tr v-if="item.state==false">
+            <tr v-else>
               <td>{{ item.studentNumber }}</td>
               <td>{{ item.name }}</td>
               <td>---</td>
               <td  class="width1">暂无</td>
-              <td >正在批阅</td>
+              <td style="color:#67c23a">正在批阅</td>
               <td  class="width1">
                 <span @click="toPaper(1)">批阅</span>
                 <span>查看</span>
@@ -72,31 +71,41 @@
     </div>
   </div>
 
-
 </template>
 
 <script setup>
 import { ArrowLeft,ArrowRight } from '@element-plus/icons-vue';
 import { ref } from 'vue'
 import { useRoute,useRouter } from "vue-router"
-import { examPaperGetAllEP } from '../../../../mock/teacher/marking.js';
+import { getALLStudentPaperAPI } from '@/apis/examPaper.js'
+// import { examPaperGetAllEP } from '../../../../mock/teacher/marking.js';
 import axios from 'axios'
+import { ElMessage } from 'element-plus';
 
 const router=useRouter();
 const route = useRoute();
 
 const studentList=ref([])
-  onMounted(async()=>{
-      console.log(route.params.id)
-      //获取相关试卷的对应学生
-      axios.get('/examPaper/getAllEP').then(res => {
-            console.log(res.data)
-            studentList.value=res.data.data
-            console.log(studentList.value)
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+
+const getExamById=async()=>{
+  
+  console.log(route.params.id)
+  let id=route.params.id;
+  const res=await getALLStudentPaperAPI(id)
+  
+  if(res.data.code===200)
+  {
+    console.log(res.data.data)
+    studentList.value=res.data.data
+  }
+  else {
+    ElMessage.error('网络错误')
+  }
+}
+
+onMounted(async()=>{
+
+  getExamById()
 })
 
 const toPaper=(id)=>{
@@ -108,6 +117,7 @@ const toPaper=(id)=>{
 <style lang="scss" scoped>
 .bigBox{
   margin-top:20px;
+  height: 100%;
 
   .top{
     display: flex;
@@ -162,6 +172,7 @@ const toPaper=(id)=>{
         width: 100%;
         height: 60px;
         line-height: 60px;
+        border-bottom:1px solid rgba(#c4c4c4,0.4);
 
         td{
           flex:1;
@@ -173,7 +184,7 @@ const toPaper=(id)=>{
         }
 
         .score{
-          color:#ce6509;
+          color:#f56c6c;
           font-size: 18px;
         }
 

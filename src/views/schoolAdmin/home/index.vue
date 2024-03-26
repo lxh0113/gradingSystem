@@ -5,7 +5,7 @@
         <div class="managePeople">
           <div class="topOperation">
             <span>人员管理</span>
-            <button class="button">管理</button>
+            <button @click="toManage" class="button">管理</button>
           </div>
           <div class="bottomPeople">
             <div class="teacher">
@@ -144,7 +144,10 @@ import { ElMessage, genFileId } from 'element-plus'
 import { getMaxMinAveAPI } from '@/apis/exam.js'
 import { uploadFile,calculateFileMD5 } from '@/utils/file.js'
 import { uploadBlankPapersAPI,checkFileAPI } from '@/apis/upload.js'
+import { useRouter,useRoute } from 'vue-router'
 
+const route=useRoute()
+const router=useRouter()
 
 const uploadPaper=ref({
   title:'',
@@ -190,9 +193,17 @@ const setChart=()=>{
   title: {
     text: '一周内批阅情况'
   },
+  // dataZoom: [{
+  //     type: 'slider', //1平移 缩放
+  //     throttle: '50', //设置触发视图刷新的频率。单位为毫秒（ms）。
+  //     minValueSpan: 6, //用于限制窗口大小的最小值,在类目轴上可以设置为 5 表示 5 个类目
+  //     start: 1, //数据窗口范围的起始百分比 范围是：0 ~ 100。表示 0% ~ 100%。
+  //     end: 50, //数据窗口范围的结束百分比。范围是：0 ~ 100。
+  //     zoomLock: false, //如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+  // }],
   legend:{
   },
-  color:['#fac858'],
+  color:['#e85368'],
   tooltip: {},
   xAxis: {
     data: ['2024/1/1', '2024/1/2', '2024/1/3', '2024/1/4', '2024/1/5', '2024/1/6','2024/1/7']
@@ -310,9 +321,7 @@ const submitUpload = async() => {
   })
 
   
-
-
-  // dialogVisible.value = false
+  dialogVisible.value = false
 }
 
 
@@ -326,6 +335,10 @@ const getClass=async()=>{
   else {
     ElMessage.error("获取失败")
   }
+}
+
+const toManage=()=>{
+  router.push('/schoolAdmin/management/student')
 }
 
 onMounted(()=>{

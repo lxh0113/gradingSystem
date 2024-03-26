@@ -1,15 +1,13 @@
 <template>
     <div class="bigBox wow fadeInUp">
       <div class="conditionSearch">
-        <el-input style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
-        <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;margin-left:30px;" ></el-select>
+        <el-input v-model="searchInput" style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
     </div>
       <div class="details">
-        <div class="paper" v-for="item in examPaperList" :key="item" @click="()=>$router.push(`/teacher/marking/${item.id}`)">
-            <div v-if="item.amount.total>item.amount.gradedNumber">
+        <div class="paper" v-for="item in examPaperList" :key="item.id" @click="()=>$router.push(`/teacher/marking/${item.id}`)">
+            <div v-if="item.amount.total!==item.amount.gradedNumber">
                 <div class="top">
                     <div>
-                        <div class="class">软件一班&nbsp;&nbsp;&nbsp;</div>
                         <div class="title">{{ item.title }}</div>
                     </div>
                     <div class="operation">
@@ -36,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="item.amount.total==item.amount.gradedNumber">
+            <div v-else>
                 <div class="top">
               <div>
                   <div class="title">{{ item.title }}</div>
@@ -77,7 +75,7 @@ import { getAllExaminationAPI } from '@/apis/examPaper.js'
 import axios from 'axios'
 import { ElMessage } from 'element-plus';
 
-
+const searchInput=ref('')
 const router=useRouter()
 const route=useRoute()
 const examPaperList=ref([])
@@ -87,7 +85,8 @@ const getAllExamination=async()=>{
 
     if(res.data.code===200)
     {
-        examPaperList=res.data.data
+        console.log(res.data)
+        examPaperList.value=res.data.data
     }
     else {
         ElMessage.error(res.data.message)

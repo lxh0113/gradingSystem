@@ -2,8 +2,18 @@ import http from '@/utils/http.js'
 
 export const getAllExaminationAPI=()=>{
     return http({
-        url:"/examPaper/getALLE",
+        url:"/examPaper/getAllE",
         method:"GET"
+    })
+}
+
+export const getEByKeyAPI=(key)=>{
+    return http({
+        url:'/examPaper/getEByKey',
+        method:'GET',
+        params:{
+            key
+        }
     })
 }
 

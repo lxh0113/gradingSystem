@@ -30,3 +30,11 @@ export const getClassHistoryTestDataAPI=(classId)=>{
         method:"GET"
     })
 }
+
+export const getMyClassAPI=(teacherAccount)=>{
+    return http({
+        url:'/examAnalysis/my-class/'+teacherAccount,
+        method:'GET'
+    })
+
+}

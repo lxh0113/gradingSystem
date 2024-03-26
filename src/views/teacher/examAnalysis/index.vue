@@ -36,7 +36,16 @@ const setChart=()=>{
     },
     legend:{
     },
-    color:['#748eed','#91cc75','#fac858'],
+    dataZoom: [{
+      type: 'slider', //1平移 缩放
+      throttle: '50', //设置触发视图刷新的频率。单位为毫秒（ms）。
+      minValueSpan: 6, //用于限制窗口大小的最小值,在类目轴上可以设置为 5 表示 5 个类目
+      start: 1, //数据窗口范围的起始百分比 范围是：0 ~ 100。表示 0% ~ 100%。
+      end: 50, //数据窗口范围的结束百分比。范围是：0 ~ 100。
+      zoomLock: false, //如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+    }],
+    color:['#63b2ee','#76da91','#f8cb7f','#f89588','#7cd6cf','#9192ab','#7898e1'
+    ,'#efa666','#eddd86','#9987ce','#63b2ee','#76da91'],
     tooltip: {},
     xAxis: {
       data: ['第一次月考', '第二次月考', '第三次月考', '第四次月考', '第五次月考', '第六次月考']
@@ -102,7 +111,16 @@ const setChart=()=>{
     },
     legend:{
     },
-    color:['#748eed','#91cc75','#fac858'],
+    dataZoom: [{
+      type: 'slider', //1平移 缩放
+      throttle: '50', //设置触发视图刷新的频率。单位为毫秒（ms）。
+      minValueSpan: 6, //用于限制窗口大小的最小值,在类目轴上可以设置为 5 表示 5 个类目
+      start: 1, //数据窗口范围的起始百分比 范围是：0 ~ 100。表示 0% ~ 100%。
+      end: 50, //数据窗口范围的结束百分比。范围是：0 ~ 100。
+      zoomLock: false, //如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+    }],
+    color:['#63b2ee','#76da91','#f8cb7f','#f89588','#7cd6cf','#9192ab','#7898e1'
+    ,'#efa666','#eddd86','#9987ce','#63b2ee','#76da91'],
     tooltip: {},
     xAxis: {
       data: ['第一次月考', '第二次月考', '第三次月考', '第四次月考', '第五次月考', '第六次月考']
@@ -159,6 +177,74 @@ const setChart=()=>{
             show:true
           }
         }
+      },
+      {
+        name: '四班',
+        type: 'bar',
+        data: [50, 30, 70, 100, 82, 67],
+        label: {
+        show: true,
+        position: 'top',
+        textStyle: {
+          fontSize: 14
+        }
+        },
+        emphasis:{
+          label:{
+            show:true
+          }
+        }
+      },
+      {
+        name: '五班',
+        type: 'bar',
+        data: [50, 30, 70, 100, 82, 67],
+        label: {
+        show: true,
+        position: 'top',
+        textStyle: {
+          fontSize: 14
+        }
+        },
+        emphasis:{
+          label:{
+            show:true
+          }
+        }
+      },
+      {
+        name: '六班',
+        type: 'bar',
+        data: [50, 30, 70, 100, 82, 67],
+        label: {
+        show: true,
+        position: 'top',
+        textStyle: {
+          fontSize: 14
+        }
+        },
+        emphasis:{
+          label:{
+            show:true
+          }
+        }
+      },
+      {
+        name: '七班',
+        type: 'bar',
+        data: [50, 30, 70, 100, 82, 67],
+        label: {
+        show: true,
+        position: 'top',
+        textStyle: {
+          fontSize: 14
+        }
+        },
+        emphasis:{
+          label:{
+            show:true
+          }
+        }
       }
     ]
   };
@@ -179,7 +265,13 @@ const setChart=()=>{
 
 const getPapers=async()=>{
   const res=await getMaxMinAveAPI(1);
-  ElMessage.success("获取成功")
+  if(res.data.code===200)
+  {
+    console.log(res)
+  }
+  else {
+
+  }
 }
 
 onMounted(()=>{
