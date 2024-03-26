@@ -5,6 +5,31 @@
       <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;margin-left:30px;" ></el-select>
     </div>
     <div class="details">
+      <div @click="toPaper(1)" class="paper" v-for="item in 5">
+        <div class="top">
+            <div>
+                <div class="title">
+                    xx市第一次模拟试卷
+                </div>
+            </div>
+            <div class="operation">
+                批阅
+            </div>
+        </div>
+        <div class="content">
+            <div class="text">
+                正在批阅中，请耐心等待！
+            </div>
+            <div class="view">
+                查看已批阅试题&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="time">
+                2024/1/1 12:00
+            </div>
+        </div>
+      </div>
       <div class="paper" v-for="item in examPaperList" :key="item">
         <div v-if="item.amount.total>item.amount.gradedNumber">
           <div class="top">
@@ -44,20 +69,29 @@
 </template>
 
 <script setup>
-  import { Search } from '@element-plus/icons-vue';
-  import { examPaperGetAllE } from '../../../../mock/teacher/marking.js';
-  import axios from 'axios'
-  const examPaperList=ref([])
-  onMounted(async()=>{
-    axios.get('/examPaper/getAllE').then(res => {
-        console.log(res.data)
-        examPaperList.value=res.data.data
-        console.log(examPaperList.value)
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+import { Search } from '@element-plus/icons-vue';
+import { useRoute,useRouter } from 'vue-router';
+import { examPaperGetAllE } from '../../../../mock/teacher/marking.js';
+import axios from 'axios'
+
+const router=useRouter()
+const route=useRoute()
+
+const toPaper=(id)=>{
+  router.push('/paper/'+id);
+}
+
+const examPaperList=ref([])
+onMounted(async()=>{
+  axios.get('/examPaper/getAllE').then(res => {
+      console.log(res.data)
+      examPaperList.value=res.data.data
+      console.log(examPaperList.value)
   })
+  .catch((err) => {
+      console.log(err);
+  });
+})
 </script>
 
 <style lang="scss" scoped>

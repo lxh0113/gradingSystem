@@ -76,6 +76,7 @@
 </template>
 
 <script setup>
+import { ArrowLeft,ArrowRight } from '@element-plus/icons-vue';
 import { ref } from 'vue'
 import { useRoute,useRouter } from "vue-router"
 import { examPaperGetAllEP } from '../../../../mock/teacher/marking.js';

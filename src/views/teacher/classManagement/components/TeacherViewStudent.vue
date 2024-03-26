@@ -22,9 +22,10 @@
                 </div>
                 <div class="infoRight">
                     <div class="tag">
-                        <el-tag style="margin-right: 5px;" v-for="tag in tags" :key="tag.name" closable>
+                        <el-tag type="primary" style="margin-right: 5px;" v-for="tag in tags" :key="tag.name" v-show="tag.name.trim()!==''">
                           {{ tag.name }}
                         </el-tag>
+                        <el-button size="small" @click="dialogVisible = true" style="margin-left:5px" icon="Edit"></el-button>
                     </div>
                     <div>
                         20224013333
@@ -78,10 +79,39 @@
             </div>
         </div>
     </div>
+
+    <el-dialog v-model="dialogVisible" title="设置标签" width="400">
+        <el-form style="margin:10px 20px 10px 20px" label-position="left" size="large" :model="tagsForm">
+            <el-form-item label="标签1" label-width="70px">
+                <el-input size="large"  v-model="tagsForm.tag1">{{ tagsForm.tag1 }}</el-input>
+            </el-form-item>
+            <el-form-item label="标签2" label-width="70px">
+                <el-input size="large" v-model="tagsForm.tag2">{{ tagsForm.tag2 }}</el-input>
+            </el-form-item>
+            <el-form-item label="标签3" label-width="70px">
+                <el-input size="large" v-model="tagsForm.tag3">{{ tagsForm.tag3 }}</el-input>
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <div class="dialog-footer">
+              <el-button @click="dialogVisible = false">取消</el-button>
+              <el-button type="primary" @click="changeTag">
+                确认
+              </el-button>
+            </div>
+        </template>
+  </el-dialog>
 </template>
 
 <script setup>
-    import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
+import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
+import { setTagAPI } from '@/apis/user.js'
+import {useRoute,useRouter} from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { getStudentsAPI } from '@/apis/student.js'
+
+const route=useRoute()
+const router=useRouter()
 
     const tags = ref([
         { name: '大大咧咧'},
@@ -89,9 +119,42 @@
         { name: '大大咧咧'}
     ])
 
-    let internalInstance = getCurrentInstance();
-    let echarts = internalInstance.appContext.config.globalProperties.$echarts
+const tagsForm=ref({
+    tag1:'大大咧咧',
+    tag2:'大大咧咧',
+    tag3:'大大咧咧'
+})
 
+let internalInstance = getCurrentInstance();
+let echarts = internalInstance.appContext.config.globalProperties.$echarts
+
+const dialogVisible = ref(false)
+
+const changeTag=async()=>{
+    // console.log(route.params)
+    const account=route.params.studentId
+    const styleTag=tagsForm.value.tag1+'、'+tagsForm.value.tag2+'、'+tagsForm.value.tag3
+
+    if(tags.value[0].name===tagsForm.value.tag1&&tags.value[1].name===tagsForm.value.tag2&&tags.value[2]===tagsForm.value.tag3)
+    {
+        ElMessage.error("您未作出任何改动")
+        return
+    }
+
+    const res=await setTagAPI(account,styleTag);
+
+    if(res.data.code===200)
+    {
+        ElMessage.success('修改成功')
+        tags.value[0].name=tagsForm.value.tag1;
+        tags.value[1].name=tagsForm.value.tag2;
+        tags.value[2].name=tagsForm.value.tag3;
+    }  
+    else {
+        ElMessage.error(res.data.message)
+    }
+    dialogVisible = false
+}
 
     const setChart=()=>{
     const dom1 = document.querySelector('.chart');
@@ -140,6 +203,12 @@
 
 }
 
+const getStudentData=async()=>{
+    const res=await getStudentsAPI();
+
+    
+}
+
 
 onMounted(()=>{
   setChart()
@@ -148,6 +217,7 @@ onMounted(()=>{
 
 </script>
 
+<style src="@wangeditor/editor/dist/css/style.css"></style>
 <style lang="scss" scoped>
 .bigBox{
     display: grid;
