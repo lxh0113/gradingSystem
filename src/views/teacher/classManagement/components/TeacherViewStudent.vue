@@ -104,9 +104,6 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
-    import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
-=======
 import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
 import { setTagAPI } from '@/apis/user.js'
 import {useRoute,useRouter} from 'vue-router'
@@ -115,7 +112,6 @@ import { getStudentsAPI } from '@/apis/student.js'
 
 const route=useRoute()
 const router=useRouter()
->>>>>>> lxh
 
     const tags = ref([
         { name: '大大咧咧'},
@@ -123,10 +119,6 @@ const router=useRouter()
         { name: '大大咧咧'}
     ])
 
-<<<<<<< HEAD
-    let internalInstance = getCurrentInstance();
-    let echarts = internalInstance.appContext.config.globalProperties.$echarts
-=======
 const tagsForm=ref({
     tag1:'大大咧咧',
     tag2:'大大咧咧',
@@ -135,7 +127,6 @@ const tagsForm=ref({
 
 let internalInstance = getCurrentInstance();
 let echarts = internalInstance.appContext.config.globalProperties.$echarts
->>>>>>> lxh
 
 const dialogVisible = ref(false)
 

@@ -5,12 +5,7 @@
       <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;margin-left:30px;" ></el-select>
     </div>
     <div class="details">
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <div class="paper" v-for="item in 5" :key="item">
-=======
       <div @click="toPaper(1)" class="paper" v-for="item in 5">
->>>>>>> lxh
         <div class="top">
             <div>
                 <div class="title">
@@ -32,7 +27,9 @@
         <div class="bottom">
             <div class="time">
                 2024/1/1 12:00
-=======
+            </div>
+        </div>
+      </div>
       <div class="paper" v-for="item in examPaperList" :key="item">
         <div v-if="item.amount.total>item.amount.gradedNumber">
           <div class="top">
@@ -40,7 +37,6 @@
                   <div class="title">
                       {{ item.title }}
                   </div>
->>>>>>> 96bdc9d5774ca7bd41eb6d9ce4adcfb3e112edb0
               </div>
               <div class="operation">
                   批阅
@@ -73,9 +69,10 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
 import { Search } from '@element-plus/icons-vue';
 import { useRoute,useRouter } from 'vue-router';
+import { examPaperGetAllE } from '../../../../mock/teacher/marking.js';
+import axios from 'axios'
 
 const router=useRouter()
 const route=useRoute()
@@ -84,24 +81,17 @@ const toPaper=(id)=>{
   router.push('/paper/'+id);
 }
 
-
-
-=======
-  import { Search } from '@element-plus/icons-vue';
-  import { examPaperGetAllE } from '../../../../mock/teacher/marking.js';
-  import axios from 'axios'
-  const examPaperList=ref([])
-  onMounted(async()=>{
-    axios.get('/examPaper/getAllE').then(res => {
-        console.log(res.data)
-        examPaperList.value=res.data.data
-        console.log(examPaperList.value)
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+const examPaperList=ref([])
+onMounted(async()=>{
+  axios.get('/examPaper/getAllE').then(res => {
+      console.log(res.data)
+      examPaperList.value=res.data.data
+      console.log(examPaperList.value)
   })
->>>>>>> 96bdc9d5774ca7bd41eb6d9ce4adcfb3e112edb0
+  .catch((err) => {
+      console.log(err);
+  });
+})
 </script>
 
 <style lang="scss" scoped>

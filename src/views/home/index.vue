@@ -188,24 +188,15 @@ import {useClassListStore} from '@/stores/classListStore.js'
 import {useStudentListStore} from '@/stores/studentListStore.js'
 
 import { bindEmailAPI, changeAvatarAPI, changeNameAPI } from '@/apis/user'
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> 96bdc9d5774ca7bd41eb6d9ce4adcfb3e112edb0
 import {userISC} from '@/mock/home/index.js'
 import { examPaperGetAllEP } from '@/mock/teacher/marking.js';
-<<<<<<< HEAD
-=======
 import { uploadAvatarAPI } from '@/apis/upload'
 import { genFileId } from 'element-plus';
 
 let upload = ref();
 let file=null
->>>>>>> lxh
-=======
 import {studentGetStudents} from '@/mock/teacher/classManagement.js'
->>>>>>> 96bdc9d5774ca7bd41eb6d9ce4adcfb3e112edb0
 
 const outerVisible = ref(false)
 const innerVisible = ref(false)
@@ -262,18 +253,8 @@ const adminNavList=ref([
     {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement",isHaveNext:false,childrenList:[]}
 ])
 
-<<<<<<< HEAD
-const leftList=teacherNavList.value
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-const leftList=schoolAdminNavLists.value
->>>>>>> lxh
 
-=======
->>>>>>> 648803296dbd6f70c0bbdb02f7feddd700c21f3e
-=======
->>>>>>> 96bdc9d5774ca7bd41eb6d9ce4adcfb3e112edb0
+const leftList=schoolAdminNavList.value
 
 const userInfoForm = ref(null)
 const newName=ref("")
