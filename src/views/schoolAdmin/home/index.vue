@@ -110,18 +110,6 @@
           </td>
         </tr>
         <tr>
-          <td>评分标准</td>
-          <td>示例</td>
-          <td>
-            <el-upload ref="gradingCriteria" :on-change="changeGradingCriteria" class="upload-demo" action="#"
-              :limit="1" :on-exceed="handleExceed" :auto-upload="false">
-              <template v-slot:trigger>
-                <el-button type="primary">选择文件</el-button>
-              </template>
-            </el-upload>
-          </td>
-        </tr>
-        <tr>
           <td>
             所需批阅试卷压缩包
           </td>
@@ -132,7 +120,6 @@
               <template v-slot:trigger>
                 <el-button type="primary">选择文件</el-button>
               </template>
-             
             </el-upload>
           </td>
         </tr>
@@ -151,19 +138,21 @@
 </template>
 
 <script setup>
-import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
+import SparkMD5 from 'spark-md5'
+import {onMounted,onUnmounted,getCurrentInstance,ref, nextTick} from 'vue'
 import { ElMessage, genFileId } from 'element-plus'
 import { getMaxMinAveAPI } from '@/apis/exam.js'
+import { uploadFile,calculateFileMD5 } from '@/utils/file.js'
+import { uploadBlankPapersAPI,checkFileAPI } from '@/apis/upload.js'
+
 
 const uploadPaper=ref({
   title:'',
   blankPapers:null,
-  gradingCriteria:null,
   zip:null
 })
 
 const blankPapers = ref(null)
-const gradingCriteria=ref(null)
 const zip=ref(null)
 
 let internalInstance = getCurrentInstance();
@@ -258,17 +247,13 @@ const changeBlankPapers=(uploadFile)=>{
   console.log(uploadFile)
 }
 
-const changeGradingCriteria=(uploadFile)=>{
-  uploadPaper.value.gradingCriteria=uploadFile
-  console.log(uploadFile)
-}
 
 const changeZip=(uploadFile)=>{
   uploadPaper.value.zip=uploadFile
   console.log(uploadFile)
 }
 
-const submitUpload = () => {
+const submitUpload = async() => {
 
   if(uploadPaper.value.title.trim()==='')
   {
@@ -281,20 +266,53 @@ const submitUpload = () => {
     ElMessage.error("请上传空白试卷")
     return;
   }
-  if(uploadPaper.value.gradingCriteria===null)
-  {
-    ElMessage.error("请上传评分标准")
-    return
-  }
-  if(uploadPaper.value.zip.value===null)
+
+  if(uploadPaper.value.zip===null)
   {
     ElMessage.error("请上传压缩包")
     return ;
   }
 
+  let testPaperId;
+  let md5=calculateFileMD5(uploadPaper.value.zip.raw);
+
+  // 上传空白试卷
+  let data=new FormData()
+  data.append('blankTestPaper',uploadPaper.value.blankPapers.raw)
+  const res=await uploadBlankPapersAPI(uploadPaper.value.title,data)  
+  if(res.data.code===200)
+  { 
+    testPaperId=res.data.data
+    ElMessage.success('上传成功')
+  }
+  else {
+    ElMessage.error('上传出错')
+  }
+
+  
+
   //发送请求过去
 
-  dialogVisible.value = false
+  uploadFile(uploadPaper.value.zip)
+
+  nextTick(async()=>{
+
+    const res=await checkFileAPI(md5,testPaperId)
+
+    if(res.data.code===200)
+    {
+      ElMessage.success('上传成功')
+    }
+    else {
+      ElMessage.error('上传失败')
+    }
+    
+  })
+
+  
+
+
+  // dialogVisible.value = false
 }
 
 

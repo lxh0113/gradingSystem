@@ -1,6 +1,6 @@
 import http from '@/utils/http.js'
 
-export const getAllTestAPI=()=>{
+export const getAllExaminationAPI=()=>{
     return http({
         url:"/examPaper/getALLE",
         method:"GET"

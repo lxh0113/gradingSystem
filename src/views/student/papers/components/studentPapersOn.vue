@@ -2,11 +2,11 @@
   <div class="bigBox">
     <div class="conditionSearch">
       <el-input style="max-width: 250px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
-      <el-select class="m-2" placeholder="考试年份" size="large" style="width: 240px;margin-left:30px;" ></el-select>
+      <!-- <el-select class="m-2" placeholder="考试年份" size="large" style="width: 240px;margin-left:30px;" ></el-select> -->
     </div>
     <div class="details">
-      <div class="paper" v-for="item in 5">
-        <div class="subject">xx市第一次模拟试卷</div>
+      <div class="paper" v-for="item in paperList" :key="item.id" @click="toPaper(item.id)">
+        <div class="subject">{{ item.title }}</div>
         <div class="correctors">批改人：xxx老师</div>
         <div class="text">您的试卷正在批改中，请耐心等待！</div>
         <div class="status">进行中</div>
@@ -22,9 +22,36 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
+import {getALLMyPaperAPI} from '@/apis/examPaper.js'
+import { useRoute,useRouter } from 'vue-router';
 
+const route=useRoute()
+const router=useRouter()
+const paperList=ref([])
 
+const toPaper=(id)=>{
+  router.push('/paper/'+id)
+}
+
+const getMyPapers=async()=>{
+  const res=await getALLMyPaperAPI();
+  console.log(res)
+  if(res.data.code===200)
+  {
+    paperList.value=res.data.data
+    // ElMessage.success("获取成功")
+  }
+  else {
+    ElMessage.error("网络错误")
+  }
+}
+
+onMounted(()=>{
+  getMyPapers()
+})
 
 </script>
 

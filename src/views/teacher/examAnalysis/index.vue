@@ -16,7 +16,9 @@
 
 
 <script setup>
+import { ElMessage } from 'element-plus';
 import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
+import { getMaxMinAveAPI } from '@/apis/exam.js'
 
 let internalInstance = getCurrentInstance();
 let echarts = internalInstance.appContext.config.globalProperties.$echarts
@@ -182,12 +184,14 @@ const setChart=()=>{
   });
 }
 
-const init=()=>{
-
+const getPapers=async()=>{
+  const res=await getMaxMinAveAPI(1);
+  ElMessage.success("获取成功")
 }
 
 onMounted(()=>{
   setChart()
+  getPapers()
 })
 
 </script>

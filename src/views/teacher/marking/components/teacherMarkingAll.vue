@@ -9,6 +9,7 @@
             <div v-if="item.amount.total>item.amount.gradedNumber">
                 <div class="top">
                     <div>
+                        <div class="class">软件一班&nbsp;&nbsp;&nbsp;</div>
                         <div class="title">{{ item.title }}</div>
                     </div>
                     <div class="operation">
@@ -16,6 +17,9 @@
                     </div>
                 </div>
                 <div class="content">
+                    <!-- <dix class="class">
+                        软件一班
+                    </dix> -->
                     <div class="text">
                         正在批阅中，请耐心等待！
                     </div>
@@ -65,36 +69,34 @@
 </template>
 
 <script setup>
-    import { Search } from '@element-plus/icons-vue';
-    import { useRoute } from 'vue-router';
-    import { useRouter } from 'vue-router';
-    import { examPaperGetAllE } from '../../../../mock/teacher/marking.js';
-    import axios from 'axios'
+import { Search } from '@element-plus/icons-vue';
+import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { getAllExaminationAPI } from '@/apis/examPaper.js'
+// import { examPaperGetAllE } from '../../../../mock/teacher/marking.js';
+import axios from 'axios'
+import { ElMessage } from 'element-plus';
 
-    const router=useRouter()
-    const route=useRoute()
 
-    const examPaperList=ref([])
+const router=useRouter()
+const route=useRoute()
+const examPaperList=ref([])
 
-    onMounted(async()=>{
-        axios.get('/examPaper/getAllE').then(res => {
-            console.log(res.data)
-            examPaperList.value=res.data.data
-            console.log(examPaperList.value)
-            // examPaperList.value=JSON.parse(JSON.stringify(examPaperList.value))
-            // console.log(examPaperList.value)
-            // console.log(JSON.parse(JSON.stringify(examPaperList.value)).length)
-            
-            // for(let i=0;i<examPaperList.value.length;i++){
-            //     console.log(examPaperList.value[i])
-            //     console.log(examPaperList.value[i].amount.total)
-            // }
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+const getAllExamination=async()=>{
+    const res=await getAllExaminationAPI();
 
-    })
+    if(res.data.code===200)
+    {
+        examPaperList=res.data.data
+    }
+    else {
+        ElMessage.error(res.data.message)
+    }
+}
+
+onMounted(async()=>{
+    getAllExamination();
+})
 </script>
 
 <style lang="scss" scoped>
@@ -138,10 +140,14 @@
                 display: flex;
             }
 
-            .title,.subject{
+            .title,.subject,.class{
                 font-weight: bold;
                 color:#3A63F3;
                 font-size:20px;
+            }
+
+            .class{
+                color:black;
             }
 
             .subject{
@@ -155,9 +161,18 @@
             }
         }
 
+        // .class{
+        //     line-height: 20px;
+        //     // background-color: #9e8b8b;
+        //     font-size: 18px;
+        // }
+
         .content{
+            
+
             .text{
                 line-height: 80px;
+                // background-color: #3A63F3;
             }
 
             .view{
