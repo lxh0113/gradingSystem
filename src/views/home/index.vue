@@ -255,7 +255,10 @@ const adminNavList=ref([
     {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement",isHaveNext:false,childrenList:[]}
 ])
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 27bd5c65e9945315476cf5fe5422da1ec1ad61a5
 const leftList=teacherNavList.value
 
 const userInfoForm = ref(null)
