@@ -5,7 +5,7 @@
       <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;margin-left:30px;" ></el-select>
     </div>
     <div class="details">
-      <div @click="toPaper(1)" class="paper" v-for="item in 5">
+      <div @click="toPaper(1)" class="paper" v-for="item in 5" :key="item">
         <div class="top">
             <div>
                 <div class="title">
