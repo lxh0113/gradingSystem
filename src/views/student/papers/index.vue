@@ -9,7 +9,10 @@
           已结束
         </router-link>
         <router-link to="/student/papers/mistakes">
-          错题本
+          错题集
+        </router-link>
+        <router-link to="/student/papers/notes">
+          错题总结
         </router-link>
     </div>
     <div class="bottom">
@@ -19,27 +22,27 @@
 </template>
 
 <script setup>
-import {getALLMyPaperAPI} from '@/apis/examPaper.js'
+// import {getALLMyPaperAPI} from '@/apis/examPaper.js'
 import { ElMessage } from 'element-plus';
 import {ref,onMounted} from 'vue'
 
-const paperList=ref([])
+// const paperList=ref([])
 
-const getMyPapers=async()=>{
-  const res=await getALLMyPaperAPI();
-  console.log(res)
-  if(res.data.code===200)
-  {
-    paperList.value=res.data.data
-    ElMessage.success("获取成功")
-  }
-  else {
-    ElMessage.error("获取失败")
-  }
-}
+// const getMyPapers=async()=>{
+//   const res=await getALLMyPaperAPI();
+//   console.log(res)
+//   if(res.data.code===200)
+//   {
+//     paperList.value=res.data.data
+//     ElMessage.success("获取成功")
+//   }
+//   else {
+//     ElMessage.error("获取失败")
+//   }
+// }
 
 onMounted(()=>{
-  getMyPapers()
+  // getMyPapers()
 })
 
 </script>

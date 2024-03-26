@@ -35,3 +35,14 @@ export const bindEmailAPI=(email,code)=>{
         }
     })
 }
+
+export const setTagAPI=(account,styleTag)=>{
+    return http({
+        url:'/user/setTag',
+        method:'POST',
+        params:{
+            account,
+            styleTag
+        }
+    })
+}

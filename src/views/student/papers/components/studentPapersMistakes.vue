@@ -4,6 +4,9 @@
         <el-button :icon="Delete" size="large">
           删除
         </el-button>
+        <el-button :icon="Delete" size="large">
+          查看我的错题记录
+        </el-button>
       </div>
       <div class="details">
         <table>

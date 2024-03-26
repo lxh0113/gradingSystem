@@ -2,24 +2,31 @@
   <div class="bigBox">
     <div class="conditionSearch">
       <el-input style="max-width: 250px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
-      <el-select v-model="value" class="m-2" placeholder="考试年份" size="large" style="width: 240px;margin-left:30px;" ></el-select>
-      <el-select v-model="value" class="m-2" placeholder="考试分数" size="large" style="width: 240px;margin-left:30px;" ></el-select>
+      <!-- <el-select v-model="value" class="m-2" placeholder="考试年份" size="large" style="width: 240px;margin-left:30px;" ></el-select>
+      <el-select v-model="value" class="m-2" placeholder="考试分数" size="large" style="width: 240px;margin-left:30px;" ></el-select> -->
     </div>
     <div class="details">
-      <div class="paper" v-for="item in 5">
+      <div class="paper" v-for="item in paperList" :key="item.id" @click="toPaper(item.id)">
       <div class="top">
-        <div class="subject">xx市第一次模拟试卷</div>
+        <div class="subject">{{ item.title }}</div>
         <div class="look">错题分析</div>
       </div>
       
-      <div class="comment">封装组件时通常为了避免组件内部样式对全局样式造成污染，style标签会添加scoped属性，这个属性保证了在当前组件内添加的样式只作用于当前组件，当然，还可以作用于引用组件的根组件。</div>
+      <div class="comment">{{ item.comment }}</div>
       <div class="grade">
-        分数：98分&nbsp;&nbsp;满分：150分
+        分数：<span>{{ item.scored }}</span>分&nbsp;&nbsp;满分：<span>{{ item.score }}</span>分
       </div>
       <div class="ai">
           AI智能分析  匹配相似模型&gt;&gt;&gt;
       </div>
-      <div class="status">进行中</div>
+      <div class="status">
+        <div class="text">
+          已结束
+        </div>
+        <div class="time">
+          {{ item.date }}
+        </div>
+      </div>
     </div>
     </div>
 
@@ -32,9 +39,36 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
+import {getALLMyPaperAPI} from '@/apis/examPaper.js'
+import { useRoute,useRouter } from 'vue-router';
 
+const route=useRoute()
+const router=useRouter()
+const paperList=ref([])
 
+const toPaper=(id)=>{
+  router.push('/paper/'+id)
+}
+
+const getMyPapers=async()=>{
+  const res=await getALLMyPaperAPI();
+  console.log(res)
+  if(res.data.code===200)
+  {
+    paperList.value=res.data.data
+    // ElMessage.success("获取成功")
+  }
+  else {
+    ElMessage.error("网络错误")
+  }
+}
+
+onMounted(()=>{
+  getMyPapers()
+})
 
 </script>
 
@@ -101,6 +135,8 @@ import { Search } from '@element-plus/icons-vue';
   }
   .status{
     color:#787474;
+    display: flex;
+    justify-content: space-between;
   }
   }
   .page{

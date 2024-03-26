@@ -5,7 +5,11 @@
       <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;margin-left:30px;" ></el-select>
     </div>
     <div class="details">
+<<<<<<< HEAD
       <div class="paper" v-for="item in 5" :key="item">
+=======
+      <div @click="toPaper(1)" class="paper" v-for="item in 5">
+>>>>>>> lxh
         <div class="top">
             <div>
                 <div class="title">
@@ -43,6 +47,16 @@
 
 <script setup>
 import { Search } from '@element-plus/icons-vue';
+import { useRoute,useRouter } from 'vue-router';
+
+const router=useRouter()
+const route=useRoute()
+
+const toPaper=(id)=>{
+  router.push('/paper/'+id);
+}
+
+
 
 </script>
 

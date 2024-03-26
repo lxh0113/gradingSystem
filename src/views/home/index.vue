@@ -82,11 +82,20 @@
                     <td class="td">
                         <img class="homeUserInfoAvatar" :src="userInfoForm?.avatar" alt="">
                     </td>
-                    <td class="td">
-                        <el-button>选择文件</el-button>
+                    <td class="td fileTd">
+                        <el-upload style="display: flex;align-items: center;flex-wrap: wrap;" ref="upload" class="upload-demo" action="#" :limit="1"
+                          :on-exceed="handleExceed" :auto-upload="false" :on-change="changeAvatarOperation">
+                          <template #trigger>
+                            <el-button type="primary">选择</el-button>
+                          </template>
+                          <el-button style="margin-left: 20px" class="ml-3" type="success" @click="changeAvatar">
+                            上传
+                          </el-button>
+                        </el-upload>
+                        <!-- <el-button>选择文件</el-button>
                         <el-button style="margin-left: 20px;" type="primary" @click="submitUpload">
                           上传
-                        </el-button>
+                        </el-button> -->
                     </td>
                 </tr>
                 <tr class="tr">
@@ -174,9 +183,17 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import {useUserStore} from '@/stores/userStore.js'
 import axios from 'axios'
 import { bindEmailAPI, changeAvatarAPI, changeNameAPI } from '@/apis/user'
+<<<<<<< HEAD
 import {userISC} from '@/mock/home/index.js'
 // import { userISC } from '..././mock/home/index.js';
 import { examPaperGetAllEP } from '@/mock/teacher/marking.js';
+=======
+import { uploadAvatarAPI } from '@/apis/upload'
+import { genFileId } from 'element-plus';
+
+let upload = ref();
+let file=null
+>>>>>>> lxh
 
 const outerVisible = ref(false)
 const innerVisible = ref(false)
@@ -228,8 +245,12 @@ const adminNavList=ref([
     {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement",isHaveNext:false,childrenList:[]}
 ])
 
+<<<<<<< HEAD
 const leftList=teacherNavList.value
 <<<<<<< HEAD
+=======
+const leftList=schoolAdminNavLists.value
+>>>>>>> lxh
 
 =======
 >>>>>>> 648803296dbd6f70c0bbdb02f7feddd700c21f3e
@@ -240,6 +261,21 @@ const newEmail=ref({
     email:'',
     code:''
 })
+
+const handleExceed = (files) => {
+  upload.value.clearFiles();
+  const file = files[0];
+  file.uid = genFileId();
+  upload.value.handleStart(file);
+};
+
+const submitUpload = () => {
+  console.log(upload.value)
+};
+
+const changeAvatarOperation=(uploadFiles)=>{
+    file=uploadFiles
+}
 
 
 const changeName=async()=>{
@@ -270,7 +306,24 @@ const bindEmail=async()=>{
 }
 
 const changeAvatar=async()=>{
-    // const res=await changeAvatarAPI(userInfoForm.value.account,avatar)
+    let data = new FormData();
+    
+    // 确保 upload.value 是一个文件对象，然后将其附加到 FormData 中
+    data.append('avatar', file.raw);
+    
+    console.log(file);
+    console.log(data);
+
+    const res=await uploadAvatarAPI(userInfoForm.value.account,data)
+
+    if(res.data.code===200)
+    {
+        userStore.changeAvatar(res.data.data)
+        ElMessage.success('上传成功')
+    }
+    else{
+        ElMessage.error('上传失败')
+    }
 }
 
 const collapseOperation = () => {
@@ -578,6 +631,13 @@ onMounted(async()=>{
               height: 50px;
               margin-top:15px;
               border-radius: 50%;
+          }
+
+          .fileTd{
+            line-height: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: left;
           }
       }
   }

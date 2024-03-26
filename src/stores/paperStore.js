@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {ref} from 'vue'
 import {ElMessage} from "element-plus";
 import {defineStore} from "pinia";
@@ -38,3 +39,5 @@ export const usePaperStore = defineStore('paper',()=>{
 },{
     persist:true
 })
+=======
+>>>>>>> lxh

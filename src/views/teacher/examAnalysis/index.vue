@@ -16,9 +16,15 @@
 
 
 <script setup>
+<<<<<<< HEAD
   import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
   import { generateExamAnalysisClass } from '../../../mock/teacher/examAnalysis.js';
   import axios from 'axios'
+=======
+import { ElMessage } from 'element-plus';
+import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
+import { getMaxMinAveAPI } from '@/apis/exam.js'
+>>>>>>> lxh
 
   const classScoreList=ref([])
   let internalInstance = getCurrentInstance();
@@ -197,10 +203,18 @@
     });
   }
 
-const init=()=>{
-
+const getPapers=async()=>{
+  const res=await getMaxMinAveAPI(1);
+  ElMessage.success("获取成功")
 }
 
+<<<<<<< HEAD
+=======
+onMounted(()=>{
+  setChart()
+  getPapers()
+})
+>>>>>>> lxh
 
 </script>
 
