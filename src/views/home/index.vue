@@ -184,8 +184,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 import {useUserStore} from '@/stores/userStore.js'
 import {useClassStore} from '@/stores/classStore.js'
-import {useClassListStore} from '@/stores/classListStore.js'
-import {useStudentListStore} from '@/stores/studentListStore.js'
 
 import { bindEmailAPI, changeAvatarAPI, changeNameAPI } from '@/apis/user'
 
@@ -255,10 +253,6 @@ const adminNavList=ref([
     {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement",isHaveNext:false,childrenList:[]}
 ])
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 27bd5c65e9945315476cf5fe5422da1ec1ad61a5
 const leftList=teacherNavList.value
 
 const userInfoForm = ref(null)
