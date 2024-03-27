@@ -7,10 +7,10 @@
       <div class="left">
         <div class="class" @click="classOneClick">
           <el-icon style="color:#3a63f3" size="large"><Folder /></el-icon>
-          <span style="margin-left: 10px; cursor: pointer;">{{ classStore.classOne.name }}</span>
+          <span style="margin-left: 10px; cursor: pointer;">{{ classText }}</span>
         </div>
         <el-scrollbar height="600px">
-          <router-link v-for="(item,index) in studentListStore.studentList" :key="item" :to="'/teacher/management/'+route.params.classId+'/'+index"  class="li">
+          <router-link v-for="(item,index) in studentList" :key="item.id" :to="'/teacher/management/'+route.params.classId+'/'+item.id"  class="li">
             <el-icon style="margin-left:10px;color:#3a63f3"><Avatar /></el-icon>
             <span style="margin-left: 10px;">{{ item.name }}</span>
           </router-link>
@@ -33,63 +33,97 @@
 </template>
 
 <script setup>
-  import { onMounted,onUnmounted,ref,getCurrentInstance } from 'vue'; // Import ref from Vue
-  import { useRoute,useRouter } from 'vue-router';
-  import axios from 'axios'
-  import {useClassStore} from '@/stores/classStore.js'
-  import {useStudentListStore} from '@/stores/studentListStore.js'
+import { onMounted,onUnmounted,ref,getCurrentInstance } from 'vue'; // Import ref from Vue
+import { useRoute,useRouter } from 'vue-router';
+import axios from 'axios'
+import { useClassStore } from '@/stores/classStore';
+import { getStudentsAPI } from '@/apis/student.js';
+import { ElMessage } from 'element-plus';
 
-  const router=useRouter()
-  const route=useRoute()
-  const classStore=useClassStore()
-  const studentListStore=useStudentListStore()
+const classText=ref('班级')
+const router=useRouter()
+const route=useRoute()
+const classStore=useClassStore()
+let internalInstance = getCurrentInstance();
+let echarts = internalInstance.appContext.config.globalProperties.$echarts
 
-  let internalInstance = getCurrentInstance();
-  let echarts = internalInstance.appContext.config.globalProperties.$echarts
+const studentList=ref([])
 
-  const setChart=()=>{
-    const dom1 = document.querySelector('.chart');
-    const myChart1 = echarts.init(dom1);
-    // 指定图表的配置项和数据
-    var option1 = {
-        title: {
-          text: '班级历史平均分成绩分布'
-        },
-        legend:{
-
-        },
-        color:['#748eed','#91cc75','#fac858'],
-        tooltip: {},
-        xAxis: {
-          data: ['第一次月考', '第二次月考', '第三次月考', '第四次月考', '第五次月考', '第六次月考']
-        },
-        yAxis: {},
-        series: [{
-            name: 'lxh',
-            type: 'line',
-            data: [60, 70, 67, 80, 77, 76],
-            label: {
-              show: true,
-              position: 'top',
-              textStyle: {
-                fontSize: 14
-              }
+const setChart=()=>{
+  const dom1 = document.querySelector('.chart');
+  const myChart1 = echarts.init(dom1);
+  // 指定图表的配置项和数据
+  var option1 = {
+      title: {
+        text: '班级历史平均分成绩分布'
+      },
+      legend:{
+      },
+      color:['#748eed','#91cc75','#fac858'],
+      tooltip: {},
+      xAxis: {
+        data: ['第一次月考', '第二次月考', '第三次月考', '第四次月考', '第五次月考', '第六次月考']
+      },
+      yAxis: {},
+      series: [{
+          name: 'lxh',
+          type: 'line',
+          data: [60, 70, 67, 80, 77, 76],
+          label: {
+            show: true,
+            position: 'top',
+            textStyle: {
+              fontSize: 14
             }
-        }]
-    };
-    // 使用刚指定的配置项和数据显示图表。
-    myChart1.setOption(option1);
-    window.addEventListener('resize',()=>{
-        myChart1.resize()
-    })
+          }
+      }]
+  };
+  // 使用刚指定的配置项和数据显示图表。
+  myChart1.setOption(option1);
+  window.addEventListener('resize',()=>{
+      myChart1.resize()
+  })
+  onUnmounted(()=>{
+    myChart1.dispose();
+  })
+}
+
+const getStudents=async()=>{
+  let id=route.params.classId;
+  const res=await getStudentsAPI(id);
+  if(res.data.code===200)
+  {
+    console.log(res.data.data)
+    studentList.value=res.data.data
   }
-  onMounted(async ()=> {
-      setChart()
-  });
-  //点击班级，显示班级详情
-  function classOneClick(){
-    router.push('/teacher/management/'+route.params.classId)
+  else {
+    ElMessage.error(res.data.message)
   }
+}
+const getClass=()=>{
+  let classId=route.params.classId;
+  console.log(classId)
+  
+  console.log(classStore.getClassList)
+  for(let i=0;i<classStore.getClassList.length;i++)
+  {
+    if(classStore.getClassList[i].id===classId)
+    {
+      classText.value=classStore.getClassList[i].name
+    }
+  }
+}
+
+onMounted(()=> {
+    getClass()
+    getStudents()
+    setChart()
+});
+
+//点击班级，显示班级详情
+function classOneClick(){
+  router.push('/teacher/management/'+route.params.classId)
+}
 </script>
 
 

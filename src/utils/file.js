@@ -5,15 +5,20 @@ import { ElMessage } from 'element-plus';
 var chunkSize = 1 * 1024 * 1024;
 let  fileMd5=null;
 
+// export const fileMd5=null
+
 export const calculateFileMD5=(file)=>{
    
-    getFileMd5(file).then((md5) => {
-        
-        fileMd5=md5;
-        console.info(fileMd5)
-
-        return md5
-    })
+    return new Promise((resolve, reject) => {
+        getFileMd5(file)
+            .then((md5) => {
+                console.info(md5);
+                resolve(md5); // 解析计算得到的 MD5 值
+            })
+            .catch((error) => {
+                reject(error); // 如果计算 MD5 值出错，拒绝 Promise
+            });
+    });
 }
 
 export const uploadFile=(file)=> {

@@ -9,9 +9,7 @@
         
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="a">xx市第二次模拟试题</el-dropdown-item>
-              <el-dropdown-item command="b">xx市第三次模拟试题</el-dropdown-item>
-              <el-dropdown-item command="c">xx市第四次模拟试题</el-dropdown-item>
+              <el-dropdown-item v-for="item in navList" :key="item" :command="item.title">{{ item.title }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -81,10 +79,13 @@ import { getALLStudentPaperAPI } from '@/apis/examPaper.js'
 // import { examPaperGetAllEP } from '../../../../mock/teacher/marking.js';
 import axios from 'axios'
 import { ElMessage } from 'element-plus';
+import { useTeacherPaperStore } from '@/stores/teacherPaperStore';
 
 const router=useRouter();
 const route = useRoute();
+const teacherPaperStore=useTeacherPaperStore()
 
+const navList=ref([])
 const studentList=ref([])
 
 const getExamById=async()=>{
@@ -103,8 +104,12 @@ const getExamById=async()=>{
   }
 }
 
-onMounted(async()=>{
+const setNav=()=>{
+  navList.value=teacherPaperStore.getTeacherPaperList()
+}
 
+onMounted(async()=>{
+  setNav()
   getExamById()
 })
 

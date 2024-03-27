@@ -3,12 +3,24 @@ import { defineStore } from 'pinia'
 
 export const useClassStore = defineStore('class', () => {
     
-    const classOne=ref([])
+    const classList=ref(null)
 
+    const setClassList=(data)=>{
+        console.log(data)
+        classList.value=data
+    }
+
+    const getClassList=()=>{
+        return classList.value||[]
+    }
 
     return {
-        classOne
+        setClassList,
+        getClassList
     }
 },{
-    persist:true
+    persist:{
+        enabled:true,
+        storage:localStorage
+    }
 })

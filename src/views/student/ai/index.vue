@@ -6,9 +6,7 @@
         <router-link to="/student/ai/generate">
           生成
         </router-link>
-        <router-link to="/student/ai/history">
-          历史试题
-        </router-link>
+        
     </div>
     <div class="bottom">
       <router-view>

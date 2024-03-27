@@ -74,11 +74,13 @@ import { getAllExaminationAPI } from '@/apis/examPaper.js'
 // import { examPaperGetAllE } from '../../../../mock/teacher/marking.js';
 import axios from 'axios'
 import { ElMessage } from 'element-plus';
+import { useTeacherPaperStore } from '@/stores/teacherPaperStore.js';
 
 const searchInput=ref('')
 const router=useRouter()
 const route=useRoute()
 const examPaperList=ref([])
+const teacherPaperStore=useTeacherPaperStore()
 
 const getAllExamination=async()=>{
     const res=await getAllExaminationAPI();
@@ -87,6 +89,8 @@ const getAllExamination=async()=>{
     {
         console.log(res.data)
         examPaperList.value=res.data.data
+
+        teacherPaperStore.setTeacherPaperList(examPaperList.value)
     }
     else {
         ElMessage.error(res.data.message)

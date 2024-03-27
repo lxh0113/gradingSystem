@@ -15,7 +15,6 @@ import StudentPapersOn from "@/views/student/papers/components/studentPapersOn.v
 import StudentPapersOff from "@/views/student/papers/components/studentPapersOff.vue"
 import StudentPapersMistakes from "@/views/student/papers/components/studentPapersMistakes.vue"
 import StudentAiGenerate from "@/views/student/ai/components/studentAiGenerate.vue"
-import StudentAiHistory from "@/views/student/ai/components/studentAiHistory.vue"
 import StudentPapersNotes from "@/views/student/papers/components/studentPapersNotes.vue"
 import StudentPapersNotesDetails from "@/views/student/papers/components/studentPapersNotesDetails.vue"
 
@@ -117,8 +116,7 @@ const router = createRouter({
               component:StudentAI,
               redirect:"/student/ai/generate",
               children:[
-                {path:'generate',component:StudentAiGenerate},
-                {path:'history',component:StudentAiHistory}
+                {path:'generate',component:StudentAiGenerate}
               ]
             },
             {path:'analysis',component:StudentAnalysis},

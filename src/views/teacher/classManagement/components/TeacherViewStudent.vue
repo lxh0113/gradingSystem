@@ -153,7 +153,7 @@ const changeTag=async()=>{
     else {
         ElMessage.error(res.data.message)
     }
-    dialogVisible = false
+    dialogVisible.value = false
 }
 
     const setChart=()=>{
@@ -200,18 +200,31 @@ const changeTag=async()=>{
     onUnmounted( ()=>{
         myChart1.dispose();
     })
-
+1
 }
 
 const getStudentData=async()=>{
-    const res=await getStudentsAPI();
+
+    // console.log(route.params)
+    let id=route.params.classId;
+    const res=await getStudentsAPI(id);
+
+    if(res.data.code===200)
+    {
+        console.log(res.data.data)
+    }
+    else {
+        ElMessage.error(res.data.message)
+    }
 
     
 }
 
 
 onMounted(()=>{
-  setChart()
+    getStudentData()
+    setChart()
+
 })
 
 

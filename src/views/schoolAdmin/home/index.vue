@@ -285,7 +285,8 @@ const submitUpload = async() => {
   }
 
   let testPaperId;
-  let md5=calculateFileMD5(uploadPaper.value.zip.raw);
+  let md5=await calculateFileMD5(uploadPaper.value.zip.raw);
+  console.log(md5)
 
   // 上传空白试卷
   let data=new FormData()
@@ -294,10 +295,13 @@ const submitUpload = async() => {
   if(res.data.code===200)
   { 
     testPaperId=res.data.data
-    ElMessage.success('上传成功')
+    console.log(res.data.data)
+    // ElMessage.success('上传成功')
   }
   else {
     ElMessage.error('上传出错')
+
+    return
   }
 
   
@@ -308,8 +312,9 @@ const submitUpload = async() => {
 
   nextTick(async()=>{
 
-    const res=await checkFileAPI(md5,testPaperId)
-
+    
+    const res=await checkFileAPI(testPaperId,md5)
+    console.log(res)
     if(res.data.code===200)
     {
       ElMessage.success('上传成功')

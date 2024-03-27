@@ -191,7 +191,10 @@ import {userISC} from '@/mock/home/index.js'
 import { examPaperGetAllEP } from '@/mock/teacher/marking.js';
 import { uploadAvatarAPI } from '@/apis/upload'
 import { genFileId } from 'element-plus';
+import { useRoute,useRouter } from 'vue-router'
 
+const route=useRoute()
+const router=useRouter()
 let upload = ref();
 let file=null
 import {studentGetStudents} from '@/mock/teacher/classManagement.js'
@@ -204,8 +207,6 @@ const modifyUserInfoStatus=ref(1)
 
 const userStore=useUserStore()
 const classStore=useClassStore()
-const classListStore=useClassListStore()
-const studentListStore=useStudentListStore()
 
 var teacherChildrenList=ref([])
 var studentList=ref([])
@@ -228,9 +229,6 @@ const teacherNavList=ref([
         get childrenList() {
             return teacherChildrenList.value;
         }}
-    // [
-    //     {text:"软件一班",to:"1"},{text:"软件二班",to:"2"},{text:"软件三班",to:"3"},{text:"软件四班",to:"4"}
-    // ]
     
 ])
 
@@ -253,7 +251,7 @@ const adminNavList=ref([
     {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement",isHaveNext:false,childrenList:[]}
 ])
 
-const leftList=teacherNavList.value
+const leftList=studentNavList.value
 
 const userInfoForm = ref(null)
 const newName=ref("")
@@ -377,27 +375,16 @@ onMounted(async()=>{
         const res=await getMyClassAPI(userInfoForm.value.account);
         console.log(res.data.data)
         teacherChildrenList.value=res.data.data
+        classStore.setClassList(res.data.data)
     }
 })
 
 //教师端点击班级事件
 function classOneClick(classId){
     //获取班级学生
-    axios.get('/student/getStudents').then(res => {
-          console.log(res.data)
-          studentListStore.studentList=res.data.data
-          console.log(studentListStore.studentList)
-      })
-      .catch((err) => {
-          console.log(err);
-      });
-      classListStore.classList.filter(item => {
-        console.log(item)
-        if (item.id == classId) {
-            classStore.classOne=item
-        }
-      });
-      console.log(classStore.classOne)
+
+    router.push('/teacher/management/'+classId)
+    
 }
 </script>
   
