@@ -7,9 +7,16 @@ export const getMaxMinAveAPI=(testPaperId)=>{
     })
 }
 
-export const getHistoryTestDetailsAPI=(schoolId)=>{
+export const teacherGetAllClassAPI=(teacherAccount)=>{
     return http({
-        url:"/examAnalysis/examDetails/"+schoolId,
+        url:'/examAnalysis/class/'+teacherAccount,
+        method:'GET'
+    })
+}
+
+export const getHistoryTestDetailsAPI=(schoolAdminAccount)=>{
+    return http({
+        url:"/examAnalysis/examDetails/"+schoolAdminAccount,
         method:"GET"
     })
 }

@@ -19,7 +19,7 @@
               <el-button size="small" type="primary" @click="visible = false">确认</el-button>
             </div>
             <template #reference>
-              <el-button @click="visible = true">评语</el-button>
+              <el-button @click="visible = true" v-if="userStore.user.identity==='teacher'">评语</el-button>
             </template>
           </el-popover>
         </div>
@@ -57,8 +57,11 @@
             <div class="answer">
               答案：B
             </div>
-            <div class="score">
+            <div class="score" v-if="userStore.user.identity==='teacher'">
               分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" />
+            </div>
+            <div class="score" v-else>
+              分值：5
             </div>
           </div>
           <div class="analysis">
@@ -76,8 +79,11 @@
             <div class="answer">
               答案：哇咔咔咔咔咔咔咔
             </div>
-            <div class="score">
+            <div class="score" v-if="userStore.user.identity==='teacher'">
               分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" />
+            </div>
+            <div class="score" v-else>
+              分值：5
             </div>
           </div>
           <div class="analysis">
@@ -98,8 +104,11 @@
             <div class="answer">
               
             </div>
-            <div class="score">
+            <div class="score" v-if="userStore.user.identity==='teacher'">
               分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" />
+            </div>
+            <div class="score" v-else>
+              分值：5
             </div>
           </div>
           <div class="analysis">
@@ -118,10 +127,12 @@
 import { ArrowLeft,ArrowLeftBold,ArrowRight, DArrowLeft, DArrowRight } from '@element-plus/icons-vue';
 import { ref } from 'vue'
 import { useRoute,useRouter } from "vue-router"
+import { useUserStore } from '@/stores/userStore';
 
 const showImagePreview=ref(false)
 const visible = ref(false)
 const comment=ref('')
+const userStore=useUserStore()
 
 const Router=useRouter()
 const route = useRoute();

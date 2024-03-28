@@ -19,9 +19,11 @@
 import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
 import { generateExamAnalysisClass } from '../../../mock/teacher/examAnalysis.js';
 import { ElMessage } from 'element-plus';
-import { getMaxMinAveAPI } from '@/apis/exam.js'
+import { getMaxMinAveAPI,getClassHistoryTestDataAPI } from '@/apis/exam.js'
+import { useUserStore } from '@/stores/userStore';
 
 const classScoreList=ref([])
+const userStore=useUserStore()
 let internalInstance = getCurrentInstance();
 let echarts = internalInstance.appContext.config.globalProperties.$echarts
 const setChart=()=>{
@@ -263,20 +265,30 @@ const setChart=()=>{
   });
 }
 
-const getPapers=async()=>{
-  const res=await getMaxMinAveAPI(1);
+const setChartData1=async()=>{
+  const res=await getClassHistoryTestDataAPI(userStore.getUserInfo.account);
+
   if(res.data.code===200)
   {
-    console.log(res)
+    console.log(res.data.data)
   }
   else {
-
+    ElMessage.error(res.data.message)
   }
+}
+
+const setChartData2=()=>{
+  // const res=await 
+}
+
+const initChart=()=>{
+  setChartData1()
+  setChartData2()
 }
 
 onMounted(()=>{
   setChart()
-  getPapers()
+  initChart()
 })
 
 </script>

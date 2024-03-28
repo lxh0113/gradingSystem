@@ -4,12 +4,12 @@
       <div class="content">
         <el-dropdown @command="handleCommand">
           <span class="name el-dropdown-link">
-            xx市第一次模拟试题<el-icon class="el-icon--right"><arrow-down /></el-icon>
+            {{ titleText }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
           </span>
         
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item v-for="item in navList" :key="item" :command="item.title">{{ item.title }}</el-dropdown-item>
+              <el-dropdown-item v-for="item in navList" :key="item" :command="item.title" @click="router.push('/teacher/marking/'+item.id)">{{ item.title }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -84,6 +84,7 @@ import { useTeacherPaperStore } from '@/stores/teacherPaperStore';
 const router=useRouter();
 const route = useRoute();
 const teacherPaperStore=useTeacherPaperStore()
+const titleText=ref('')
 
 const navList=ref([])
 const studentList=ref([])
@@ -106,6 +107,11 @@ const getExamById=async()=>{
 
 const setNav=()=>{
   navList.value=teacherPaperStore.getTeacherPaperList()
+  let id=route.params.id
+
+  const paper = teacherPaperStore.getTeacherPaperList().find(item => item.id == id);
+  titleText.value = paper ? paper.title : '';
+
 }
 
 onMounted(async()=>{

@@ -68,7 +68,7 @@ import Test from '@/mock/test.vue';
 
 // 公共部分
 import PaperView from '@/views/common/paperView.vue';
-
+import NoPage from '@/views/noPage/noPage.vue'
 
 
 const router = createRouter({
@@ -250,9 +250,15 @@ const router = createRouter({
       component:PaperView
     },
     {
-      path:'/register',
-      name:'register',
-      component: Register
+      path: '/404',
+      name: 'NoPage404',
+      component: NoPage,
+      hidden: true
+    },
+    {
+      path: '/:pathMatch(.*)',
+      redirect: '/404',
+      hidden: true
     }
   ]
 })
