@@ -1,7 +1,7 @@
 <template>
     <div class="bigBox wow fadeInUp">
       <div class="conditionSearch">
-        <el-input v-model="searchInput" style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
+        <el-input @keyup.enter="saerch" v-model="searchInput" style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
     </div>
       <div class="details">
         <div class="paper" v-for="item in examPaperList" :key="item.id" @click="()=>$router.push(`/teacher/marking/${item.id}`)">
@@ -58,10 +58,11 @@
                 </div>
             </div>
         </div>
+        <el-empty v-if="examPaperList.length===0" description="无数据" />
       </div>
   
       <div class="page">
-        <el-pagination prev-text="上一页" next-text="下一页" :page-size="20" :pager-count="11" layout="prev, pager, next"  :total="1000" />
+        <el-pagination v-if="examPaperList.length!==0" prev-text="上一页" next-text="下一页" @prev-click="minusPages" @next-click="addPages" @current-change="changeCurrent" :current-page="pageData.current" layout="prev, pager, next"  :page-count="pageData.totalPage" />
       </div>
     </div>
 </template>
@@ -70,7 +71,7 @@
 import { Search } from '@element-plus/icons-vue';
 import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
-import { getAllExaminationAPI } from '@/apis/examPaper.js'
+import { getAllExaminationAPI,getEByKeyAPI } from '@/apis/examPaper.js'
 // import { examPaperGetAllE } from '../../../../mock/teacher/marking.js';
 import axios from 'axios'
 import { ElMessage } from 'element-plus';
@@ -82,13 +83,89 @@ const route=useRoute()
 const examPaperList=ref([])
 const teacherPaperStore=useTeacherPaperStore()
 
-const getAllExamination=async()=>{
-    const res=await getAllExaminationAPI();
+const pageData=ref({
+    current:1,
+    totalPage:0
+})
+
+const changeCurrent=(number)=>{
+    pageData.value.current=number;
+    if(searchInput.value.trim()==='')
+    {
+        getAllExamination(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
+
+const addPages=()=>{
+    if(pageData.value.current>=pageData.value.totalPage)
+    {
+        return
+    }
+
+    pageData.value.current++;
+    
+    if(searchInput.value.trim()==='')
+    {
+        getAllExamination(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
+
+const minusPages=()=>{
+    if(pageData.value.current===1)
+    {
+        return
+    }
+
+    pageData.value.current--;
+    
+    if(searchInput.value.trim()==='')
+    {
+        getAllExamination(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
+
+const saerch=()=>{
+    if(searchInput.value.trim()==='')
+    {
+        getAllExamination(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
+
+const getAllExaminationByKey=async(key,page)=>{
+    const res=await getEByKeyAPI(key,page);
+
+    if(res.data.code===200)
+    {
+        examPaperList.value=res.data.data.list
+        pageData.value.totalPage=res.data.data.totalPage
+
+        teacherPaperStore.setTeacherPaperList(examPaperList.value)
+    }
+    else {
+        ElMessage.error(res.data.message)
+    }
+}
+
+const getAllExamination=async(page)=>{
+    const res=await getAllExaminationAPI(page);
 
     if(res.data.code===200)
     {
         console.log(res.data)
-        examPaperList.value=res.data.data
+        examPaperList.value=res.data.data.list
+        pageData.value.totalPage=res.data.data.totalPage
 
         teacherPaperStore.setTeacherPaperList(examPaperList.value)
     }
@@ -98,13 +175,16 @@ const getAllExamination=async()=>{
 }
 
 onMounted(async()=>{
-    getAllExamination();
+    getAllExamination(1);
 })
 </script>
 
 <style lang="scss" scoped>
     .bigBox{
         margin-top:20px;
+        height: 100vh;
+        background-color: #fff;
+        // position: relative;
 
         .conditionSearch{
             color:#3A63F3;
@@ -201,7 +281,11 @@ onMounted(async()=>{
         }
 
     .page{
+        // position: fixed;
+        bottom:20px;
         display: flex;
+        // margin-left: 50%;
+        // transform: translateX(-50%);
         justify-content: center;
         align-items: center;
     }

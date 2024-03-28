@@ -9,7 +9,7 @@
         
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item v-for="item in navList" :key="item" :command="item.title" @click="router.push('/teacher/marking/'+item.id)">{{ item.title }}</el-dropdown-item>
+              <el-dropdown-item v-for="item in navList" :key="item" :command="item.title" @click="toMarking(item.id)">{{ item.title }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -38,17 +38,17 @@
             <td class="width1">操作</td>
           </tr>
         </thead>
-        <tbody>
-          <div  v-for="item in studentList" :key="item.id">
-            <tr v-if="item.state===true">
+        <tbody v-if="studentList.length!==0">
+          <div v-for="item in studentList" :key="item.id">
+            <tr v-if="item.state==='2'">
               <td>{{ item.studentNumber }}</td>
               <td>{{ item.name }}</td>
               <td class="score">{{ item.score }}</td>
-              <td class="width1">{{ item.comment }}</td>
+              <td class="width1" :title="item.comment">{{ item.comment }}</td>
               <td style="color:#f56c6c">已批阅</td>
               <td class="width1">
-                <span style="opacity: 0;">批阅</span>
-                <span>查看</span>
+                <!-- <span style="opacity: 0;">批阅</span> -->
+                <span @click="router.push('/paper/'+item.id)">查看</span>
               </td>
             </tr>
 
@@ -58,13 +58,14 @@
               <td>---</td>
               <td  class="width1">暂无</td>
               <td style="color:#67c23a">正在批阅</td>
-              <td  class="width1">
+              <td  class="width1" :title="item.comment">
                 <span @click="toPaper(1)">批阅</span>
                 <span>查看</span>
               </td>
             </tr>
           </div>
         </tbody>
+        <el-empty v-else description="description" />
       </table>
     </div>
   </div>
@@ -103,6 +104,14 @@ const getExamById=async()=>{
   else {
     ElMessage.error('网络错误')
   }
+  
+}
+
+const toMarking=(id)=>{
+  router.push('/teacher/marking/'+id)
+
+  setNav()
+  getExamById()
 }
 
 const setNav=()=>{
@@ -182,6 +191,7 @@ const toPaper=(id)=>{
         display: flex;
         width: 100%;
         height: 60px;
+        max-width: 85vw;
         line-height: 60px;
         border-bottom:1px solid rgba(#c4c4c4,0.4);
 

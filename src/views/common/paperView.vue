@@ -5,12 +5,12 @@
           <textarea name="" id="" cols="30" rows="10"></textarea>
         </div> -->
         <el-scrollbar style="display: flex;max-width:1000px;justify-content: center;align-items: center;" height="800px">
-          <img @click="()=>showImagePreview=true" class="imagePapers" src="@/assets/testPaper.png" alt="">
+          <img @click="()=>showImagePreview=true" class="imagePapers" :src="paperList[currentIndex]?.path" alt="">
         </el-scrollbar>
         <div class="fixed">
           <el-button :icon="DArrowLeft">上一套</el-button>
-          <el-button :icon="ArrowLeft"></el-button>
-          <el-button :icon="ArrowRight"></el-button>
+          <el-button :icon="ArrowLeft" :disabled="currentIndex===0" @click="setMinusIndex"></el-button>
+          <el-button :icon="ArrowRight" :disabled="currentIndex===paperList.length-1" @click="setAddIndex"></el-button>
           <el-button :icon="DArrowRight">下一套</el-button>
           <el-popover :visible="visible" placement="top" :width="320" style="height: 150px;">
             <el-input size="large" type="textarea" :rows="6" placeholder="请输入评语" v-model="comment" resize="false" style="margin-bottom: 20px;" />
@@ -35,85 +35,59 @@
         </div>
       </div>
       <el-scrollbar>
-        <div class="questions" v-for="item in 1">
+        <div class="questions" v-for="item in currentPages" :key="item">
           <div class="question">
-          1．下列哪个语句在Python中是非法的？
+            {{ item.question }}
           </div>
-          <div class="options">
-            <div class="option">
-              A、x = y = z = 1"
-            </div>
-            <div class="option">
-              B、x = (y = z + 1)
-            </div>
-            <div class="option">
-              C、x, y = y, x
-            </div>
-            <div class="option">
-              D、x += y x=x+y
+          <div class="options" v-if="item.type==='选择题'">
+            <div class="option" v-for="littleItem in item.options" :key="littleItem">
+              {{ littleItem }}
             </div>
           </div>
-          <div class="details">
+          <div class="options" v-else-if="简答题">
+            <div class="option">
+              <span class="answer">答案：</span>{{ item.studentResponse }}
+            </div>
+          </div>
+
+          <div class="details" v-if="item.type==='选择题'">
             <div class="answer">
-              答案：B
+              答案：{{ item.studentResponse }}
             </div>
             <div class="score" v-if="userStore.user.identity==='teacher'">
-              分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" />
+              分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" :value="item.score" />
             </div>
             <div class="score" v-else>
-              分值：5
+              分值：{{ item.score }}
             </div>
           </div>
+          <div class="details" v-else-if="item.type==='填空题'">
+            <div class="answer">
+              答案：{{ item.studentResponse }}
+            </div>
+            <div class="score" v-if="userStore.user.identity==='teacher'">
+              分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" :value="item.score" />
+            </div>
+            <div class="score" v-else>
+              分值：{{ item.score }}
+            </div>
+          </div>
+          <div class="details" v-else>
+            <div class="answer">
+            </div>
+            <div class="score" v-if="userStore.user.identity==='teacher'">
+              分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" :value="item.score" />
+            </div>
+            <div class="score" v-else>
+              分值：{{ item.score }}
+            </div>
+          </div>
+
+
           <div class="analysis">
-            本题考查Python的语法规则。选项B中的赋值语句是不合法的，因为Python不允许在赋值表达式中嵌套赋值。
+            {{ item.analyzing }}
           </div>
           <hr>
-        </div>
-
-        <div class="questions">
-          <div class="question">
-            1．下列哪个语句在Python中是非法的________
-          </div>
-          
-          <div class="details">
-            <div class="answer">
-              答案：哇咔咔咔咔咔咔咔
-            </div>
-            <div class="score" v-if="userStore.user.identity==='teacher'">
-              分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" />
-            </div>
-            <div class="score" v-else>
-              分值：5
-            </div>
-          </div>
-          <div class="analysis">
-            本题考查Python的语法规则。选项B中的赋值语句是不合法的，因为Python不允许在赋值表达式中嵌套赋值。
-          </div>
-        </div>
-        <hr>
-        <div class="questions">
-          <div class="question">
-            请简述你对java的看法，说明至少5点
-          </div>
-          <div class="options">
-            <div class="option">
-              <span class="answer">答案：</span>起因：由于在自定义请求头后请求会从简单请求转变为复杂请求，复杂请求会提前发送一个预检请求与服务器进行沟通，大概类似于（预检请求：“我可以访问吗？”=> 服务器：“可以” =>真实请求） 这里，就是因为axios的预检请求失败（当使用某些自定义请求头或特殊请求方法时，浏览器会发送预检请求（OPTIONS）
-            </div>
-          </div>
-          <div class="details">
-            <div class="answer">
-              
-            </div>
-            <div class="score" v-if="userStore.user.identity==='teacher'">
-              分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" />
-            </div>
-            <div class="score" v-else>
-              分值：5
-            </div>
-          </div>
-          <div class="analysis">
-            本题考查Python的语法规则。选项B中的赋值语句是不合法的，因为Python不允许在赋值表达式中嵌套赋值。
-          </div>
         </div>
         <hr>
       </el-scrollbar>
@@ -125,9 +99,11 @@
 
 <script setup>
 import { ArrowLeft,ArrowLeftBold,ArrowRight, DArrowLeft, DArrowRight } from '@element-plus/icons-vue';
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute,useRouter } from "vue-router"
 import { useUserStore } from '@/stores/userStore';
+import { getPaperAPI } from '@/apis/examPaper.js'
+import { ElMessage } from 'element-plus';
 
 const showImagePreview=ref(false)
 const visible = ref(false)
@@ -140,11 +116,71 @@ const route = useRoute();
 let url = ['https://yuejuanpt.oss-cn-zhangjiakou.aliyuncs.com/%E9%BB%98%E8%AE%A4.png'];
 
 const showViewer = ref(false);
+let currentIndex=0;
+const paperList=ref([])
+const currentPages=ref(null)
 
 const closePreview=()=>{
   showImagePreview.value=false
 }
 
+const setAddIndex=()=>{
+  if(currentIndex>=paperList.length-1)
+  {
+    return
+  }
+
+  currentIndex++
+  // alert(currentIndex)
+  url[0]=paperList.value[currentIndex].path
+
+  console.log(url[0])
+
+  let newStr=paperList.value[currentIndex].content.replaceAll('\n','');
+  newStr=paperList.value[currentIndex].content.replaceAll('\'','\"');
+  currentPages.value=JSON.parse(newStr)
+  console.log(currentPages)
+}
+
+const setMinusIndex=()=>{
+  if(currentIndex<=0)
+  {
+    return
+  }
+  currentIndex--
+  url[0]=paperList.value[currentIndex].path
+
+  let newStr=paperList.value[currentIndex].content.replaceAll('\n','');
+  newStr=paperList.value[currentIndex].content.replaceAll('\'','\"');
+  currentPages.value=JSON.parse(newStr)
+  console.log(currentPages)
+}
+
+const getPaperDetails=async()=>{
+  let id=route.params.id
+  const res=await getPaperAPI(id);
+
+  if(res.data.code===200)
+  {
+    console.log(res.data.data)
+    paperList.value=res.data.data
+    currentIndex=0;
+    
+    url[0]=paperList.value[currentIndex].path
+    let newStr=paperList.value[currentIndex].content.replaceAll('\n','');
+    newStr=paperList.value[currentIndex].content.replaceAll('\'','\"');
+    console.log(newStr)
+    currentPages.value=JSON.parse(newStr)
+    console.log(currentPages)
+  }
+  else {
+    ElMessage.error(res.data.message)
+  }
+}
+
+onMounted(()=>{
+  getPaperDetails()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -267,7 +303,8 @@ const closePreview=()=>{
 
 
     .imagePapers{
-      width: 500px;
+      width: 540px;
+      // height: 100%;
       height: fit-content;
     }
 

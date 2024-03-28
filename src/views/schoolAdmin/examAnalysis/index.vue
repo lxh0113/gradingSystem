@@ -190,7 +190,7 @@ const setChartData3=()=>{
 }
 
 const initChart=()=>{
-  // setChartData1()
+  setChartData1()
   setChartData2()
   setChartData3()
 }

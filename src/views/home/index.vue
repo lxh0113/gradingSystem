@@ -251,7 +251,7 @@ const adminNavList=ref([
     {text:"账号管理",icon:"iconfont icon-user-management",to:"/admin/accountManagement",isHaveNext:false,childrenList:[]}
 ])
 
-const leftList=studentNavList.value
+const leftList=teacherNavList.value
 
 const userInfoForm = ref(null)
 const newName=ref("")
