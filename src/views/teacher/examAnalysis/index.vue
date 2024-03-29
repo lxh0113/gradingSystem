@@ -19,20 +19,11 @@
 import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
 import { generateExamAnalysisClass } from '../../../mock/teacher/examAnalysis.js';
 import { ElMessage } from 'element-plus';
-import { getMaxMinAveAPI,getClassHistoryTestDataAPI } from '@/apis/exam.js'
+import { getMaxMinAveAPI,teacherGetAllClassDetailsAPI } from '@/apis/exam.js'
 import { useUserStore } from '@/stores/userStore';
 
-const classScoreList=ref([])
-const userStore=useUserStore()
-let internalInstance = getCurrentInstance();
-let echarts = internalInstance.appContext.config.globalProperties.$echarts
-const setChart=()=>{
-  const dom1 = document.querySelector('.firstChart');
-  const myChart1 = echarts.init(dom1);
-  const dom2 = document.querySelector('.secondChart');
-  const myChart2 = echarts.init(dom2);
-  // 指定图表的配置项和数据
-  var option1 = {
+const chartData1=ref(
+  {
     title: {
       text: '班级历史平均分成绩分布'
     },
@@ -50,64 +41,12 @@ const setChart=()=>{
     ,'#efa666','#eddd86','#9987ce','#63b2ee','#76da91'],
     tooltip: {},
     xAxis: {
-      data: ['第一次月考', '第二次月考', '第三次月考', '第四次月考', '第五次月考', '第六次月考']
+      data: []
     },
     yAxis: {},
-    series: [
-      {
-        name: '一班',
-        type: 'line',
-        data: [60, 70, 67, 80, 77, 76],
-        label: {
-        show: false,
-        position: 'top',
-        textStyle: {
-          fontSize: 14
-        }
-        },
-        emphasis:{
-          label:{
-            show:true
-          }
-        }
-      },
-      {
-        name: '二班',
-        type: 'line',
-        data: [80, 90, 65, 87, 100, 50],
-        label: {
-        show: false,
-        position: 'top',
-        textStyle: {
-          fontSize: 14
-        }
-        },
-        emphasis:{
-          label:{
-            show:true
-          }
-        }
-      },
-      {
-        name: '三班',
-        type: 'line',
-        data: [50, 30, 70, 100, 82, 67],
-        label: {
-        show: false,
-        position: 'top',
-        textStyle: {
-          fontSize: 14
-        }
-        },
-        emphasis:{
-          label:{
-            show:true
-          }
-        }
-      }
-    ]
-  };
-  var option2 = {
+    series: []
+})
+const chartData2=ref({
     title: {
       text: '各班级历史平均分成绩分布'
     },
@@ -125,116 +64,14 @@ const setChart=()=>{
     ,'#efa666','#eddd86','#9987ce','#63b2ee','#76da91'],
     tooltip: {},
     xAxis: {
-      data: ['第一次月考', '第二次月考', '第三次月考', '第四次月考', '第五次月考', '第六次月考']
+      data: []
     },
     yAxis: {},
     series: [
       {
         name: '一班',
         type: 'bar',
-        data: [60, 70, 67, 80, 77, 76],
-        label: {
-        show: true,
-        position: 'top',
-        textStyle: {
-          fontSize: 14
-        }
-        },
-        emphasis:{
-          label:{
-            show:true
-          }
-        }
-      },
-      {
-        name: '二班',
-        type: 'bar',
-        data: [80, 90, 65, 87, 100, 50],
-        label: {
-        show: true,
-        position: 'top',
-        textStyle: {
-          fontSize: 14
-        }
-        },
-        emphasis:{
-          label:{
-            show:true
-          }
-        }
-      },
-      {
-        name: '三班',
-        type: 'bar',
-        data: [50, 30, 70, 100, 82, 67],
-        label: {
-        show: true,
-        position: 'top',
-        textStyle: {
-          fontSize: 14
-        }
-        },
-        emphasis:{
-          label:{
-            show:true
-          }
-        }
-      },
-      {
-        name: '四班',
-        type: 'bar',
-        data: [50, 30, 70, 100, 82, 67],
-        label: {
-        show: true,
-        position: 'top',
-        textStyle: {
-          fontSize: 14
-        }
-        },
-        emphasis:{
-          label:{
-            show:true
-          }
-        }
-      },
-      {
-        name: '五班',
-        type: 'bar',
-        data: [50, 30, 70, 100, 82, 67],
-        label: {
-        show: true,
-        position: 'top',
-        textStyle: {
-          fontSize: 14
-        }
-        },
-        emphasis:{
-          label:{
-            show:true
-          }
-        }
-      },
-      {
-        name: '六班',
-        type: 'bar',
-        data: [50, 30, 70, 100, 82, 67],
-        label: {
-        show: true,
-        position: 'top',
-        textStyle: {
-          fontSize: 14
-        }
-        },
-        emphasis:{
-          label:{
-            show:true
-          }
-        }
-      },
-      {
-        name: '七班',
-        type: 'bar',
-        data: [50, 30, 70, 100, 82, 67],
+        data: [],
         label: {
         show: true,
         position: 'top',
@@ -249,7 +86,21 @@ const setChart=()=>{
         }
       }
     ]
-  };
+  })
+
+const classScoreList=ref([])
+const userStore=useUserStore()
+let internalInstance = getCurrentInstance();
+let echarts = internalInstance.appContext.config.globalProperties.$echarts
+
+const setChart=()=>{
+  const dom1 = document.querySelector('.firstChart');
+  const myChart1 = echarts.init(dom1);
+  const dom2 = document.querySelector('.secondChart');
+  const myChart2 = echarts.init(dom2);
+  // 指定图表的配置项和数据
+  var option1 = chartData1.value
+  var option2 = chartData2.value
 
   // 使用刚指定的配置项和数据显示图表。
   myChart1.setOption(option1);
@@ -266,19 +117,99 @@ const setChart=()=>{
 }
 
 const setChartData1=async()=>{
-  const res=await getClassHistoryTestDataAPI(userStore.getUserInfo.account);
+  const res=await teacherGetAllClassDetailsAPI(userStore.getUserInfo().account);
 
   if(res.data.code===200)
   {
     console.log(res.data.data)
+    
+    chartData1.value.xAxis.data=res.data.data.map(item=>{
+      return item.title
+    })
+
+    chartData1.value.series=res.data.data[0].classScoreList.map(item=>{
+      return {
+        name: item.name,
+        type: 'line',
+        data: [],
+        label: {
+        show: false,
+        position: 'top',
+        textStyle: {
+          fontSize: 14
+        }
+        },
+        emphasis:{
+          label:{
+            show:true
+          }
+        }
+      }
+    })
+
+    for(let i=0;i<chartData1.value.series.length;i++)
+    {
+      chartData1.value.series[i].data=res.data.data.map(item=>{
+        return item.classScoreList[i].avgScore
+      })
+    }
+
+    
+    // initChart()
+    setChart()
+
   }
   else {
     ElMessage.error(res.data.message)
   }
 }
 
-const setChartData2=()=>{
-  // const res=await 
+const setChartData2=async()=>{
+  const res=await teacherGetAllClassDetailsAPI(userStore.getUserInfo().account);
+
+  if(res.data.code===200)
+  {
+    console.log(res.data.data)
+    
+    chartData2.value.xAxis.data=res.data.data.map(item=>{
+      return item.title
+    })
+
+    chartData2.value.series=res.data.data[0].classScoreList.map(item=>{
+      return {
+        name: item.name,
+        type: 'bar',
+        data: [],
+        label: {
+        show: true,
+        position: 'top',
+        textStyle: {
+          fontSize: 14
+        }
+        },
+        emphasis:{
+          label:{
+            show:true
+          }
+        }
+      }
+    })
+
+    for(let i=0;i<chartData2.value.series.length;i++)
+    {
+      chartData2.value.series[i].data=res.data.data.map(item=>{
+        return item.classScoreList[i].avgScore
+      })
+    }
+
+    
+    // initChart()
+    setChart()
+
+  }
+  else {
+    ElMessage.error(res.data.message)
+  }
 }
 
 const initChart=()=>{

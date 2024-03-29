@@ -29,7 +29,7 @@
 
 <script setup>
 import {onMounted,onUnmounted,getCurrentInstance,ref,watch} from 'vue'
-import { getHistoryTestDetailsAPI } from "@/apis/exam.js"
+import { getHistoryTestDetailsAPI,schoolAdminGetAllExamDetailsAPI } from "@/apis/exam.js"
 import { useUserStore } from '@/stores/userStore';
 import { ElMessage } from 'element-plus';
 
@@ -185,7 +185,10 @@ const setChartData2=()=>{
   
 }
 
-const setChartData3=()=>{
+const setChartData3=async()=>{
+
+  const res=await schoolAdminGetAllExamDetailsAPI(userStore.getUserInfo().account);
+  
 
 }
 

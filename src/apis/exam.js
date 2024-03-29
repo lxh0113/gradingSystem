@@ -45,3 +45,17 @@ export const getMyClassAPI=(teacherAccount)=>{
     })
 
 }
+
+export const schoolAdminGetAllExamDetailsAPI=(schoolAdminAccount)=>{
+    return http({
+        url:'/examAnalysis/examDetails/'+schoolAdminAccount,
+        method:'GET'
+    })
+}
+
+export const teacherGetAllClassDetailsAPI=(teacherAccount)=>{
+    return http({
+        url:'/examAnalysis/teacher-class/'+teacherAccount,
+        method:'GET'
+    })
+}

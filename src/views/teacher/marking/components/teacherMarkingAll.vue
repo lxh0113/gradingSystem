@@ -58,7 +58,9 @@
                 </div>
             </div>
         </div>
-        <el-empty v-if="examPaperList.length===0" description="无数据" />
+        <div v-if="examPaperList.length===0" style="display: flex;width: 100%;justify-content: center;align-items: center;">
+            <el-empty style="flex:1;" description="无数据" />
+        </div>
       </div>
   
       <div class="page">
