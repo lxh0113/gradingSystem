@@ -1,3 +1,5 @@
+import { useUserStore } from '@/stores/userStore';
+
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from "@/views/home/index.vue";
 import Login from "@/views/login/index.vue";
@@ -53,6 +55,7 @@ import SchoolAdminHomeOff from "@/views/schoolAdmin/home/components/schoolAdminH
 import SchoolAdminHomeWill from "@/views/schoolAdmin/home/components/schoolAdminHomeWill.vue"
 import SchoolAdminPeopleManagementStudent from '@/views/schoolAdmin/peopleManagement/components/schoolAdminPeopleManagementStudent.vue';
 import SchoolAdminPeopleManagementTeacher from '@/views/schoolAdmin/peopleManagement/components/schoolAdminPeopleManagementTeacher.vue';
+import SchoolAdminPaperDetails from '@/views/schoolAdmin/papersManagement/components/schoolAdminPaperDetails.vue'
 
 //admin 模块
 import AdminAccountAudit from "@/views/admin/accountAudit/index.vue";
@@ -70,197 +73,331 @@ import Test from '@/mock/test.vue';
 import PaperView from '@/views/common/paperView.vue';
 import NoPage from '@/views/noPage/noPage.vue'
 
+const basicRouter=[
+  {
+    path:'/login',
+    name:'login',
+    component: Login
+  },
+  {
+    path:'/paper/:id',
+    component:PaperView
+  },
+  {
+    path: '/404',
+    name: 'NoPage404',
+    component: NoPage,
+    hidden: true
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home,
-      children:[
+  routes: basicRouter
+})
+
+
+export const clearRouter=()=>{
+  router.routes=basicRouter
+
+  
+}
+
+const setRouter=async()=>{
+  return new Promise((resolve, reject)=>{
+    const userStore=useUserStore()
+    clearRouter()
+    console.log('看谁先到222')
+    let identity=userStore.getUserInfo().identity
+    console.log(identity)
+    if(identity==='student')
         {
-          path:'test',component:Test
-        },
-        {
-          path:'student',
-          children:[
+          router.addRoute({
+            path:'/',
+            name:'home',
+            redirect:'/student/home',
+            component:Home,
+            children:[
+              {
+                path:'student',
+                name:'student',
+                children:[
+                  {
+                    path:'home',
+                    name:'studentHome',
+                    component:StudentHome,
+                    redirect:"/student/home/on",
+                    children:[
+                      {path:'on',name:'studentHomePaperOn',component:StudentHomePaperOn},
+                      {path:'off',name:'studentHomePaperOff',component:StudentHomePaperOff}
+                    ]
+                  },
+                  {
+                    path:'papers',
+                    name:'studentPapers',
+                    component:StudentPapers,
+                    redirect:"/student/papers/on",
+                    children:[
+                      {path:'on',name:'studentPapersOn',component:StudentPapersOn},
+                      {path:'off',name:'studentPapersOff',component:StudentPapersOff},
+                      {path:'mistakes',name:'studentPapersMistakes',component:StudentPapersMistakes},
+                      {
+                        path:'notes',
+                        component:StudentPapersNotes,
+                        children:[
+                          {path:':id',name:'studentPapersNotesDetails',component:StudentPapersNotesDetails}
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    path:'ai',
+                    name:'studentAi',
+                    component:StudentAI,
+                    redirect:"/student/ai/generate",
+                    children:[
+                      {path:'generate',name:'studentAiGenerate',component:StudentAiGenerate}
+                    ]
+                  },
+                  {path:'analysis',name:'studentAnalysis',component:StudentAnalysis},
+                  {path:'relationship',name:'studentRelationship',component:StudentRelationship}
+                ]
+              }
+            ]
+          })
+
+    }
+    else if(identity==='parents') {
+          router.addRoute([
             {
-              path:'home',
-              component:StudentHome,
-              redirect:"/student/home/on",
+              path:'/',
+              component:Home,
+              redirect:'/parents/home',
+              name:'home',
               children:[
-                {path:'on',component:StudentHomePaperOn},
-                {path:'off',component:StudentHomePaperOff}
-              ]
-            },
-            {
-              path:'papers',
-              component:StudentPapers,
-              redirect:"/student/papers/on",
-              children:[
-                {path:'on',component:StudentPapersOn},
-                {path:'off',component:StudentPapersOff},
-                {path:'mistakes',component:StudentPapersMistakes},
                 {
-                  path:'notes',
-                  component:StudentPapersNotes,
+                  path:'parents',
+                  name:'parents',
                   children:[
-                    {path:':id',component:StudentPapersNotesDetails}
+                    {
+                      path:'home',
+                      name:'parentsHome',
+                      component:()=>import('@/views/parents/home/index.vue'),
+                      redirect:'/parents/home/on',
+                      children:[
+                        {path:'on',name:'parentsHomeOn',component:()=>import('@/views/parents/home/components/parentsHomeOn.vue')},
+                        {path:'off',name:'parentsHomeOff',component:()=>import('@/views/parents/home/components/parentsHomeOff.vue')}
+                      ]
+                    },
+                    {
+                      path:'papers',
+                      name:'parentsPapers',
+                      component:()=>import('@/views/parents/childrenPapers/index.vue'),
+                      redirect:'/parents/papers/on',
+                      children:[
+                        {path:'on',name:'parentsPapersOn',component:()=>import('@/views/parents/childrenPapers/components/parentsChildrenPapersOn.vue')},
+                        {path:'off',name:'parentsPapersOff',component:()=>import('@/views/parents/childrenPapers/components/parentsChildrenPapersOff.vue')}
+                      ]
+                    },
+                    {path:'analysis',name:'parentsAnalysis',component:()=>import('@/views/parents/studyAnalysis/index.vue')},
+                    {path:'relationship',name:'parentsRelationship',component:()=>import('@/views/parents/relationship/index.vue')}
+                  ]
+            }
+              ]
+            }
+            
+          ])
+
+    }
+    else if(identity==='teacher')
+        {
+          router.addRoute(
+            {
+              path:'/',
+              component:Home,
+              name:'home',
+              redirect:'/teacher/home',
+              children:[
+                {
+                  path:'teacher',
+                  name:'teacher',
+                  children:[
+                    {
+                      path:'home',
+                      component:()=>import('@/views/teacher/home/index.vue'),
+                      name:'teacherHome',
+                      redirect:'/teacher/home/on',
+                      children:[
+                        {path:'on',name:'teacherHomeOn',component:()=>import('@/views/teacher/home/components/teacherHomeOn.vue')},
+                        {path:'off',name:'teacherHomeOff',component:()=>import('@/views/teacher/home/components/teacherHomeOff.vue')}
+                      ]
+                    },
+                    {
+                      path:'marking',
+                      name:'teacherMarking',
+                      component:()=>import('@/views/teacher/marking/index.vue'),
+                      redirect:'/teacher/marking/all',
+                      children:[
+                        {path:'all',name:'teacherMarkingAll',component:()=>import('@/views/teacher/marking/components/teacherMarkingAll.vue')},
+                        {path:'on',name:'teacherMarkingOn',component:()=>import('@/views/teacher/marking/components/teacherMarkingOn.vue')},
+                        {path:'off',name:'teacherMarkingOff',component:()=>import('@/views/teacher/marking/components/teacherMarkingOff.vue')},
+                        {
+                          path:':id',
+                          name:'teacherMarkingDetails',
+                          component:()=>import('@/views/teacher/marking/components/teacherMarkingDetails.vue')
+                        }
+                      ]
+                    },
+                    {path:'analysis',name:'teacherAnalysis',component:()=>import('@/views/teacher/examAnalysis/index.vue')},
+                    {
+                      path:'management/:classId',
+                      name:'teacherManagement',
+                      component:()=>import('@/views/teacher/classManagement/index.vue'),
+                      children:[
+                        {path:':studentId',name:'teacherViewStudent',component:()=>import('@/views/teacher/classManagement/components/TeacherViewStudent.vue')}
+                      ]
+                    }
+                  ]
+                },
+              ]
+            }
+            
+          )
+
+    }
+    else if(identity==='schoolAdmin')
+        {
+          router.addRoute(
+            {
+              path:'/',
+              component:Home,
+              name:'home',
+              redirect:'/schoolAdmin/home',
+              children:[
+                {
+                  path:'/schoolAdmin',
+                  name:'schoolAdmin',
+                  children:[
+                    {
+                      path:'home',
+                      name:'schoolAdminHome',
+                      component:()=>import('@/views/schoolAdmin/home/index.vue'),
+                      redirect:'/schoolAdmin/home/on',
+                      children:[
+                        {path:'on',name:'schoolAdminHomeOn',component:()=>import('@/views/schoolAdmin/home/components/schoolAdminHomeOn.vue')},
+                        {path:'off',name:'schoolAdminHomeOff',component:()=>import('@/views/schoolAdmin/home/components/schoolAdminHomeOff.vue')},
+                        {path:'will',name:'schoolAdminHomeWill',component:()=>import('@/views/schoolAdmin/home/components/schoolAdminHomeWill.vue')}
+                      ]
+                    },
+                    {
+                      path:'management',
+                      name:'schoolAdminManagement',
+                      component:()=>import('@/views/schoolAdmin/peopleManagement/index.vue'),
+                      redirect:'/schoolAdmin/management/student',
+                      children:[
+                        {path:'student',name:'schoolAdminPeopleManagementStudent',component:()=>import('@/views/schoolAdmin/peopleManagement/components/schoolAdminPeopleManagementStudent.vue')},
+                        {path:'teacher',name:'schoolAdminPeopleManagementTeacher',component:()=>import('@/views/schoolAdmin/peopleManagement/components/schoolAdminPeopleManagementTeacher.vue')}
+                      ]
+                    },
+                    {path:'analysis',name:'schoolAdminAnalysis',component:()=>import('@/views/schoolAdmin/examAnalysis/index.vue')},
+                    {
+                      path:'papers',
+                      name:'schoolAdminPapers',
+                      component:()=>import('@/views/schoolAdmin/papersManagement/index.vue')
+                    },
+                    {
+                      path:'papers/:id',name:'schoolAdminPaperDetails',component:()=>import('@/views/schoolAdmin/papersManagement/components/schoolAdminPaperDetails.vue')
+                    }
                   ]
                 }
               ]
-            },
-            {
-              path:'ai',
-              component:StudentAI,
-              redirect:"/student/ai/generate",
-              children:[
-                {path:'generate',component:StudentAiGenerate}
-              ]
-            },
-            {path:'analysis',component:StudentAnalysis},
-            {path:'relationship',component:StudentRelationship}
-          ]
-        },
+            }
+          )
+
+    }
+    else if(identity==='admin')
         {
-          path:'parents',
-          children:[
+          router.addRoute(
             {
-              path:'home',
-              component:ParentsHome,
-              redirect:'/parents/home/on',
+              path:'/',
+              component:Home,
+              name:'home',
+              redirect:'/admin',
               children:[
-                {path:'on',component:ParentsHomeOn},
-                {path:'off',component:ParentsHomeOff}
-              ]
-            },
-            {
-              path:'papers',
-              component:ParentsChildrenPapers,
-              redirect:'/parents/papers/on',
-              children:[
-                {path:'on',component:ParentsChildrenPapersOn},
-                {path:'off',component:ParentsChildrenPapersOff}
-              ]
-            },
-            {path:'analysis',component:ParentsStudyAnalysis},
-            {path:'relationship',component:ParentsRelationship}
-          ]
-        },
-        {
-          path:'/teacher',
-          children:[
-            {
-              path:'home',
-              component:TeacherHome,
-              redirect:'/teacher/home/on',
-              children:[
-                {path:'on',component:TeacherHomeOn},
-                {path:'off',component:TeacherHomeOff}
-              ]
-            },
-            {
-              path:'marking',
-              component:TeacherMarking,
-              redirect:'/teacher/marking/all',
-              children:[
-                {path:'all',component:TeacherMarkingAll},
-                {path:'on',component:TeacherMarkingOn},
-                {path:'off',component:TeacherMarkingOff},
                 {
-                  path:':id',
-                  component:TeacherMarkingDetails
+                  path:'/admin',
+                  name:'admin',
+                  children:[
+                    {
+                      path:'accountAudit',
+                      name:'adminAccountAudit',
+                      component:()=>import('@/views/admin/accountAudit/index.vue'),
+                      redirect:'/admin/accountAudit/all',
+                      children:[
+                        {path:'all',name:'adminAccountAuditAll',component:()=>import('@/views/admin/accountAudit/components/adminAccountAuditAll.vue')},
+                        {path:'underway',name:'adminAccountAuditUnderway',component:()=>import('@/views/admin/accountAudit/components/adminAccountAuditUnderway.vue')},
+                        {path:'examine',name:'adminAccountAuditExamine',component:()=>import('@/views/admin/accountAudit/components/adminAccountAuditExamine.vue')}
+                      ]
+                    },
+                    {
+                      path:'accountManagement',
+                      name:'adminAccountManagement',
+                      component:()=>import('@/views/admin/accountManagement/index.vue'),
+                      redirect:'/admin/accountManagement/all',
+                      children:[
+                        {path:'all',name:'adminAccountManagementAll',component:()=>import('@/views/admin/accountManagement/components/adminAccountManagementAll.vue')},
+                        {path:'underway',name:'adminAccountManagementUnderway',component:()=>import('@/views/admin/accountManagement/components/adminAccountManagementUnderway.vue')},
+                        {path:'examine',name:'adminAccountManagementExamine',component:()=>import('@/views/admin/accountManagement/components/adminAccountManagementExamine.vue')}
+                      ]
+                    },
+                  ]
                 }
               ]
-            },
-            {path:'analysis',component:TeacherExamAnalysis},
-            {
-              path:'management/:classId',
-              component:TeacherClassManagement,
-              children:[
-                {path:':studentId',component:TeacherViewStudent}
-              ]
-              // children:[
-              //   {path:':id',}
-              // ]
             }
-          ]
-        },
-        {
-          path:'/schoolAdmin',
-          children:[
-            {
-              path:'home',
-              component:SchoolAdminHome,
-              redirect:'/schoolAdmin/home/on',
-              children:[
-                {path:'on',component:SchoolAdminHomeOn},
-                {path:'off',component:SchoolAdminHomeOff},
-                {path:'will',component:SchoolAdminHomeWill}
-              ]
-            },
-            {
-              path:'management',
-              component:SchoolAdminPeopleManagement,
-              redirect:'/schoolAdmin/management/student',
-              children:[
-                {path:'student',component:SchoolAdminPeopleManagementStudent},
-                {path:'teacher',component:SchoolAdminPeopleManagementTeacher}
-              ]
-            },
-            {path:'analysis',component:SchoolAdminExamAnalysis},
-            {path:'papers',component:SchoolAdminPaperManagement}
-          ]
-        },
-        {
-          path:'/admin',
-          children:[
-            {
-              path:'accountAudit',
-              component:AdminAccountAudit,
-              redirect:'/admin/accountAudit/all',
-              children:[
-                {path:'all',component:AdminAccountAuditAll},
-                {path:'underway',component:AdminAccountAuditUnderway},
-                {path:'examine',component:AdminAccountAuditExamine}
-              ]
-            },
-            {
-              path:'accountManagement',
-              component:AdminAccountManagement,
-              redirect:'/admin/accountManagement/all',
-              children:[
-                {path:'all',component:AdminAccountManagementAll},
-                {path:'underway',component:AdminAccountManagementUnderway},
-                {path:'examine',component:AdminAccountManagementExamine}
-              ]
-            },
-          ]
-        }
-      ]
-    },
-    {
-      path:'/login',
-      name:'login',
-      component: Login
-    },
-    {
-      path:'/paper/:id',
-      component:PaperView
-    },
-    {
-      path: '/404',
-      name: 'NoPage404',
-      component: NoPage,
-      hidden: true
-    },
-    {
-      path: '/:pathMatch(.*)',
-      redirect: '/404',
-      hidden: true
+          )
+
     }
-  ]
-})
+      userStore.changeIsLogin(true)
+      resolve(true)
+  })
+}
+
+
+router.beforeEach(async(to, from, next) => {
+	// 判断有没有登录
+  const userStore=useUserStore()
+  if (to.name == "login") {
+    next();
+    return 
+  } 
+  
+	if (userStore.getUserInfo()===null) 
+  {
+		if (to.name == "login") {
+			next();
+		} else {
+			router.push('login')
+		}
+	} else {
+  if(userStore.getIsLogin()===false)
+  {
+    const res = await setRouter()
+
+    if(res===true)
+    {
+      next({ ...to, replace: true })
+    }
+    else next(false)
+    
+    // next('/')
+   
+
+    return
+      
+  }
+    
+		next();
+	}
+});
 
 export default router

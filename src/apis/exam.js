@@ -59,3 +59,35 @@ export const teacherGetAllClassDetailsAPI=(teacherAccount)=>{
         method:'GET'
     })
 }
+
+export const getAllClassAPI=(schoolAdminAccount)=>{
+    return http({
+        url:'/examAnalysis/all-class/'+schoolAdminAccount,
+        method:'GET'
+    })
+}
+
+export const getSchoolAllExamAPI=(account)=>{
+    return http({
+        url:'/examAnalysis/all-exam/'+account,
+        method:'GET'
+    })
+}
+
+export const getAClassDetailsAPI=(classId)=>{
+    return http({
+        url:'/examAnalysis/classHistoryExam/'+classId,
+        method:'GET'
+    })
+}
+
+export const getExamDetailsByTestIdAPI=(data)=>{
+    return http({
+        url:'/examAnalysis/teacher-class-by-examId',
+        headers: {
+            'content-type': 'application/json;charset=UTF-8'
+        },
+        method:'POST',
+        data
+    })
+}

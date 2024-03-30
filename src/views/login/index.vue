@@ -67,7 +67,7 @@
 <script setup>
 import { Clock, Lock, Search, Unlock, User } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
-import {onMounted, ref} from 'vue'
+import {nextTick, onMounted, ref} from 'vue'
 import WOW from 'wow.js'
 import { useUserStore } from '@/stores/userStore.js';
 import { loginAPI,getCodeAPI,registerAPI,modifyAPI } from '@/apis/login';
@@ -144,9 +144,14 @@ const login=async()=>{
     userStore.setUserInfo(res.data.data,res.headers.authorization,res.headers['authorization-refresh'])
 
     ElMessage.success(res.data.message)
+    
+    router.push('/')
+
     setTimeout(()=>{
       router.push('/')
-    },2000)
+
+      // console.log('kkkk')
+    },3000)
   }
   else{
     ElMessage.error(res.data.message)
@@ -160,9 +165,11 @@ const register=async()=>{
   {
     userStore.setUserInfo(res.data.data,res.headers.authorization,res.headers['authorization-refresh'])
     ElMessage.success(res.data.message)
+    
     setTimeout(()=>{
       router.push('/')
     },2000)
+
   }
   else {
     ElMessage.error(res.data.message)

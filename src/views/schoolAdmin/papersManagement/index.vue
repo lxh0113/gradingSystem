@@ -6,12 +6,8 @@
             试卷管理
         </div>
         <div class="right">
-              <el-button size="large" :icon="TakeawayBox">下发给老师</el-button>
               <el-button size="large" :icon="Download">导入试卷</el-button>
               <el-button size="large" :icon="Upload">导出成绩</el-button>
-              <el-button size="large" :icon="Plus">添加</el-button>
-              <el-button size="large" :icon="Delete">删除</el-button>
-              <el-button size="large" :icon="Edit">编辑</el-button>
         </div>
     </div>
     <div class="paper">
@@ -26,9 +22,6 @@
         <table>
               <thead>
                   <tr>
-                      <td>
-                          <el-checkbox size="large" />
-                      </td>
                       <td>批阅老师</td>
                       <td>试卷标题</td>
                       <td>批阅状态</td>
@@ -36,22 +29,25 @@
                       <td>操作</td>
                   </tr>
               </thead>
-              <tbody>
-                  <tr>
-                      <td>
-                        <el-checkbox size="large" />
+              <tbody v-if="examList.length>0">
+                  <tr v-for="item in examList" :key="item.id">
+                      <td>{{ item.examMarker.map(item=>{return item}).join(',')}}
                       </td>
-                      
-                      <td>xxx</td>
-                      <td>第一次月考</td>
-                      <td>已批阅</td>
-                      <td>2024-12-1 12:11</td>
+                      <td>{{ item.title }}</td>
+                      <td>{{ item.amount.total===item.amount.gradeNumber?'已批阅':'批阅中' }}</td>
+                      <td>{{ item.date }}</td>
                       <td>
-                        <el-button type="primary" plain>查看</el-button>
+                        <el-button @click="router.push('/schoolAdmin/papers/'+item.id)" type="primary" plain>查看</el-button>
                       </td>
                   </tr>
               </tbody>
+              <!-- <tbody style="width: 100%;display: flex;justify-content: center;align-items: center" v-else>
+                <el-empty style="width: 100%;" description="无数据" />
+              </tbody> -->
           </table>
+      </div>
+      <div class="page">
+        <el-pagination v-if="examList.length!==0" prev-text="上一页" next-text="下一页" @prev-click="minusPages" @next-click="addPages" @current-change="changeCurrent" :current-page="pageData.current" layout="prev, pager, next"  :page-count="pageData.totalPage" />
       </div>
     </div>
     </div>
@@ -60,7 +56,67 @@
 
 <script setup>
 import { Delete, Download, Edit, Handbag, Plus, Search, TakeawayBox, Upload } from '@element-plus/icons-vue';
+import { onMounted,ref } from 'vue';
+import { useRoute,useRouter } from 'vue-router';
+import { schoolAdminGetAllPapersAPI }  from '@/apis/examPaper.js'
+import { ElMessage } from 'element-plus';
 
+const route=useRoute()
+const router=useRouter()
+
+const examList=ref([])
+const pageData=ref({
+  page:1,
+  pageSize:20,
+  totalPage:0
+})
+
+const changeCurrent=(number)=>{
+    pageData.value.page=number;
+    
+    getAllExam()
+}
+
+const addPages=()=>{
+    if(pageData.value.page>=pageData.value.totalPage)
+    {
+        return
+    }
+
+    pageData.value.page++;
+    
+    getAllExam()
+}
+
+const minusPages=()=>{
+    if(pageData.value.page===1)
+    {
+        return
+    }
+
+    pageData.value.page--;
+    
+    getAllExam()
+}
+
+
+const getAllExam=async()=>{
+  const res=await schoolAdminGetAllPapersAPI(pageData.value.page,pageData.value.pageSize)
+
+  if(res.data.code===200)
+  {
+    console.log(res.data.data)
+    examList.value=res.data.data.list
+    pageData.value.totalPage=res.data.data.totalPage
+  }
+  else {
+    ElMessage.error(res.data.message)
+  }
+}
+
+onMounted(()=>{
+  getAllExam()
+})
 
 </script>
 
@@ -117,7 +173,7 @@ import { Delete, Download, Edit, Handbag, Plus, Search, TakeawayBox, Upload } fr
         display: flex;
         align-items: center;
         height: 60px;
-        justify-content: flex-start;
+        justify-content: flex-end;
         // margin-top:20px;
       }
 
@@ -148,6 +204,16 @@ import { Delete, Download, Edit, Handbag, Plus, Search, TakeawayBox, Upload } fr
       }
     }
   }
+
+  .page{
+        // position: fixed;
+        bottom:20px;
+        display: flex;
+        // margin-left: 50%;
+        // transform: translateX(-50%);
+        justify-content: center;
+        align-items: center;
+    }
 
  
 }

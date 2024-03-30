@@ -1,23 +1,30 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
+import { useRouter } from 'vue-router'
+
 export const useUserStore = defineStore('user', () => {
     
-    const user=ref({
-        account:'123',
-        gender:'12'
-    })
+    const user=ref(null)
+
+    const isLogin=ref(false);
+
+    const getIsLogin=()=>{
+        return isLogin.value
+    }
+
+    const changeIsLogin=(value)=>{
+        isLogin.value=value
+    }
 
     const setUserInfo=(userInfo,shortToken,refreshToken)=>{
-        // console.log(user)
-        // console.log(shortToken)
-        // console.log(refreshToken)
         user.value=null
         user.value={
             ...userInfo,
             shortToken,
             refreshToken
         };
+        console.log('看谁先到111')
         console.log(user.value)
     }
 
@@ -49,6 +56,8 @@ export const useUserStore = defineStore('user', () => {
 
     return {
         user,
+        getIsLogin,
+        changeIsLogin,
         setUserInfo,
         getUserInfo,
         changeName,

@@ -4,8 +4,8 @@
         <!-- <div class="comment">
           <textarea name="" id="" cols="30" rows="10"></textarea>
         </div> -->
-        <el-scrollbar style="display: flex;max-width:1000px;justify-content: center;align-items: center;" height="800px">
-          <img @click="()=>showImagePreview=true" class="imagePapers" :src="paperList[currentIndex]?.path" alt="">
+        <el-scrollbar style="display: flex;max-width:1000px;justify-content: center;align-items: center;margin-top:10px">
+          <img @click="()=>showImagePreview=true" class="imagePapers" :src="url[0]" alt="">
         </el-scrollbar>
         <div class="fixed">
           <el-button :icon="DArrowLeft">上一套</el-button>
@@ -44,15 +44,20 @@
               {{ littleItem }}
             </div>
           </div>
+          
           <div class="options" v-else-if="简答题">
             <div class="option">
-              <span class="answer">答案：</span>{{ item.studentResponse }}
+              <span class="answer">学生答案：</span>{{ item.studentResponse }}
             </div>
+          </div>
+
+          <div class="correctAnswer">
+            正确答案：{{ item.ans }}
           </div>
 
           <div class="details" v-if="item.type==='选择题'">
             <div class="answer">
-              答案：{{ item.studentResponse }}
+              学生答案：{{ item.studentResponse }}
             </div>
             <div class="score" v-if="userStore.user.identity==='teacher'">
               分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" :value="item.score" />
@@ -63,7 +68,7 @@
           </div>
           <div class="details" v-else-if="item.type==='填空题'">
             <div class="answer">
-              答案：{{ item.studentResponse }}
+              学生答案：{{ item.studentResponse }}
             </div>
             <div class="score" v-if="userStore.user.identity==='teacher'">
               分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" :value="item.score" />
@@ -202,7 +207,7 @@ onMounted(()=>{
       height: 100%;
       // background-color: #ce6509;
       justify-content: center;
-      align-items: center;
+      // align-items: center;
       // margin-bottom: 60px;
 
       .fixed{
@@ -214,7 +219,7 @@ onMounted(()=>{
     .right{
       // position:fixed;
       // background-color: aqua;
-      max-width: 600px;
+      max-width: 700px;
       min-width: 420px;
       padding-left: 20px;
       padding-right: 10px;
@@ -268,6 +273,14 @@ onMounted(()=>{
             }
           }
         }
+
+        .correctAnswer{
+            color:green;
+            font-size: 16px;
+            line-height: 30px;
+            font-weight: bold;
+            padding:10px;
+        }
     
         .details{
           display: flex;
@@ -303,8 +316,10 @@ onMounted(()=>{
 
 
     .imagePapers{
-      width: 540px;
+      width: 600px;
+      // height: 900px;
       // height: 100%;
+      // background-color: #3a63f3;
       height: fit-content;
     }
 

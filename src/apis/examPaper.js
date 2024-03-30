@@ -47,3 +47,34 @@ export const getALLMyPaperAPI=()=>{
         method:"GET"
     })
 }
+
+
+export const teacherGetAllExamAPI=(examPaperId)=>{
+    return http({
+        url:"/examPaper/getAllEP",
+        method:'GET',
+        params:{
+            examPaperId
+        }
+    })
+}
+
+export const schoolAdminGetAllPapersAPI=(page,pageSize)=>{
+    return http({
+        url:'/examPaper/getSAE',
+        method:'GET',
+        params:{
+            page,pageSize
+        }
+    })
+}
+
+export const schoolAdminGetAllExamAPI=(examId)=>{
+    return http({
+        url:"/examPaper/getSEP",
+        method:'GET',
+        params:{
+            examId
+        }
+    })
+}
