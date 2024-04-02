@@ -11,7 +11,7 @@
                 <el-dropdown trigger="click">
                     <span class="el-dropdown-link">
                         <el-badge is-dot class="HomeItem">
-                            <el-button class="share-button" :icon="BellFilled" type="primary" />
+                            <el-button class="share-button" :icon="Bell" type="primary" />
                         </el-badge>
                     </span>
                     <template #dropdown>
@@ -41,19 +41,18 @@
         </div>
         <div class="homeBottom">
             <div class="homeLeft wow slideInLeft">
-                <el-menu router :default-active="leftList[0].to" class="el-menu-vertical-demo" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
+                <el-menu router :default-active="getCurrentPath()" class="el-menu-vertical-demo" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
                     <div class="homeMenu" v-for="item in leftList" :key="item">
                         <el-sub-menu v-if="item.isHaveNext" :index="item.to">
                             <template #title>
-                                <i :class="item.icon"></i>
+                                
+                                <span :class="item.icon"></span>
                                 &nbsp;&nbsp;&nbsp;
                                 <span v-if="!isCollapse">{{ item.text }}</span>
                             </template>
-                        <!-- <el-menu-item-group>  -->
                             <el-menu-item v-for="i in item.childrenList" :index="item.to +'/'+i.id" :key="i" @click="classOneClick(i.id)">
                                 <span>{{ i.name }}</span>
                             </el-menu-item>
-                        <!-- </el-menu-item-group> -->
                         </el-sub-menu>
 
                         <el-menu-item v-else :index="item.to">
@@ -92,10 +91,6 @@
                             上传
                           </el-button>
                         </el-upload>
-                        <!-- <el-button>选择文件</el-button>
-                        <el-button style="margin-left: 20px;" type="primary" @click="submitUpload">
-                          上传
-                        </el-button> -->
                     </td>
                 </tr>
                 <tr class="tr">
@@ -179,7 +174,7 @@
 import { onMounted, ref, h, shallowReactive } from 'vue'
 import WOW from 'wow.js'
 import axios from 'axios'
-import { BellFilled } from '@element-plus/icons-vue'
+import { Bell } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 import {useUserStore} from '@/stores/userStore.js'
@@ -187,18 +182,17 @@ import {useClassStore} from '@/stores/classStore.js'
 
 import { bindEmailAPI, changeAvatarAPI, changeNameAPI } from '@/apis/user'
 
-import {userISC} from '@/mock/home/index.js'
-import { examPaperGetAllEP } from '@/mock/teacher/marking.js';
 import { uploadAvatarAPI } from '@/apis/upload'
 import { genFileId } from 'element-plus';
 import { useRoute,useRouter } from 'vue-router'
 
-
+const currentPath=ref('')
 
 const route=useRoute()
 const router=useRouter()
 let upload = ref();
 let file=null
+
 import {studentGetStudents} from '@/mock/teacher/classManagement.js'
 import { getMyClassAPI } from '@/apis/exam'
 import { getNavList } from '@/utils/navList.js'
@@ -213,10 +207,11 @@ const classStore=useClassStore()
 
 var teacherChildrenList=ref([])
 var studentList=ref([])
+var isGet=false;
 
 //学生左边导航选项
 
-const leftList=getNavList()
+const leftList=ref([])
 
 const userInfoForm = ref(null)
 const newName=ref("")
@@ -328,21 +323,17 @@ const initData=()=>{
     userInfoForm.value=userStore.getUserInfo()||{account:'',email:'',avatar:'',name:''}
 }
 
-onMounted(async()=>{
-    new WOW().init()
-    collapseOperation()
+const getCurrentPath=()=>{
+    let currentPath=route.path.split('/')
 
-    initData()
 
-    //判断是否是教师端，需要获取全部班级，用于点击班级管理
-    if(userInfoForm.value.identity==="teacher")
+    for(let i=0;i<leftList.value.length;i++)
     {
-        const res=await getMyClassAPI(userInfoForm.value.account);
-        console.log(res.data.data)
-        teacherChildrenList.value=res.data.data
-        classStore.setClassList(res.data.data)
+        let path=leftList.value[i].to.split('/')
+        
+        if(path[2]==currentPath[2]) return leftList.value[i].to
     }
-})
+}
 
 //教师端点击班级事件
 function classOneClick(classId){
@@ -351,6 +342,31 @@ function classOneClick(classId){
     router.push('/teacher/management/'+classId)
     
 }
+
+onMounted(async()=>{
+
+    leftList.value=getNavList()
+
+    new WOW().init()
+    collapseOperation()
+
+    initData()
+
+    getCurrentPath()
+
+    //判断是否是教师端，需要获取全部班级，用于点击班级管理
+    if(isGet===false)
+    {
+        if(userInfoForm.value.identity==="teacher")
+        {
+            const res=await getMyClassAPI(userInfoForm.value.account);
+            console.log(res.data.data)
+            teacherChildrenList.value=res.data.data
+            classStore.setClassList(res.data.data)
+        }
+        isGet=true
+    }
+})
 </script>
   
 <style lang="scss">
@@ -371,7 +387,7 @@ function classOneClick(classId){
       display: grid;
   }
   .el-menu--collapse  .el-sub-menu__title span{
-      display: none;
+      display: block;
   }
   .el-menu--collapse  .el-sub-menu__title .el-sub-menu__icon-arrow{
       display: none;

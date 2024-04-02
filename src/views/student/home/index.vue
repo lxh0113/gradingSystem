@@ -3,8 +3,9 @@
     <div class="left">
       <div class="myParents">
         <div class="avatars">
-          <img src="../../../assets/avatar.jpeg" alt="">
-          <img src="../../../assets/avatar.jpeg" alt="">
+          <img v-for="item in parentsList" :key="item" :src="item.avatar" alt="">
+          <span v-if="parentsList.length===0" @click="router.push('/student/relationship')" style="cursor:pointer;color:#3c62f3;font-size: 16px;">暂无，去绑定</span>
+          <!-- <img src="../../../assets/avatar.jpeg" alt=""> -->
         </div>
         <div class="text">
           我的家长
@@ -47,7 +48,45 @@
 </template>
 
 <script setup>
+import { onMounted,ref } from "vue";
+import { studentGetAllParentsAPI } from '@/apis/user.js'
+import { ElMessage } from "element-plus";
+import { useRoute,useRouter } from "vue-router";
 
+const router=useRouter()
+const route=useRoute()
+const parentsList=ref([])
+
+const setImage=()=>{
+  let images = document.querySelectorAll('.avatars img')
+
+  images.forEach((img, index) => {
+      if (index > 0) {
+        img.style.transform = `translateX(-${15 * index}px)`;
+      }
+  });
+}
+
+const getParents=async()=>{
+  const res=await studentGetAllParentsAPI();
+
+  if(res.data.code===200)
+  {
+    console.log(res.data.data)
+    parentsList.value=res.data.data
+  }
+  else {
+    ElMessage.error(res.data.message)
+  }
+}
+
+
+onMounted(()=>{
+
+  getParents()
+  setImage()
+
+})
 </script>
 
 <style lang="scss" scoped>
@@ -96,10 +135,10 @@
         border-radius: 50%;
       }
 
-      img:nth-child(2){
-        // position:absolute;
-        transform: translateX(-15px);
-      }
+      // img:nth-child(n+2) {
+      //   transform: translateX(calc(-15px * (n - 1)));
+      // }
+
 
     }
 

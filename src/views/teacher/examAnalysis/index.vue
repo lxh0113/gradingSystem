@@ -150,7 +150,7 @@ const setChartData1=async()=>{
     for(let i=0;i<chartData1.value.series.length;i++)
     {
       chartData1.value.series[i].data=res.data.data.map(item=>{
-        return item.classScoreList[i].avgScore
+        return item.classScoreList[i]?.avgScore||0
       })
     }
 
@@ -198,7 +198,7 @@ const setChartData2=async()=>{
     for(let i=0;i<chartData2.value.series.length;i++)
     {
       chartData2.value.series[i].data=res.data.data.map(item=>{
-        return item.classScoreList[i].avgScore
+        return item.classScoreList[i]?.avgScore||0
       })
     }
 

@@ -67,6 +67,13 @@ export const getAllClassAPI=(schoolAdminAccount)=>{
     })
 }
 
+export const getAllExamAPI=(account)=>{
+    return http({
+        url:'/examAnalysis/all-exam/'+account,
+        method:'GET'
+    })
+}
+
 export const getSchoolAllExamAPI=(account)=>{
     return http({
         url:'/examAnalysis/all-exam/'+account,
@@ -84,10 +91,29 @@ export const getAClassDetailsAPI=(classId)=>{
 export const getExamDetailsByTestIdAPI=(data)=>{
     return http({
         url:'/examAnalysis/teacher-class-by-examId',
-        headers: {
-            'content-type': 'application/json;charset=UTF-8'
-        },
         method:'POST',
         data
+    })
+}
+
+export const schoolAdminGetExamByIdsAPI=(data)=>{
+    return http({
+        url:'/examAnalysis/schoolAdmin-examId',
+        method:'POST',
+        data
+    })
+}
+
+export const studentGetHistoryExamAPI=(studentAccount)=>{
+    return http({
+        url:'/examAnalysis/my-score-history/'+studentAccount,
+        method:'GET'
+    })
+}
+
+export const studentGetScoreStageAPI=(studentAccount)=>{
+    return http({
+        url:'/examAnalysis/my-score-stage/'+studentAccount,
+        method:'GET'
     })
 }

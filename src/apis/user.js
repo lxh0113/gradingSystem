@@ -46,3 +46,10 @@ export const setTagAPI=(account,styleTag)=>{
         }
     })
 }
+
+export const studentGetAllParentsAPI=()=>{
+    return http({
+        url:'/user/getMyParents',
+        method:'GET'
+    })
+}

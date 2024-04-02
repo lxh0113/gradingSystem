@@ -26,11 +26,10 @@
                     </div>
                 </div>
                 <div class="bottom">
+                    
+                    <el-progress :text-inside="false" style="width: 40%;" :percentage="getPercent(item.amount)" />
                     <div class="time">
                         {{ item.date }}
-                    </div>
-                    <div class="count">
-                        {{ item.amount.gradedNumber }}/{{ item.amount.total }}
                     </div>
                 </div>
             </div>
@@ -52,8 +51,10 @@
                     </div>
                 </div>
                 <div class="bottom">
-                    <div class="count">
-                        {{ item.amount.gradedNumber }}/{{ item.amount.total }}
+                    
+                    <el-progress :text-inside="false" style="width: 40%;" :percentage="getPercent(item.amount)" />
+                    <div class="time">
+                        {{ item.date }}
                     </div>
                 </div>
             </div>
@@ -84,6 +85,15 @@ const router=useRouter()
 const route=useRoute()
 const examPaperList=ref([])
 const teacherPaperStore=useTeacherPaperStore()
+
+const getPercent=(amount)=>{
+
+    console.log(amount)
+    if((amount.gradedNumber&&amount.total)&&amount.gradedNumber===0||amount.total===0) return 0;
+    else {
+        return amount.gradedNumber/amount.total*100
+    }
+}
 
 const pageData=ref({
     current:1,
@@ -153,7 +163,6 @@ const getAllExaminationByKey=async(key,page)=>{
         examPaperList.value=res.data.data.list
         pageData.value.totalPage=res.data.data.totalPage
 
-        teacherPaperStore.setTeacherPaperList(examPaperList.value)
     }
     else {
         ElMessage.error(res.data.message)
@@ -169,7 +178,6 @@ const getAllExamination=async(page)=>{
         examPaperList.value=res.data.data.list
         pageData.value.totalPage=res.data.data.totalPage
 
-        teacherPaperStore.setTeacherPaperList(examPaperList.value)
     }
     else {
         ElMessage.error(res.data.message)
@@ -269,7 +277,7 @@ onMounted(async()=>{
         .bottom{
             display: flex;
             justify-content: space-between;
-            margin-right: 30px;
+            // margin-right: 30px;
             font-size: 18px;
             line-height: 30px;
             color:#9e8b8b;
@@ -291,5 +299,11 @@ onMounted(async()=>{
         justify-content: center;
         align-items: center;
     }
+}
+
+:deep(.el-progress-bar__outer){
+
+    background-color: #fff;
+
 }
 </style>

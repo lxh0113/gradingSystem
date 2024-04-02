@@ -11,7 +11,7 @@ import { showLoading, hideLoading } from '@/utils/loading.js'
 const route=useRoute()
 
 const http = axios.create({
-    baseURL: 'http://localhost:8079',
+    baseURL: 'http://10.251.23.167:8079',
     timeout: 5000
 })
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';

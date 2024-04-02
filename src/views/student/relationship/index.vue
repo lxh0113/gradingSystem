@@ -114,6 +114,10 @@
             font-size: 16px;
           }
 
+          button:hover{
+            background-color: #f5f7fa;
+          }
+
           button:nth-child(1){
             color:#6cba2d;
           }

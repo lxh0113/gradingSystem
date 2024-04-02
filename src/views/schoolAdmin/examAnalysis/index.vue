@@ -36,7 +36,7 @@
 
 <script setup>
 import {onMounted,onUnmounted,getCurrentInstance,ref,watch} from 'vue'
-import { getHistoryTestDetailsAPI,getExamDetailsByTestIdAPI,getAClassDetailsAPI,getAllClassAPI,schoolAdminGetAllExamDetailsAPI,getSchoolAllExamAPI } from "@/apis/exam.js"
+import { getHistoryTestDetailsAPI,getExamDetailsByTestIdAPI,getAClassDetailsAPI,schoolAdminGetExamByIdsAPI,getAllClassAPI,getAllExamAPI } from "@/apis/exam.js"
 import { useUserStore } from '@/stores/userStore';
 import { ElMessage } from 'element-plus';
 
@@ -145,7 +145,8 @@ let chartData2=ref({
     legend:{
 
     },
-    color:['#748eed','#91cc75','#fac858'],
+    color:['#63b2ee','#76da91','#f8cb7f','#f89588','#7cd6cf','#9192ab','#7898e1'
+    ,'#efa666','#eddd86','#9987ce','#63b2ee','#76da91'],
     tooltip: {},
     xAxis: {
       data: []
@@ -227,8 +228,7 @@ let chartData3=ref({
     legend:{
 
     },
-    color:['#63b2ee','#76da91','#f8cb7f','#f89588','#7cd6cf','#9192ab','#7898e1'
-    ,'#efa666','#eddd86','#9987ce','#63b2ee','#76da91'],
+    color:['#9987ce', '#eddd86', '#efa666', '#7898e1', '#9192ab', '#7cd6cf', '#f89588', '#f8cb7f', '#76da91', '#63b2ee'],
     tooltip: {},
     xAxis: {
       data: []
@@ -342,14 +342,49 @@ const setChartData3=async()=>{
   // alert(currentExamList.value);
   if(currentExamList.value.length<=0) return 
   console.log(currentExamList.value)
-  let data=new FormData()
-  data.append('teacherAccount',18734840)
-  data.append('examIds',currentExamList.value)
-  const res=await getExamDetailsByTestIdAPI(data);
+  let data={
+    teacherAccount:userStore.getUserInfo().account,
+    examIds:currentExamList.value
+  }
+
+  const res=await schoolAdminGetExamByIdsAPI(data);
 
   if(res.data.code===200)
   {
     console.log(res.data.data)
+
+    chartData3.value.xAxis.data=res.data.data.map(item=>{
+      return item.title
+    })
+
+    chartData3.value.series=res.data.data[0].classScoreList.map(item=>{
+      return {
+        name: item.name,
+        type: 'bar',
+        data: [],
+        label: {
+        show: true,
+        position: 'top',
+        textStyle: {
+          fontSize: 14
+        }
+        },
+        emphasis:{
+          label:{
+            show:true
+          }
+        }
+      }
+    })
+
+    for(let i=0;i<chartData3.value.series.length;i++)
+    {
+      chartData3.value.series[i].data=res.data.data.map(item=>{
+        return item.classScoreList[i].avgScore
+      })
+    }
+
+    setChart()
     
   }
   else {
@@ -359,7 +394,7 @@ const setChartData3=async()=>{
 }
 
 const getAllClass=async()=>{
-  const res=await getAllClassAPI(18734840);
+  const res=await getAllClassAPI(userStore.getUserInfo().account);
 
   if(res.data.code===200)
   {
@@ -373,7 +408,7 @@ const getAllClass=async()=>{
 }
 
 const getAllExam=async()=>{
-  const res=await getSchoolAllExamAPI(18734840);
+  const res=await getAllExamAPI(userStore.getUserInfo().account);
   console.log(res.data.data)
   examList.value=res.data.data
   currentExamList.value=[]

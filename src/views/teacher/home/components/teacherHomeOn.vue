@@ -1,15 +1,15 @@
 <template>
   <div class="bigBox">
     <div class="conditionSearch">
-      <el-input style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
-      <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;margin-left:30px;" ></el-select>
+      <el-input style="max-width: 300px;height:40px;" @keyup.enter="saerch" v-model="searchInput" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
+      <!-- <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;margin-left:30px;" ></el-select> -->
     </div>
     <div class="details">
-      <div @click="toPaper(1)" class="paper" v-for="item in 5" :key="item">
+      <div class="paper" v-for="item in examPaperList" :key="item.id" @click="toPaper(item.id)">
         <div class="top">
             <div>
                 <div class="title">
-                    xx市第一次模拟试卷
+                    {{ item.title }}
                 </div>
             </div>
             <div class="operation">
@@ -26,44 +26,14 @@
         </div>
         <div class="bottom">
             <div class="time">
-                2024/1/1 12:00
-            </div>
-        </div>
-      </div>
-      <div class="paper" v-for="item in examPaperList" :key="item">
-        <div v-if="item.amount.total>item.amount.gradedNumber">
-          <div class="top">
-              <div>
-                  <div class="title">
-                      {{ item.title }}
-                  </div>
-              </div>
-              <div class="operation">
-                  批阅
-              </div>
-          </div>
-          <div class="content">
-              <div class="text">
-                  正在批阅中，请耐心等待！
-              </div>
-              <div class="view">
-                  查看已批阅试题&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;
-              </div>
-          </div>
-          <div class="bottom">
-              <div class="time">
                 {{ item.date }}
-              </div>
-              <div class="count">
-                {{ item.amount.gradedNumber }}/{{ item.amount.total }}
-              </div>
-          </div>
+            </div>
         </div>
       </div>
     </div>
 
     <div class="page">
-      <el-pagination prev-text="上一页" next-text="下一页" :page-size="20" :pager-count="11" layout="prev, pager, next"  :total="1000" />
+      <el-pagination v-if="examPaperList.length!==0" prev-text="上一页" next-text="下一页" @prev-click="minusPages" @next-click="addPages" @current-change="changeCurrent" :current-page="pageData.current" layout="prev, pager, next"  :page-count="pageData.totalPage" />
     </div>
   </div>
 </template>
@@ -71,26 +41,115 @@
 <script setup>
 import { Search } from '@element-plus/icons-vue';
 import { useRoute,useRouter } from 'vue-router';
-import { examPaperGetAllE } from '../../../../mock/teacher/marking.js';
-import axios from 'axios'
+import { getAllExaminationAPI,getEByKeyAPI } from '@/apis/examPaper';
+import { useTeacherPaperStore } from '@/stores/teacherPaperStore';
 
 const router=useRouter()
 const route=useRoute()
+const teacherPaperStore=useTeacherPaperStore()
+
+const searchInput=ref('')
+
+const pageData=ref({
+    current:1,
+    totalPage:0
+})
+
+const changeCurrent=(number)=>{
+    pageData.value.current=number;
+    if(searchInput.value.trim()==='')
+    {
+        getAllExamination(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
+
+const addPages=()=>{
+    if(pageData.value.current>=pageData.value.totalPage)
+    {
+        return
+    }
+
+    pageData.value.current++;
+    
+    if(searchInput.value.trim()==='')
+    {
+        getAllExamination(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
+
+const saerch=()=>{
+    if(searchInput.value.trim()==='')
+    {
+        getAllExamination(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
+
+
+const minusPages=()=>{
+    if(pageData.value.current===1)
+    {
+        return
+    }
+
+    pageData.value.current--;
+    
+    if(searchInput.value.trim()==='')
+    {
+        getAllExamination(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
 
 const toPaper=(id)=>{
   router.push('/paper/'+id);
 }
 
 const examPaperList=ref([])
-onMounted(async()=>{
-  axios.get('/examPaper/getAllE').then(res => {
-      console.log(res.data)
-      examPaperList.value=res.data.data
-      console.log(examPaperList.value)
-  })
-  .catch((err) => {
-      console.log(err);
-  });
+
+const getAllExaminationByKey=async(key,page)=>{
+    const res=await getEByKeyAPI(key,page);
+
+    if(res.data.code===200)
+    {
+        examPaperList.value=res.data.data.list
+        pageData.value.totalPage=res.data.data.totalPage
+
+        teacherPaperStore.setTeacherPaperList(examPaperList.value)
+    }
+    else {
+        ElMessage.error(res.data.message)
+    }
+}
+
+const getAllExamination=async(page)=>{
+    const res=await getAllExaminationAPI(page);
+
+    if(res.data.code===200)
+    {
+        console.log(res.data)
+        examPaperList.value=res.data.data.list
+        pageData.value.totalPage=res.data.data.totalPage
+
+        teacherPaperStore.setTeacherPaperList(examPaperList.value)
+    }
+    else {
+        ElMessage.error(res.data.message)
+    }
+}
+
+onMounted(()=>{
+  getAllExamination(1);
 })
 </script>
 

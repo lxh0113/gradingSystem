@@ -6,13 +6,13 @@
     </div>
     <el-dialog v-model="dialogVisible" title="新建错题本" width="400" :before-close="handleClose">
         <el-input size="large" style="width:320px;margin:20px;" placeholder="请输入标题"></el-input>
-        <el-select size="large" v-model="value" multiple clearable collapse-tags placeholder="Select" popper-class="custom-header" :max-collapse-tags="1" style="width: 320px;margin:20px;">
+        <el-select size="large" v-model="currentExamList" multiple clearable collapse-tags placeholder="请选择考试" popper-class="custom-header" :max-collapse-tags="1" style="width: 320px;margin:20px;">
           <template #header>
             <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
               All
             </el-checkbox>
           </template>
-          <el-option v-for="item in cities" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-option v-for="item in examList" :key="item.examName" :label="item.examName" :value="item.examName"/>
         </el-select>
       <template #footer>
         <div class="dialog-footer">
@@ -31,33 +31,15 @@
             <span>&nbsp;&nbsp;&nbsp;我的错题集</span>
         </div>
         <div class="notes">
-            <router-link to="/student/papers/notes/1">
+            <router-link v-for="item in examList" :key="item" to="/student/papers/notes/1">
                 <div>
                     <el-icon style="color:#3a63f3"><Notebook /></el-icon>
                     <span class="wrongBookTitle">
                         &nbsp;&nbsp;
-                        第一次月考
+                        {{ item.examName }}
                     </span>
                     <el-icon class="editIcon" style="color:#3a63f3;margin-left: 20px;"><Edit /></el-icon>
                     <el-icon class="editIcon" style="color:#3a63f3;margin-left: 10px"><Delete /></el-icon>
-                </div>
-            </router-link>
-            <router-link to="/student/papers/notes/2">
-                <div>
-                    <el-icon style="color:#3a63f3"><Notebook /></el-icon>
-                    <span>
-                        &nbsp;&nbsp;
-                        第二次月考
-                    </span>
-                </div>
-            </router-link>
-            <router-link to="/student/papers/notes/3">
-                <div>
-                    <el-icon style="color:#3a63f3"><Notebook /></el-icon>
-                    <span>
-                        &nbsp;&nbsp;
-                        第三次月考
-                    </span>
                 </div>
             </router-link>
             
@@ -71,45 +53,24 @@
 
 <script setup>
 import { Plus } from '@element-plus/icons-vue';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+import { studentGetHistoryExamAPI } from '@/apis/exam';
+import { ElMessage } from 'element-plus';
 
 const dialogVisible = ref(false)
+const userStore=useUserStore()
 
 let checkAll = ref(false);
 let indeterminate = ref(false);
-let value = ref([]);
-let cities = ref([
-  {
-    value: 'Beijing',
-    label: 'Beijing',
-  },
-  {
-    value: 'Shanghai',
-    label: 'Shanghai',
-  },
-  {
-    value: 'Nanjing',
-    label: 'Nanjing',
-  },
-  {
-    value: 'Chengdu',
-    label: 'Chengdu',
-  },
-  {
-    value: 'Shenzhen',
-    label: 'Shenzhen',
-  },
-  {
-    value: 'Guangzhou',
-    label: 'Guangzhou',
-  },
-]);
+let currentExamList = ref([]);
+let examList = ref([]);
 
-watch(value, (val) => {
+watch(currentExamList, (val) => {
   if (val.length === 0) {
     checkAll.value = false;
     indeterminate.value = false;
-  } else if (val.length === cities.value.length) {
+  } else if (val.length === examList.value.length) {
     checkAll.value = true;
     indeterminate.value = false;
   } else {
@@ -120,11 +81,28 @@ watch(value, (val) => {
 const handleCheckAll = (val) => {
   indeterminate.value = false;
   if (val) {
-    value.value = cities.value.map((_) => _.value);
+    currentExamList.value = examList.value.map((_) => _.value);
   } else {
-    value.value = [];
+    currentExamList.value = [];
   }
 };
+
+const getAllExam=async()=>{
+  const res=await studentGetHistoryExamAPI(userStore.getUserInfo().account)
+
+  if(res.data.code===200)
+  {
+    console.log(res.data.data)
+    examList.value=res.data.data
+  }
+  else {
+    ElMessage.error(res.data.message)
+  }
+}
+
+onMounted(()=>{
+  getAllExam()
+})
 
 </script>
 

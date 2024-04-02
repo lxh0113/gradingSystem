@@ -1,7 +1,7 @@
 <template>
   <div class="bigBox">
     <div class="conditionSearch">
-      <el-input style="max-width: 250px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
+      <el-input style="max-width: 250px;height:40px;" @keyup.enter="saerch" v-model="searchInput" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
       <!-- <el-select class="m-2" placeholder="考试年份" size="large" style="width: 240px;margin-left:30px;" ></el-select> -->
     </div>
     <div class="details">
@@ -14,7 +14,7 @@
     </div>
 
     <div class="page">
-      <el-pagination prev-text="上一页" next-text="下一页" :page-size="20" :pager-count="11" layout="prev, pager, next"  :total="1000" />
+      <el-pagination v-if="paperList.length!==0" prev-text="上一页" next-text="下一页" @prev-click="minusPages" @next-click="addPages" @current-change="changeCurrent" :current-page="pageData.current" layout="prev, pager, next"  :page-count="pageData.totalPage" />
     </div>
 
 
@@ -25,23 +25,99 @@
 import { onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
-import {getALLMyPaperAPI} from '@/apis/examPaper.js'
+import {studentGetAllExamAPI,studentGetAllExamByKeyAPI} from '@/apis/examPaper.js'
 import { useRoute,useRouter } from 'vue-router';
 
 const route=useRoute()
 const router=useRouter()
 const paperList=ref([])
+const searchInput=ref('')
+
+const pageData=ref({
+    current:1,
+    totalPage:0
+})
+
+const changeCurrent=(number)=>{
+    pageData.value.current=number;
+    if(searchInput.value.trim()==='')
+    {
+        getMyPapers(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
+
+const addPages=()=>{
+    if(pageData.value.current>=pageData.value.totalPage)
+    {
+        return
+    }
+
+    pageData.value.current++;
+    
+    if(searchInput.value.trim()==='')
+    {
+      getMyPapers(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
+
+const minusPages=()=>{
+    if(pageData.value.current===1)
+    {
+        return
+    }
+
+    pageData.value.current--;
+    
+    if(searchInput.value.trim()==='')
+    {
+      getMyPapers(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
+
+const saerch=()=>{
+    if(searchInput.value.trim()==='')
+    {
+      getMyPapers(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
+}
+
+const getAllExaminationByKey=async(page,key)=>{
+    const res=await studentGetAllExamByKeyAPI(page,8,key);
+
+    if(res.data.code===200)
+    {
+        paperList.value=res.data.data.list
+        pageData.value.totalPage=res.data.data.totalPage
+
+    }
+    else {
+        ElMessage.error(res.data.message)
+    }
+}
 
 const toPaper=(id)=>{
   router.push('/paper/'+id)
 }
 
 const getMyPapers=async()=>{
-  const res=await getALLMyPaperAPI();
-  console.log(res)
+  const res=await studentGetAllExamAPI(pageData.value.current,8);
+  // console.log(res)
   if(res.data.code===200)
   {
-    paperList.value=res.data.data
+    console.log(res.data.data)
+    paperList.value=res.data.data.list
     // ElMessage.success("获取成功")
   }
   else {

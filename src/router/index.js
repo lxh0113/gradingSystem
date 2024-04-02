@@ -8,7 +8,6 @@ import Register from "@/views/register/index.vue";
 //student 模块
 import StudentHome from "@/views/student/home/index.vue"
 import StudentPapers from "@/views/student/papers/index.vue"
-import StudentAI from "@/views/student/ai/index.vue"
 import StudentRelationship from "@/views/student/relationship/index.vue"
 import StudentAnalysis from "@/views/student/analysis/index.vue"
 import StudentHomePaperOn from "@/views/student/home/components/studentPaperOn.vue"
@@ -16,7 +15,7 @@ import StudentHomePaperOff from "@/views/student/home/components/studentPaperOff
 import StudentPapersOn from "@/views/student/papers/components/studentPapersOn.vue"
 import StudentPapersOff from "@/views/student/papers/components/studentPapersOff.vue"
 import StudentPapersMistakes from "@/views/student/papers/components/studentPapersMistakes.vue"
-import StudentAiGenerate from "@/views/student/ai/components/studentAiGenerate.vue"
+
 import StudentPapersNotes from "@/views/student/papers/components/studentPapersNotes.vue"
 import StudentPapersNotesDetails from "@/views/student/papers/components/studentPapersNotesDetails.vue"
 
@@ -43,6 +42,9 @@ import TeacherMarkingOn from "@/views/teacher/marking/components/teacherMarkingO
 import TeacherMarkingOff from "@/views/teacher/marking/components/teacherMarkingOff.vue"
 import TeacherMarkingDetails from "@/views/teacher/marking/components/teacherMarkingDetails.vue"
 import TeacherViewStudent from '@/views/teacher/classManagement/components/TeacherViewStudent.vue';
+
+import TeacherAI from "@/views/teacher/ai/index.vue"
+import TeacherAiGenerate from "@/views/teacher/ai/components/teacherAiGenerate.vue"
 
 
 //schoolAdmin 模块
@@ -150,15 +152,6 @@ const setRouter=async()=>{
                       }
                     ]
                   },
-                  {
-                    path:'ai',
-                    name:'studentAi',
-                    component:StudentAI,
-                    redirect:"/student/ai/generate",
-                    children:[
-                      {path:'generate',name:'studentAiGenerate',component:StudentAiGenerate}
-                    ]
-                  },
                   {path:'analysis',name:'studentAnalysis',component:StudentAnalysis},
                   {path:'relationship',name:'studentRelationship',component:StudentRelationship}
                 ]
@@ -168,7 +161,7 @@ const setRouter=async()=>{
 
     }
     else if(identity==='parents') {
-          router.addRoute([
+          router.addRoute(
             {
               path:'/',
               component:Home,
@@ -206,7 +199,7 @@ const setRouter=async()=>{
               ]
             }
             
-          ])
+          )
 
     }
     else if(identity==='teacher')
@@ -246,6 +239,15 @@ const setRouter=async()=>{
                           name:'teacherMarkingDetails',
                           component:()=>import('@/views/teacher/marking/components/teacherMarkingDetails.vue')
                         }
+                      ]
+                    },
+                    {
+                      path:'ai',
+                      name:'teacherAi',
+                      component:TeacherAI,
+                      redirect:"/teacher/ai/generate",
+                      children:[
+                        {path:'generate',name:'teacherAiGenerate',component:TeacherAiGenerate}
                       ]
                     },
                     {path:'analysis',name:'teacherAnalysis',component:()=>import('@/views/teacher/examAnalysis/index.vue')},
@@ -357,6 +359,12 @@ const setRouter=async()=>{
           )
 
     }
+
+    router.addRoute({
+      path: '/:pathMatch(.*)',
+      redirect: '/404',
+      hidden: true
+    })
       userStore.changeIsLogin(true)
       resolve(true)
   })

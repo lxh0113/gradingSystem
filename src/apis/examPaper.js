@@ -31,6 +31,26 @@ export const getALLStudentPaperAPI=(examPaperId)=>{
     })
 }
 
+export const studentGetAllExamAPI=(page,pageSize)=>{
+    return http({
+        url:'/examPaper/getMyAllE',
+        method:'GET',
+        params:{
+            page,pageSize
+        }
+    })
+}
+
+export const studentGetAllExamByKeyAPI=(page,pageSize,condition)=>{
+    return http({
+        url:'/examPaper/getMyEByC',
+        method:'GET',
+        params:{
+            page,pageSize,condition
+        }
+    })
+}
+
 export const getPaperAPI=(examPaperId)=>{
     return http({
         url:'/examPaper/getPages',

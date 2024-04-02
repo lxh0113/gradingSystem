@@ -3,6 +3,12 @@
     <div class="top">
       <span>学情分析</span>
     </div>
+    <div class="chooseChildren">
+      <el-select size="large" style="width: 200px" placeholder="请选择孩子">
+        <el-option label="李泽言" value="李泽言" />
+        <el-option label="许墨" value="许墨" />
+      </el-select>
+    </div>
     <div class="details">
       <div class="chart1">
       </div>
@@ -141,6 +147,10 @@ onMounted(()=>{
       font-weight: bold;
       padding-bottom:20px;
     }
+  }
+
+  .chooseChildren{
+    margin-top:20px;
   }
 
   .details{

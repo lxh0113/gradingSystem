@@ -15,10 +15,6 @@
         </el-dropdown>
 
         <div>
-          <el-button style="border-radius: 50%;width: 30px;height: 30px;" :icon="ArrowLeft">
-          </el-button>
-          <el-button style="margin-left: 30px;border-radius: 50%;width: 30px;height: 30px;" :icon="ArrowRight">
-          </el-button>
         </div>
       </div>
     </div>
@@ -39,7 +35,7 @@
           </tr>
         </thead>
         <tbody v-if="studentList.length!==0">
-          <div v-for="item in studentList" :key="item.id">
+          <div v-for="(item,index) in studentList" :key="item.id">
             <tr v-if="item.state==='2'">
               <td>{{ item.studentNumber }}</td>
               <td>{{ item.name }}</td>
@@ -48,7 +44,7 @@
               <td style="color:#f56c6c">已批阅</td>
               <td class="width1">
                 <!-- <span style="opacity: 0;">批阅</span> -->
-                <span @click="router.push('/paper/'+item.id)">查看</span>
+                <span @click="toPaper(item.id,index)">查看</span>
               </td>
             </tr>
 
@@ -59,7 +55,7 @@
               <td  class="width1">暂无</td>
               <td style="color:#67c23a">正在批阅</td>
               <td  class="width1" :title="item.comment">
-                <span @click="toPaper(1)">批阅</span>
+                <span @click="toPaper(item.id,index)">批阅</span>
                 <span>查看</span>
               </td>
             </tr>
@@ -74,16 +70,17 @@
 
 <script setup>
 import { ArrowLeft,ArrowRight } from '@element-plus/icons-vue';
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import { useRoute,useRouter } from "vue-router"
 import { getALLStudentPaperAPI } from '@/apis/examPaper.js'
-// import { examPaperGetAllEP } from '../../../../mock/teacher/marking.js';
 import axios from 'axios'
 import { ElMessage } from 'element-plus';
 import { useTeacherPaperStore } from '@/stores/teacherPaperStore';
+import { useExamStore } from '@/stores/examStore.js'
 
 const router=useRouter();
 const route = useRoute();
+const examStore=useExamStore()
 const teacherPaperStore=useTeacherPaperStore()
 const titleText=ref('')
 
@@ -98,7 +95,6 @@ const getExamById=async()=>{
   
   if(res.data.code===200)
   {
-    console.log(res.data.data)
     studentList.value=res.data.data
   }
   else {
@@ -108,27 +104,37 @@ const getExamById=async()=>{
 }
 
 const toMarking=(id)=>{
+
   router.push('/teacher/marking/'+id)
 
-  setNav()
-  getExamById()
+  nextTick(()=>{
+    setNav()
+    getExamById()
+  })
+  
 }
 
 const setNav=()=>{
-  navList.value=teacherPaperStore.getTeacherPaperList()
-  let id=route.params.id
+  // navList.value=teacherPaperStore.getTeacherPaperList().list
+  // let id=route.params.id
 
-  const paper = teacherPaperStore.getTeacherPaperList().find(item => item.id == id);
-  titleText.value = paper ? paper.title : '';
+  // const paper = teacherPaperStore.getTeacherPaperList().list.find(item => item.id == id);
+  // titleText.value = paper ? paper.title : '';
 
 }
 
-onMounted(async()=>{
+
+onMounted(()=>{
   setNav()
   getExamById()
 })
 
-const toPaper=(id)=>{
+const toPaper=(id,index)=>{
+
+  examStore.setExamData(studentList.value[index])
+  teacherPaperStore.setTeacherPaperList(index,studentList.value)
+
+  
   router.push('/paper/'+id)
 }
 

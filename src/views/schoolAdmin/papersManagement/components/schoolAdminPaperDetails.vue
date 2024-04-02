@@ -27,14 +27,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in studentList" :key="item.id">                        
+                    <tr v-for="(item,index) in studentList" :key="item.id">                        
                         <td>{{ item.studentNumber }}</td>
                         <td>{{ item.name }}</td>
                         <td>{{ item.state==='2'?'已批阅':'未批阅' }}</td>
                         <td class="score">{{ item.state==='2'?item.score:'---' }}</td>
                         <td :title="item.comment" class="comment">{{ item.comment }}</td>
                         <td>
-                          <el-button @click="router.push('/paper/'+item.id)" type="primary" plain>查看</el-button>
+                          <el-button @click="toPaper(item.id,index)" type="primary" plain>查看</el-button>
                         </td>
                     </tr>
                 </tbody>
@@ -51,9 +51,11 @@ import { onMounted } from 'vue';
 import { useRoute,useRouter } from 'vue-router';
 import { schoolAdminGetAllExamAPI } from '@/apis/examPaper.js'
 import { ElMessage } from 'element-plus';
+import { useExamStore } from '@/stores/examStore';
 
 const route=useRoute()
 const router=useRouter()
+const examStore=useExamStore()
 
 const studentList=ref([])
 
@@ -70,6 +72,13 @@ const getExam=async()=>{
   else {
     ElMessage.error(res.data.message)
   }
+}
+
+const toPaper=(id,index)=>{
+
+  examStore.setExamData(studentList.value[index])
+
+  router.push('/paper/'+id)
 }
 
   onMounted(()=>{

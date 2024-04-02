@@ -1,17 +1,14 @@
 <template>
     <div class="fullScreen" :z-index="20">
     <div class="left">
-        <!-- <div class="comment">
-          <textarea name="" id="" cols="30" rows="10"></textarea>
-        </div> -->
         <el-scrollbar style="display: flex;max-width:1000px;justify-content: center;align-items: center;margin-top:10px">
           <img @click="()=>showImagePreview=true" class="imagePapers" :src="url[0]" alt="">
         </el-scrollbar>
         <div class="fixed">
-          <el-button :icon="DArrowLeft">上一套</el-button>
+          <el-button :icon="DArrowLeft" :disabled="teacherPaperStore.getTeacherPaperList().index==0" @click="toPapers(0)" :title="teacherPaperStore.getTeacherPaperList().index===0?'':teacherPaperStore.getTeacherPaperList().list[teacherPaperStore.getTeacherPaperList().index-1]?.naame">上一套</el-button>
           <el-button :icon="ArrowLeft" :disabled="currentIndex===0" @click="setMinusIndex"></el-button>
           <el-button :icon="ArrowRight" :disabled="currentIndex===paperList.length-1" @click="setAddIndex"></el-button>
-          <el-button :icon="DArrowRight">下一套</el-button>
+          <el-button :icon="DArrowRight" :disabled="teacherPaperStore.getTeacherPaperList().index===teacherPaperStore.getTeacherPaperList().list.length-1" @click="toPapers(1)" :title="currentIndex===teacherPaperStore.getTeacherPaperList().list.length-1?'':teacherPaperStore.getTeacherPaperList()[teacherPaperStore.getTeacherPaperList().index+1]?.name">下一套</el-button>
           <el-popover :visible="visible" placement="top" :width="320" style="height: 150px;">
             <el-input size="large" type="textarea" :rows="6" placeholder="请输入评语" v-model="comment" resize="false" style="margin-bottom: 20px;" />
             <div style="text-align: right; margin: 0">
@@ -31,7 +28,7 @@
           阅卷
         </div>
         <div class="score">
-          分值：97
+          分值：{{ teacherPaperStore.getTeacherPaperList().list[teacherPaperStore.getTeacherPaperList().index].score }}
         </div>
       </div>
       <el-scrollbar>
@@ -109,54 +106,60 @@ import { useRoute,useRouter } from "vue-router"
 import { useUserStore } from '@/stores/userStore';
 import { getPaperAPI } from '@/apis/examPaper.js'
 import { ElMessage } from 'element-plus';
+import { useExamStore } from '@/stores/examStore';
+import { useTeacherPaperStore } from '@/stores/teacherPaperStore';
 
+const teacherPaperStore=useTeacherPaperStore()
 const showImagePreview=ref(false)
 const visible = ref(false)
 const comment=ref('')
 const userStore=useUserStore()
+const examStore=useExamStore()
 
-const Router=useRouter()
+const router=useRouter()
 const route = useRoute();
 
-let url = ['https://yuejuanpt.oss-cn-zhangjiakou.aliyuncs.com/%E9%BB%98%E8%AE%A4.png'];
+let url = ref(['https://yuejuanpt.oss-cn-zhangjiakou.aliyuncs.com/%E9%BB%98%E8%AE%A4.png']);
 
 const showViewer = ref(false);
-let currentIndex=0;
+const currentIndex=ref(0);
 const paperList=ref([])
-const currentPages=ref(null)
+const currentPages=ref([])
+
+// const currentPaperIndex=ref()
 
 const closePreview=()=>{
   showImagePreview.value=false
 }
 
 const setAddIndex=()=>{
-  if(currentIndex>=paperList.length-1)
+  if(currentIndex.value>=paperList.length-1)
   {
     return
   }
 
-  currentIndex++
+  currentIndex.value++
   // alert(currentIndex)
-  url[0]=paperList.value[currentIndex].path
+  url.value[0]=paperList.value[currentIndex.value].path
 
-  console.log(url[0])
+  console.log(url.value[0])
 
-  let newStr=paperList.value[currentIndex].content.replaceAll('\n','');
-  newStr=paperList.value[currentIndex].content.replaceAll('\'','\"');
+  let newStr=paperList.value[currentIndex.value].content.replaceAll('\n','');
+  newStr=paperList.value[currentIndex.value].content.replaceAll('\'','\"');
   currentPages.value=JSON.parse(newStr)
   console.log(currentPages)
 }
 
 const setMinusIndex=()=>{
-  if(currentIndex<=0)
+  if(currentIndex.value<=0)
   {
     return
   }
-  currentIndex--
-  url[0]=paperList.value[currentIndex].path
+  currentIndex.value--
+  url.value[0]=paperList.value[currentIndex.value].path
 
-  let newStr=paperList.value[currentIndex].content.replaceAll('\n','');
-  newStr=paperList.value[currentIndex].content.replaceAll('\'','\"');
+  let newStr=paperList.value[currentIndex.value].content.replaceAll('\n','');
+  newStr=paperList.value[currentIndex.value].content.replaceAll('\'','\"');
   currentPages.value=JSON.parse(newStr)
   console.log(currentPages)
 }
@@ -169,11 +172,11 @@ const getPaperDetails=async()=>{
   {
     console.log(res.data.data)
     paperList.value=res.data.data
-    currentIndex=0;
+    currentIndex.value=0;
     
-    url[0]=paperList.value[currentIndex].path
-    let newStr=paperList.value[currentIndex].content.replaceAll('\n','');
-    newStr=paperList.value[currentIndex].content.replaceAll('\'','\"');
+    url.value[0]=paperList.value[currentIndex.value].path
+    let newStr=paperList.value[currentIndex.value].content.replaceAll('\n','');
+    newStr=paperList.value[currentIndex.value].content.replaceAll('\'','\"');
     console.log(newStr)
     currentPages.value=JSON.parse(newStr)
     console.log(currentPages)
@@ -183,8 +186,37 @@ const getPaperDetails=async()=>{
   }
 }
 
+const toPapers=(flag)=>{
+  let index=teacherPaperStore.getTeacherPaperList().index
+  if(flag===0)
+  {
+    if(index==0) return 
+    index--
+    teacherPaperStore.changeIndex(index-1)
+  }
+  else {
+    if(index==teacherPaperStore.getTeacherPaperList().list.length-1) return
+    index++
+    teacherPaperStore.changeIndex(index+1)
+  }
+
+  router.push('/paper/'+teacherPaperStore.getTeacherPaperList().list[index].id)
+}
+
+const setComment=()=>{
+  comment.value=teacherPaperStore.getTeacherPaperList().list[teacherPaperStore.getTeacherPaperList().index].comment||''
+
+  //设置上一套下一套
+
+  console.log(teacherPaperStore.getTeacherPaperList())
+  
+
+}
+
 onMounted(()=>{
   getPaperDetails()
+
+  setComment()
 })
 </script>
 
