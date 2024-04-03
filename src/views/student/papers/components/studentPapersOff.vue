@@ -20,9 +20,9 @@
       <div class="grade">
         分数：<span>{{ item.scored }}</span>分&nbsp;&nbsp;满分：<span>{{ item.score }}</span>分
       </div>
-      <div class="ai">
+      <!-- <div class="ai">
           AI智能分析  匹配相似模型&gt;&gt;&gt;
-      </div>
+      </div> -->
       <div class="status">
         <div class="text">
           已结束
@@ -207,12 +207,12 @@ onMounted(()=>{
     p{
       overflow:hidden;
       text-overflow: ellipsis;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 5;
       display: -webkit-box;
       -webkit-box-orient: vertical;
     }
     
-    height: 75px;
+    height: 110px;
     
     // display: -webkit-box;
     // -webkit-line-clamp: 3;

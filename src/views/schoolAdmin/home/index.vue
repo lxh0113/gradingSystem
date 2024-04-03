@@ -53,15 +53,16 @@
       <div class="title">
         <div class="left">
           试卷&nbsp;&nbsp;&nbsp;&gt;&gt;
-          <router-link to="/schoolAdmin/home/on">
-            进行中
-          </router-link>
           <router-link to="/schoolAdmin/home/off">
             已结束
           </router-link>
-          <router-link to="/schoolAdmin/home/will">
-            待开始
+          <router-link to="/schoolAdmin/home/on">
+            进行中
           </router-link>
+          
+          <!-- <router-link to="/schoolAdmin/home/will">
+            待开始
+          </router-link> -->
       </div>
      </div>
     <div class="paper">

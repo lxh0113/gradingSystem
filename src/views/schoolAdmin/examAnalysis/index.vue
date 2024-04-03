@@ -380,7 +380,7 @@ const setChartData3=async()=>{
     for(let i=0;i<chartData3.value.series.length;i++)
     {
       chartData3.value.series[i].data=res.data.data.map(item=>{
-        return item.classScoreList[i].avgScore
+        return item.classScoreList[i]?.avgScore||0
       })
     }
 
@@ -411,7 +411,9 @@ const getAllExam=async()=>{
   const res=await getAllExamAPI(userStore.getUserInfo().account);
   console.log(res.data.data)
   examList.value=res.data.data
-  currentExamList.value=[]
+  currentExamList.value=examList.value.map(item=>{
+    return item.id
+  })
 }
 
 const initChart=async()=>{

@@ -1,10 +1,11 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useClassStore = defineStore('class', () => {
+export const useEditorStore = defineStore('edit', () => {
     const value=ref('')
 
     const setValue=(data)=>{
+        alert(122111111111111)
         value.value=data
     }
 
@@ -13,6 +14,7 @@ export const useClassStore = defineStore('class', () => {
     }
 
     return {
+        value,
         setValue,
         getValue
     }

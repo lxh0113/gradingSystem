@@ -27,9 +27,6 @@ const router=useRouter()
 
 const currentId = route.params.id; 
 
-watch(() => route.params.id, (newValue, oldValue) => {
-    getMyPapers()
-});
 
 </script>
 

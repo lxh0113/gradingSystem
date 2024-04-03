@@ -294,7 +294,7 @@ const setRouter=async()=>{
                       path:'home',
                       name:'schoolAdminHome',
                       component:()=>import('@/views/schoolAdmin/home/index.vue'),
-                      redirect:'/schoolAdmin/home/on',
+                      redirect:'/schoolAdmin/home/off',
                       children:[
                         {path:'on',name:'schoolAdminHomeOn',component:()=>import('@/views/schoolAdmin/home/components/schoolAdminHomeOn.vue')},
                         {path:'off',name:'schoolAdminHomeOff',component:()=>import('@/views/schoolAdmin/home/components/schoolAdminHomeOff.vue')},

@@ -135,11 +135,9 @@ const getMyPapers=async()=>{
   }
 }
 
-watch(() => route.params.id, (newValue, oldValue) => {
+watch(() => route.params.id, () => {
     getMyPapers()
-    
-    
-});
+}, { immediate: false });
 
 onMounted(()=>{
   getMyPapers()

@@ -5,7 +5,7 @@
         </el-button>
     </div>
     <el-dialog v-model="dialogVisible" title="新建错题本" width="400" :before-close="handleClose">
-        <el-input size="large" style="width:320px;margin:20px;" placeholder="请输入标题"></el-input>
+        <el-input size="large" v-model="title" style="width:320px;margin:20px;" placeholder="请输入标题"></el-input>
         <el-select size="large" v-model="currentExamList" multiple clearable collapse-tags placeholder="请选择考试" popper-class="custom-header" :max-collapse-tags="1" style="width: 320px;margin:20px;">
           <template #header>
             <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
@@ -39,7 +39,7 @@
                         {{ item.examName }}
                     </span>
                     <el-icon class="editIcon" style="color:#3a63f3;margin-left: 20px;"><Edit /></el-icon>
-                    <el-icon class="editIcon" style="color:#3a63f3;margin-left: 10px"><Delete /></el-icon>
+                    <el-icon class="editIcon" @click="deleteExam(index)" style="color:#3a63f3;margin-left: 10px"><Delete /></el-icon>
                 </div>
             </router-link>
             
@@ -57,9 +57,16 @@ import { onMounted, ref, watch } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { studentGetHistoryExamAPI } from '@/apis/exam';
 import { ElMessage } from 'element-plus';
+import { useEditorStore } from '@/stores/editorStore.js'
+import { getData } from '@/utils/editorData.js'
+import { useRoute,useRouter } from 'vue-router';
 
 const dialogVisible = ref(false)
 const userStore=useUserStore()
+const editorStore=useEditorStore()
+const title=ref('')
+const route=useRoute()
+const router=useRouter()
 
 let checkAll = ref(false);
 let indeterminate = ref(false);
@@ -94,6 +101,16 @@ const getAllExam=async()=>{
   {
     console.log(res.data.data)
     examList.value=res.data.data
+
+    examList.value=examList.value.map(item=>{
+      return {
+        examName:item.examName,
+        notes:getData()
+      }
+    })
+
+    console.log(examList.value)
+
   }
   else {
     ElMessage.error(res.data.message)
@@ -102,16 +119,44 @@ const getAllExam=async()=>{
 
 const addNotes=()=>{
 
+  // console.log(currentExamList.value)
   if(currentExamList.value.length===0)
   {
-    //说明
+    examList.value.push({
+      examName:title.value,
+      notes:''
+    })
   }
   else {
-
+    examList.value.push({
+      examName:title.value,
+      notes:getData()
+    })
   }
-  dialogVisible = false
+
+  
+
+  let index=examList.value.length-1
+  router.push('/student/papers/notes/'+index)
+
+  ElMessage.success('新建成功')
+
+  title.value=''
+  currentExamList.value=[]
+  dialogVisible.value = false
 }
 
+watch(() => route.params.id, () => {
+    editorStore.setValue(examList.value[route.params.id].notes)
+});
+
+const deleteExam=(i)=>{
+  examList.value=examList.value.map((item,index)=>{
+    if(i!==index) return item
+  })
+
+  router.push('student/papers/notes/0')
+}
 
 
 onMounted(()=>{

@@ -9,7 +9,7 @@
       <div class="paper" v-for="(item,index) in paperList" :key="item.id" @click="toPaper(item.id,index)">
       <div class="top">
         <div class="subject">{{ item.title }}</div>
-        <div class="look">错题分析</div>
+        <!-- <div class="look">错题分析</div> -->
       </div>
       
       <div class="comment" :title="item.comment">
@@ -155,13 +155,15 @@ const getMyPapers=async()=>{
   }
 }
 
-watch(() => route.params.id, (newValue, oldValue) => {
+watch(() => route.params.id, () => {
     getMyPapers()
-});
+}, { immediate: false });
 
 onMounted(()=>{
   getMyPapers()
 })
+
+
 </script>
 
 <style lang="scss" scoped>

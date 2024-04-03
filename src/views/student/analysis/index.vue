@@ -8,6 +8,10 @@
       </div>
       <div class="chart2">
       </div>
+
+      <div class="chart3"></div>
+      <div class="chart4"></div>
+
     </div>
   </div>
 </template>
@@ -45,6 +49,13 @@ const chartData1=ref({
         textStyle: {
           fontSize: 14
         }
+        },
+        itemStyle: {
+            normal: {
+                lineStyle:{
+                    width:6//设置线条粗细
+                }
+            }
         },
         emphasis:{
           label:{
@@ -101,6 +112,93 @@ const chartData2=ref({
     }
   ]
   })
+const chartData3=ref({
+    title: {
+      text: userStore.getUserInfo().name+'班级排名趋势'
+    },
+    legend:{
+    },
+    color:['#91cc75'],
+    tooltip: {},
+    xAxis: {
+      data: ['第一次月考', '第二次月考', '第三次月考', '第四次月考', '第五次月考', '第六次月考'],
+      axisLine: {
+        onZero: false
+      }
+    },
+    yAxis: {inverse:true},
+    series: [
+      {
+        name: '班级排名',
+        type: 'line',
+        data: [],
+        label: {
+        show: true,
+        position: 'top',
+        textStyle: {
+          fontSize: 14
+        }
+        },
+        itemStyle: {
+            normal: {
+                color: '#91cc75',
+                lineStyle:{
+                    width:6//设置线条粗细
+                }
+            }
+        },
+        emphasis:{
+          label:{
+            show:true
+          }
+        }
+      }
+    ]
+  })
+const chartData4=ref({
+    title: {
+      text: userStore.getUserInfo().name+'年级排名趋势'
+    },
+    legend:{
+    },
+    color:['#ee6666'],
+    tooltip: {},
+    xAxis: {
+      data: ['第一次月考', '第二次月考', '第三次月考', '第四次月考', '第五次月考', '第六次月考'],
+      axisLine: {
+        onZero: false
+      }
+    },
+    yAxis: {inverse:true},
+    series: [
+      {
+        name: '年级排名',
+        type: 'line',
+        data: [],
+        label: {
+        show: true,
+        position: 'top',
+        textStyle: {
+          fontSize: 14
+        }
+        },
+        itemStyle: {
+            normal: {
+                color: '#ee6666',
+                lineStyle:{
+                    width:6//设置线条粗细
+                }
+            }
+        },
+        emphasis:{
+          label:{
+            show:true
+          }
+        }
+      }
+    ]
+  })
+
 
 const setChart=()=>{
   const dom1 = document.querySelector('.chart1');
@@ -109,24 +207,44 @@ const setChart=()=>{
   const dom2 = document.querySelector('.chart2');
   const myChart2 = echarts.init(dom2);
 
+  const dom3 = document.querySelector('.chart3');
+  const myChart3 = echarts.init(dom3);
+
+  const dom4 = document.querySelector('.chart4');
+  const myChart4 = echarts.init(dom4);
+
   // 指定图表的配置项和数据
   var option1 = chartData1.value;
 
   var option2 = chartData2.value;
+
+  var option3 = chartData3.value
+
+  var option4 = chartData4.value
+
   
   // 使用刚指定的配置项和数据显示图表。
   myChart1.setOption(option1);
   myChart2.setOption(option2)
+  myChart3.setOption(option3)
+  myChart4.setOption(option4)
+
 
   window.addEventListener('resize',()=>{
     // alert(1)
     myChart1.resize()
     myChart2.resize()
+    myChart3.resize()
+    myChart4.resize()
+
   })
 
   onUnmounted(() => {
       myChart1.dispose();
       myChart2.dispose()
+      myChart3.dispose()
+      myChart4.dispose()
+
   });
 }
 
@@ -167,14 +285,36 @@ const initChart=async()=>{
     ElMessage.error(res.data.message)
   }
 
+  res = await studentGetHistoryExamAPI(userStore.getUserInfo().account)
+
+  if(res.data.code===200)
+  {
+
+    chartData3.value.xAxis.data=res.data.data.map(item=>{
+      return item.examName
+    })
+
+    chartData3.value.series[0].data=res.data.data.map(item=>{
+      return item.classRank
+    })
+
+    chartData4.value.xAxis.data=res.data.data.map(item=>{
+      return item.examName
+    })
+
+    chartData4.value.series[0].data=res.data.data.map(item=>{
+      return item.gradeRank
+    })
+  }
+  else ElMessage.error(res.data.message)
+
   setChart()
 }
 
 
 onMounted(()=>{
+  setChart()
   initChart()
-  // setChart()
-  
 })
 </script>
 
@@ -201,11 +341,14 @@ onMounted(()=>{
     width: 100%;
     margin-top: 20px;
     display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(480px,700px));
-    gap:10px;
+    display: grid;
+    box-sizing: border-box;
+    padding:20px;
+    grid-template-columns: repeat(2, minmax(400px,75vw));
+    gap: 20px;
 
-    .chart1,.chart2{
-      height: 500px;
+    .chart1,.chart2,.chart3,.chart4{
+      height: 400px;
       // background-color: aqua;
       // margin-right: 10px;
       // margin-bottom: 10px;

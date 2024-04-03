@@ -32,12 +32,13 @@
     <div class="title">
       <div class="left">
         试卷&nbsp;&nbsp;&nbsp;&gt;&gt;
-        <router-link to="/student/home/on">
-          进行中
-        </router-link>
         <router-link to="/student/home/off">
           已结束
         </router-link>
+        <router-link to="/student/home/on">
+          进行中
+        </router-link>
+        
       </div>
     </div>
     <div class="paper">

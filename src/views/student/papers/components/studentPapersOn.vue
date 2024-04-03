@@ -7,7 +7,7 @@
     <div class="details">
       <div class="paper" v-for="(item,index) in paperList" :key="item.id" @click="toPaper(item.id,index)">
         <div class="subject">{{ item.title }}</div>
-        <div class="correctors">批改人：xxx老师</div>
+        <!-- <div class="correctors">批改人：xxx老师</div> -->
         <div class="text">您的试卷正在批改中，请耐心等待！</div>
         <div class="status">进行中</div>
       </div>
@@ -182,7 +182,7 @@ onMounted(()=>{
     }
 
     .text{
-      height: 110px;
+      height: 140px;
       line-height: 110px;
       font-size: 18px;
     }
