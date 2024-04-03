@@ -6,7 +6,7 @@ export const getAllExaminationAPI=(page)=>{
         method:"GET",
         params:{
             page,
-            pageSize:2
+            pageSize:4
         }
     })
 }
@@ -16,7 +16,7 @@ export const getEByKeyAPI=(key,page)=>{
         url:'/examPaper/getEByKey',
         method:'GET',
         params:{
-            key,page,pageSize:2
+            key,page,pageSize:4
         }
     })
 }
@@ -95,6 +95,26 @@ export const schoolAdminGetAllExamAPI=(examId)=>{
         method:'GET',
         params:{
             examId
+        }
+    })
+}
+
+export const parentsGetChildrenPapersAPI=(page,pageSize,account)=>{
+    return http({
+        url:"/examPaper/getChildAllEP",
+        method:'GET',
+        params:{
+            page,pageSize,account
+        }
+    })
+}
+
+export const parentsGetChildrenPapersByKeyAPI=(page,pageSize,condition,account)=>{
+    return http({
+        url:'/examPaper/getChildEByC',
+        method:'GET',
+        params:{
+            page,pageSize,condition,account
         }
     })
 }

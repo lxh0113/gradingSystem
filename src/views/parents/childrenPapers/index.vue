@@ -3,11 +3,11 @@
     <div class="title">
       <div class="left">
         孩子试卷&nbsp;&nbsp;&nbsp;&gt;&gt;
-        <router-link to="/parents/papers/on">
-          进行中
-        </router-link>
-        <router-link to="/parents/papers/off">
+        <router-link :to="`/parents/papers/${currentId}/off`">
           已结束
+        </router-link>
+        <router-link :to="`/parents/papers/${currentId}/on`">
+          进行中
         </router-link>
       </div>
     </div>
@@ -19,6 +19,17 @@
 </template>
 
 <script setup>
+import { useRoute,useRouter } from 'vue-router';
+import { watch } from 'vue'
+
+const route=useRoute()
+const router=useRouter()
+
+const currentId = route.params.id; 
+
+watch(() => route.params.id, (newValue, oldValue) => {
+    getMyPapers()
+});
 
 </script>
 

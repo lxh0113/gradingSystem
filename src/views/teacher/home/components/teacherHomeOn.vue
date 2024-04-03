@@ -1,54 +1,74 @@
 <template>
-  <div class="bigBox">
-    <div class="conditionSearch">
-      <el-input style="max-width: 300px;height:40px;" @keyup.enter="saerch" v-model="searchInput" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
-      <!-- <el-select class="m-2" placeholder="班级" size="large" style="width: 240px;margin-left:30px;" ></el-select> -->
+    <div class="bigBox wow fadeInUp">
+      <div class="conditionSearch">
+        <el-input @keyup.enter="saerch" v-model="searchInput" style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
     </div>
-    <div class="details">
-      <div class="paper" v-for="item in examPaperList" :key="item.id" @click="toPaper(item.id)">
-        <div class="top">
+      <div class="details">
+        <div class="paper" v-for="item in examPaperList" :key="item.id" @click="()=>$router.push(`/teacher/marking/${item.id}`)">
             <div>
-                <div class="title">
-                    {{ item.title }}
+                <div class="top">
+                    <div>
+                        <div class="title">{{ item.title }}</div>
+                    </div>
+                    <div class="operation">
+                        批阅
+                    </div>
+                </div>
+                <div class="content">
+                    <!-- <dix class="class">
+                        软件一班
+                    </dix> -->
+                    <div class="text">
+                        正在批阅中，请耐心等待！
+                    </div>
+                    <div class="view">
+                        查看已批阅试题&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;
+                    </div>
+                </div>
+                <div class="bottom">
+                    
+                    <el-progress :text-inside="false" style="width: 40%;" :percentage="getPercent(item.amount)" />
+                    <div class="time">
+                        {{ item.date }}
+                    </div>
                 </div>
             </div>
-            <div class="operation">
-                批阅
-            </div>
         </div>
-        <div class="content">
-            <div class="text">
-                正在批阅中，请耐心等待！
-            </div>
-            <div class="view">
-                查看已批阅试题&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;
-            </div>
-        </div>
-        <div class="bottom">
-            <div class="time">
-                {{ item.date }}
-            </div>
+        <div v-if="examPaperList.length===0" style="display: flex;width: 100%;justify-content: center;align-items: center;">
+            <el-empty style="flex:1;" description="无数据" />
         </div>
       </div>
+  
+      <div class="page">
+        <el-pagination v-if="examPaperList.length!==0" prev-text="上一页" next-text="下一页" @prev-click="minusPages" @next-click="addPages" @current-change="changeCurrent" :current-page="pageData.current" layout="prev, pager, next"  :page-count="pageData.totalPage" />
+      </div>
     </div>
-
-    <div class="page">
-      <el-pagination v-if="examPaperList.length!==0" prev-text="上一页" next-text="下一页" @prev-click="minusPages" @next-click="addPages" @current-change="changeCurrent" :current-page="pageData.current" layout="prev, pager, next"  :page-count="pageData.totalPage" />
-    </div>
-  </div>
 </template>
 
 <script setup>
 import { Search } from '@element-plus/icons-vue';
-import { useRoute,useRouter } from 'vue-router';
-import { getAllExaminationAPI,getEByKeyAPI } from '@/apis/examPaper';
-import { useTeacherPaperStore } from '@/stores/teacherPaperStore';
-
-const router=useRouter()
-const route=useRoute()
-const teacherPaperStore=useTeacherPaperStore()
+import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { getAllExaminationAPI,getEByKeyAPI } from '@/apis/examPaper.js'
+// import { examPaperGetAllE } from '../../../../mock/teacher/marking.js';
+import axios from 'axios'
+import { ElMessage } from 'element-plus';
+import { useTeacherPaperStore } from '@/stores/teacherPaperStore.js';
 
 const searchInput=ref('')
+const router=useRouter()
+const route=useRoute()
+const examPaperList=ref([])
+const teacherPaperStore=useTeacherPaperStore()
+
+const getPercent=(amount)=>{
+
+    console.log(amount)
+    if((amount.gradedNumber&&amount.total)&&amount.gradedNumber===0||amount.total===0) return 0;
+    else {
+        return amount.gradedNumber/amount.total*100
+    }
+}
 
 const pageData=ref({
     current:1,
@@ -83,17 +103,6 @@ const addPages=()=>{
     }
 }
 
-const saerch=()=>{
-    if(searchInput.value.trim()==='')
-    {
-        getAllExamination(pageData.value.current)
-    }
-    else {
-        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
-    }
-}
-
-
 const minusPages=()=>{
     if(pageData.value.current===1)
     {
@@ -111,11 +120,15 @@ const minusPages=()=>{
     }
 }
 
-const toPaper=(id)=>{
-  router.push('/paper/'+id);
+const saerch=()=>{
+    if(searchInput.value.trim()==='')
+    {
+        getAllExamination(pageData.value.current)
+    }
+    else {
+        getAllExaminationByKey(searchInput.value.trim(),pageData.value.current)
+    }
 }
-
-const examPaperList=ref([])
 
 const getAllExaminationByKey=async(key,page)=>{
     const res=await getEByKeyAPI(key,page);
@@ -125,7 +138,6 @@ const getAllExaminationByKey=async(key,page)=>{
         examPaperList.value=res.data.data.list
         pageData.value.totalPage=res.data.data.totalPage
 
-        teacherPaperStore.setTeacherPaperList(examPaperList.value)
     }
     else {
         ElMessage.error(res.data.message)
@@ -141,115 +153,132 @@ const getAllExamination=async(page)=>{
         examPaperList.value=res.data.data.list
         pageData.value.totalPage=res.data.data.totalPage
 
-        teacherPaperStore.setTeacherPaperList(examPaperList.value)
     }
     else {
         ElMessage.error(res.data.message)
     }
 }
 
-onMounted(()=>{
-  getAllExamination(1);
+onMounted(async()=>{
+    getAllExamination(1);
 })
 </script>
 
 <style lang="scss" scoped>
-.bigBox{
-    margin-top:20px;
+    .bigBox{
+        margin-top:20px;
+        height: 100vh;
+        background-color: #fff;
+        // position: relative;
 
-    .conditionSearch{
-        color:#3A63F3;
-        display: flex;
+        .conditionSearch{
+            color:#3A63F3;
+            display: flex;
     }
 
-  .details {
-    // background-color: pink;
-    margin-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(480px,750px));
-    gap:20px;
-   
-    // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
+    .details {
+        // background-color: pink;
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(480px,750px));
+        gap:20px;
+    
+        // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
+    }
+
+    .paper {
+        background-color: #ebeffe;
+        flex: 1;
+        // min-width: 600px;
+        // max-width: 770px;
+        height: 220px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+        box-sizing: border-box;
+        padding:20px;
+        margin-right: 20px;
+        transition: all .5s;
+        cursor: pointer;
+
+        .top{
+            display: flex;
+            justify-content: space-between;
+
+            div{
+                display: flex;
+            }
+
+            .title,.subject,.class{
+                font-weight: bold;
+                color:#3A63F3;
+                font-size:20px;
+            }
+
+            .class{
+                color:black;
+            }
+
+            .subject{
+                margin-left:40px;
+            }
+
+            .operation{
+                font-weight: bold;
+                margin-right: 20px;
+                font-size: 18px;
+            }
+        }
+
+        // .class{
+        //     line-height: 20px;
+        //     // background-color: #9e8b8b;
+        //     font-size: 18px;
+        // }
+
+        .content{
+            
+
+            .text{
+                line-height: 80px;
+                // background-color: #3A63F3;
+            }
+
+            .view{
+                line-height: 50px;
+                font-weight: bold;
+            }
+        }
+
+        .bottom{
+            display: flex;
+            justify-content: space-between;
+            // margin-right: 30px;
+            font-size: 18px;
+            line-height: 30px;
+            color:#9e8b8b;
+
+            .time{
+                font-size: 16px;
+            }
+        }
+
+        
+        }
+
+    .page{
+        // position: fixed;
+        bottom:20px;
+        display: flex;
+        // margin-left: 50%;
+        // transform: translateX(-50%);
+        justify-content: center;
+        align-items: center;
+    }
 }
 
-.paper {
-    background-color: #ebeffe;
-    flex: 1;
-    // min-width: 600px;
-    // max-width: 770px;
-    height: 220px;
-    margin-bottom: 20px;
-    border-radius: 20px;
-    box-sizing: border-box;
-    padding:20px;
-    margin-right: 20px;
-    
+:deep(.el-progress-bar__outer){
 
-    transition: all .5s;
+    background-color: #fff;
 
-    &:hover{
-      transform: translateY(-5px);
-      box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
-    }
-
-    
-
-    .top{
-        display: flex;
-        justify-content: space-between;
-
-        div{
-            display: flex;
-        }
-
-        .title,.subject{
-            font-weight: bold;
-            color:#3A63F3;
-            font-size:20px;
-        }
-
-        .subject{
-            margin-left:40px;
-        }
-
-        .operation{
-            font-weight: bold;
-            margin-right: 20px;
-            font-size: 18px;
-        }
-    }
-
-    .content{
-        .text{
-            line-height: 80px;
-        }
-
-        .view{
-            line-height: 50px;
-            font-weight: bold;
-        }
-    }
-
-    .bottom{
-        display: flex;
-        justify-content: space-between;
-        margin-right: 30px;
-        font-size: 18px;
-        line-height: 30px;
-        color:#9e8b8b;
-
-        .time{
-          font-size: 16px;
-        }
-    }
-
-    
-    }
-
-  .page{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 }
 </style>

@@ -6,8 +6,9 @@
         </el-scrollbar>
         <div class="fixed">
           <el-button :icon="DArrowLeft" :disabled="teacherPaperStore.getTeacherPaperList().index==0" @click="toPapers(0)" :title="teacherPaperStore.getTeacherPaperList().index===0?'':teacherPaperStore.getTeacherPaperList().list[teacherPaperStore.getTeacherPaperList().index-1]?.naame">上一套</el-button>
-          <el-button :icon="ArrowLeft" :disabled="currentIndex===0" @click="setMinusIndex"></el-button>
-          <el-button :icon="ArrowRight" :disabled="currentIndex===paperList.length-1" @click="setAddIndex"></el-button>
+          <el-button :icon="ArrowLeft" :disabled="currentIndex===0" @click="setMinusIndex" style="margin-right: 20px"></el-button>
+          第<span>{{ currentIndex+1 }}</span>页 共<span>{{ paperList.length }}</span>页
+          <el-button :icon="ArrowRight" :disabled="currentIndex===paperList.length-1" @click="setAddIndex" style="margin-left: 20px"></el-button>
           <el-button :icon="DArrowRight" :disabled="teacherPaperStore.getTeacherPaperList().index===teacherPaperStore.getTeacherPaperList().list.length-1" @click="toPapers(1)" :title="currentIndex===teacherPaperStore.getTeacherPaperList().list.length-1?'':teacherPaperStore.getTeacherPaperList()[teacherPaperStore.getTeacherPaperList().index+1]?.name">下一套</el-button>
           <el-popover :visible="visible" placement="top" :width="320" style="height: 150px;">
             <el-input size="large" type="textarea" :rows="6" placeholder="请输入评语" v-model="comment" resize="false" style="margin-bottom: 20px;" />
@@ -27,12 +28,19 @@
         <div class="text">
           阅卷
         </div>
+        <div style="color:red;font-weight: bold;">
+          <!-- <span style="color:black">姓名:</span> -->
+          {{ teacherPaperStore.getTeacherPaperList()?.list[teacherPaperStore.getTeacherPaperList()?.index]?.name }}
+        </div>
         <div class="score">
-          分值：{{ teacherPaperStore.getTeacherPaperList().list[teacherPaperStore.getTeacherPaperList().index].score }}
+          分值：{{ getScore() }}
         </div>
       </div>
       <el-scrollbar>
         <div class="questions" v-for="item in currentPages" :key="item">
+          <div class="kind">
+            {{ item.type }}
+          </div>
           <div class="question">
             {{ item.question }}
           </div>
@@ -57,7 +65,7 @@
               学生答案：{{ item.studentResponse }}
             </div>
             <div class="score" v-if="userStore.user.identity==='teacher'">
-              分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" :value="item.score" />
+              分值：<el-input min="0" max="3" @change="" style="width: 60px" placeholder="0-3" :value="item.score" />
             </div>
             <div class="score" v-else>
               分值：{{ item.score }}
@@ -68,7 +76,7 @@
               学生答案：{{ item.studentResponse }}
             </div>
             <div class="score" v-if="userStore.user.identity==='teacher'">
-              分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" :value="item.score" />
+              分值：<el-input min="0" max="3" @change="" style="width: 60px" placeholder="0-3" :value="item.score" />
             </div>
             <div class="score" v-else>
               分值：{{ item.score }}
@@ -78,7 +86,7 @@
             <div class="answer">
             </div>
             <div class="score" v-if="userStore.user.identity==='teacher'">
-              分值：<el-input v-model="input" style="width: 60px" placeholder="0-100" :value="item.score" />
+              分值：<el-input min="0" max="10" style="width: 60px" @change="" placeholder="0-10" :value="item.score" />
             </div>
             <div class="score" v-else>
               分值：{{ item.score }}
@@ -127,6 +135,14 @@ const paperList=ref([])
 const currentPages=ref([])
 
 // const currentPaperIndex=ref()
+
+const getScore=()=>{
+  if(userStore.getUserInfo().identity==='student'||userStore.getUserInfo().identity==='parents')
+  {
+    return teacherPaperStore.getTeacherPaperList().list[teacherPaperStore.getTeacherPaperList().index].scored
+  }
+  else return teacherPaperStore.getTeacherPaperList().list[teacherPaperStore.getTeacherPaperList().index].score
+}
 
 const closePreview=()=>{
   showImagePreview.value=false
@@ -199,17 +215,17 @@ const toPapers=(flag)=>{
     index++
     teacherPaperStore.changeIndex(index+1)
   }
-
+  
+  currentIndex.value=0;
   router.push('/paper/'+teacherPaperStore.getTeacherPaperList().list[index].id)
+
+  getPaperDetails()
+
+  setComment()
 }
 
 const setComment=()=>{
-  comment.value=teacherPaperStore.getTeacherPaperList().list[teacherPaperStore.getTeacherPaperList().index].comment||''
-
-  //设置上一套下一套
-
-  console.log(teacherPaperStore.getTeacherPaperList())
-  
+  comment.value=teacherPaperStore.getTeacherPaperList().list[teacherPaperStore.getTeacherPaperList().index].comment||''  
 
 }
 
@@ -245,6 +261,14 @@ onMounted(()=>{
       .fixed{
         position: fixed;
         bottom:30px;
+        font-size: 16px;
+
+        transition: all .5s;
+
+        span{
+          color:#3a63f3;
+          font-weight: bold;
+        }
       }
     }
 
@@ -280,7 +304,12 @@ onMounted(()=>{
         box-sizing: border-box;
         margin-right: 20px;
 
-
+        .kind{
+          line-height: 40px;
+          font-size: 15px;
+          font-weight: bold;
+          margin-left: 10px;
+        }
 
         .question{
           border:1px solid #dcdfe6;

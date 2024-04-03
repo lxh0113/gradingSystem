@@ -6,7 +6,7 @@
       <el-select v-model="value" class="m-2" placeholder="考试分数" size="large" style="width: 240px;margin-left:30px;" ></el-select> -->
     </div>
     <div class="details">
-      <div class="paper" v-for="item in paperList" :key="item.id" @click="toPaper(item.id)">
+      <div class="paper" v-for="(item,index) in paperList" :key="item.id" @click="toPaper(item.id,index)">
       <div class="top">
         <div class="subject">{{ item.title }}</div>
         <div class="look">错题分析</div>
@@ -46,11 +46,13 @@ import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 import {studentGetAllExamAPI,studentGetAllExamByKeyAPI} from '@/apis/examPaper.js'
 import { useRoute,useRouter } from 'vue-router';
+import { useTeacherPaperStore } from '@/stores/teacherPaperStore';
 
 const route=useRoute()
 const router=useRouter()
 const paperList=ref([])
 const searchInput=ref('')
+const teacherPaperStore=useTeacherPaperStore()
 
 const pageData=ref({
     current:1,
@@ -126,7 +128,8 @@ const getAllExaminationByKey=async(page,key)=>{
     }
 }
 
-const toPaper=(id)=>{
+const toPaper=(id,index)=>{
+  teacherPaperStore.setTeacherPaperList(index,paperList.value)
   router.push('/paper/'+id)
 }
 

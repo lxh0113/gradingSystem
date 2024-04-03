@@ -3,7 +3,7 @@
         <div class="left">
             <div class="title">个人信息</div>
             <div class="avatar">
-                <img src="@/assets/avatar.jpeg" alt="">
+                <img :src="studentData.avatar" alt="">
             </div>
             <div class="info">
                 <div class="infoLeft">
@@ -22,19 +22,19 @@
                 </div>
                 <div class="infoRight">
                     <div class="tag">
-                        <el-tag type="primary" style="margin-right: 5px;" v-for="tag in tags" :key="tag.name" v-show="tag.name.trim()!==''">
-                          {{ tag.name }}
+                        <el-tag type="primary" style="margin-right: 5px;" v-for="tag in tags" :key="tag" v-show="tag.trim()!==''">
+                          {{ tag }}
                         </el-tag>
                         <el-button size="small" @click="dialogVisible = true" style="margin-left:5px" icon="Edit"></el-button>
                     </div>
                     <div>
-                        20224013333
+                        {{ studentData.studentNumber }}
                     </div>
                     <div>
-                        lxh
+                        {{ studentData.name }}
                     </div>
                     <div>
-                        12345678@qq.com
+                        {{ studentData.email||'暂无' }}
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
             <div class="rightTitle">
                 详情
             </div>
-            <div class="chart">
+            <div class="studentChart">
             </div>
             <div class="historyPaper">
                 <div class="historyPaperTitle">
@@ -56,23 +56,34 @@
                             <tr>
                                 <td>考试</td>
                                 <td>分数</td>
+                                <td>班级排名</td>
+                                <td>学校排名</td>
                                 <td>操作</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr v-for="item in 4" :key="item">
+                        <tbody v-if="examList.length!==0">
+                            <tr v-for="(item,index) in examList" :key="item">
                                 <td>
-                                    第一次月考
+                                    {{ item.examName }}
                                 </td>
                                 <td class="score">
-                                    86
+                                    {{ item.score }}
                                 </td>
                                 <td>
-                                    <el-button>
+                                    {{ item.classRank }}
+                                </td>
+                                <td>
+                                    {{ item.gradeRank }}
+                                </td>
+                                <td>
+                                    <el-button type="primary" @click=toPaper(item.studentTestPaperId,index)>
                                         查看
                                     </el-button>
                                 </td>
                             </tr>
+                        </tbody>
+                        <tbody style="width: 100%;display: flex;justify-content: center;" v-else>
+                            <el-empty description="无数据" />
                         </tbody>
                     </table>
                 </div>
@@ -83,13 +94,13 @@
     <el-dialog v-model="dialogVisible" title="设置标签" width="400">
         <el-form style="margin:10px 20px 10px 20px" label-position="left" size="large" :model="tagsForm">
             <el-form-item label="标签1" label-width="70px">
-                <el-input size="large"  v-model="tagsForm.tag1">{{ tagsForm.tag1 }}</el-input>
+                <el-input size="large"  v-model="tagsForm[0]">{{ tagsForm[0] }}</el-input>
             </el-form-item>
             <el-form-item label="标签2" label-width="70px">
-                <el-input size="large" v-model="tagsForm.tag2">{{ tagsForm.tag2 }}</el-input>
+                <el-input size="large" v-model="tagsForm[1]">{{ tagsForm[1] }}</el-input>
             </el-form-item>
             <el-form-item label="标签3" label-width="70px">
-                <el-input size="large" v-model="tagsForm.tag3">{{ tagsForm.tag3 }}</el-input>
+                <el-input size="large" v-model="tagsForm[2]">{{ tagsForm[2] }}</el-input>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -109,59 +120,16 @@ import { setTagAPI } from '@/apis/user.js'
 import {useRoute,useRouter} from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { getStudentsAPI } from '@/apis/student.js'
+import { studentGetHistoryExamAPI } from '@/apis/exam.js'
+import { useTeacherPaperStore } from '@/stores/teacherPaperStore'
 
 const route=useRoute()
 const router=useRouter()
-
-    const tags = ref([
-        { name: '大大咧咧'},
-        { name: '大大咧咧'},
-        { name: '大大咧咧'}
-    ])
-
-const tagsForm=ref({
-    tag1:'大大咧咧',
-    tag2:'大大咧咧',
-    tag3:'大大咧咧'
-})
-
-let internalInstance = getCurrentInstance();
-let echarts = internalInstance.appContext.config.globalProperties.$echarts
-
-const dialogVisible = ref(false)
-
-const changeTag=async()=>{
-    // console.log(route.params)
-    const account=route.params.studentId
-    const styleTag=tagsForm.value.tag1+'、'+tagsForm.value.tag2+'、'+tagsForm.value.tag3
-
-    if(tags.value[0].name===tagsForm.value.tag1&&tags.value[1].name===tagsForm.value.tag2&&tags.value[2]===tagsForm.value.tag3)
-    {
-        ElMessage.error("您未作出任何改动")
-        return
-    }
-
-    const res=await setTagAPI(account,styleTag);
-
-    if(res.data.code===200)
-    {
-        ElMessage.success('修改成功')
-        tags.value[0].name=tagsForm.value.tag1;
-        tags.value[1].name=tagsForm.value.tag2;
-        tags.value[2].name=tagsForm.value.tag3;
-    }  
-    else {
-        ElMessage.error(res.data.message)
-    }
-    dialogVisible.value = false
-}
-
-    const setChart=()=>{
-    const dom1 = document.querySelector('.chart');
-    const myChart1 = echarts.init(dom1);
-
-    // 指定图表的配置项和数据
-    var option1 = {
+const teacherPaperStore=useTeacherPaperStore()
+const studentData=ref({})
+const studentListData=ref([])
+const examList=ref([])
+const chartData=ref({
         title: {
         text: '班级历史平均分成绩分布'
         },
@@ -188,7 +156,57 @@ const changeTag=async()=>{
             }
         }
         ]
-    };
+    })
+
+const tags = ref([])
+
+const tagsForm=ref({
+})
+
+let internalInstance = getCurrentInstance();
+let echarts = internalInstance.appContext.config.globalProperties.$echarts
+
+const dialogVisible = ref(false)
+
+const changeTag=async()=>{
+    // console.log(route.params)
+    const account=studentListData.value[route.params.studentId].account
+
+    let list = JSON.parse(JSON.stringify(tagsForm.value))
+
+    const styleTag=list.map(item=>{
+        return item.trim()
+    }).join('、')
+
+    // alert(styleTag)
+
+    if(studentData.value.styleTag===styleTag)
+    {
+        ElMessage.error("您未作出任何改动")
+        return
+    }
+
+    console.log(styleTag)
+
+    const res=await setTagAPI(account,styleTag);
+
+    if(res.data.code===200)
+    {
+        ElMessage.success('修改成功')
+        tags.value=list
+    }  
+    else {
+        ElMessage.error(res.data.message)
+    }
+    dialogVisible.value = false
+}
+
+const setChart=()=>{
+    const dom1 = document.querySelector('.studentChart');
+    const myChart1 = echarts.init(dom1);
+
+    // 指定图表的配置项和数据
+    var option1 = chartData.value;
 
     // 使用刚指定的配置项和数据显示图表。
     myChart1.setOption(option1);
@@ -200,7 +218,7 @@ const changeTag=async()=>{
     onUnmounted( ()=>{
         myChart1.dispose();
     })
-1
+
 }
 
 const getStudentData=async()=>{
@@ -212,18 +230,87 @@ const getStudentData=async()=>{
     if(res.data.code===200)
     {
         console.log(res.data.data)
+        studentListData.value=res.data.data
     }
     else {
         ElMessage.error(res.data.message)
     }
 
-    
 }
 
+const getStudent=()=>{
+    let index=route.params.studentId
 
-onMounted(()=>{
-    getStudentData()
+    studentData.value=studentListData.value[index]
+
+    let list = studentData.value.styleTag?.split('、')||[]
+
+    console.log(list)
+
+    for(let i=0;i<3;i++)
+    {
+        if(i<list.length)
+        {
+        }
+        else list.push('')
+    }
+
+    tags.value=list
+    tagsForm.value=list
+
+}
+
+const setRightData=async()=>{
+
+    const res=await studentGetHistoryExamAPI(studentData.value.account)
+
+    if(res.data.code===200)
+    {
+        console.log(res.data.data)
+
+        chartData.value.xAxis.data=res.data.data.map(item=>{
+            return item.examName
+        })
+
+        chartData.value.series[0].name=studentData.value.name
+
+        chartData.value.series[0].data=res.data.data.map(item=>{
+            return item.score
+        })
+
+        examList.value=res.data.data
+
+
+    }
+    else ElMessage.error(res.data.message)
+
     setChart()
+}
+
+const toPaper=(id,index)=>{
+
+    console.log(id)
+    //放入数据
+    teacherPaperStore.setTeacherPaperList(index,examList.value)
+
+    router.push('/paper/'+id)
+}
+
+watch(() => route.params.studentId, (newValue, oldValue) => {
+      // 在这里执行您想要执行的逻辑
+    //   console.log('studentId 参数发生了变化:', newValue);
+
+     getStudent()
+
+     setRightData()
+});
+
+onMounted(async()=>{
+    await getStudentData()
+   
+    getStudent()
+
+    setRightData()
 
 })
 
@@ -341,7 +428,7 @@ onMounted(()=>{
             
         }
 
-        .chart{
+        .studentChart{
             height: 500px;
             // background-color: #3a63f3;
         }
@@ -378,9 +465,15 @@ onMounted(()=>{
                     border-bottom:1px solid #eceffe;
                     
                     td{
+                        flex:1;
                         display: flex;
                         align-items: center;
-                        justify-content: left;
+                        justify-content: center;
+
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        word-break: break-all;
+                        white-space: nowrap;
                     }
 
                     .score{

@@ -4,29 +4,33 @@
       <span>关系绑定</span>
     </div>
     <div class="input">
-      <el-input style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="搜索孩子id"></el-input>
+      <el-input @keyup.enter="search" v-model="searchInput" style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="输入id和姓名搜索"></el-input>
     </div>
     <div class="details">
-      <div class="paper" v-for="item in 2">
+      <div class="paper" v-for="item in data" :key="item">
           <div class="left">
-            <img src="../../../assets/avatar.jpeg">
+            <img :src="item.avatar">
           </div>
           <div class="right">
             <div class="school">
-              xx市第一中学
+              {{ item.schoolName }}
             </div>
             <div class="userInfo">
               <div class="class">
-                初一三班
+               {{ item.gradeName }} {{ item.className }}
               </div>
               <div class="name">
-                xxx
+                {{ item.name }}
               </div>
             </div>
             <div class="button">
-              <button>申请</button>
+              <button @click="apply">申请</button>
             </div>
           </div>
+      </div>
+      
+      <div v-if="data.length===0" style="width: 100%;display: flex;justify-content: center">
+        <el-empty description="无数据" />
       </div>
     </div>
   </div>
@@ -34,6 +38,32 @@
 
 <script setup>
 import { Search } from '@element-plus/icons-vue';
+import { parentsSearchChildrenAPI } from '@/apis/user.js'
+import { onMounted,ref } from 'vue';
+import { ElMessage } from 'element-plus';
+
+const searchInput=ref('')
+
+const data=ref([])
+
+const apply=()=>{
+  
+}
+
+const search=async()=>{
+  const res = await parentsSearchChildrenAPI(searchInput.value);
+
+  if(res.data.code===200)
+  {
+    console.log(res.data.data)
+    data.value=res.data.data
+  }
+  else ElMessage.error(res.data.message)
+}
+
+onMounted(()=>{
+
+})
 </script>
 
 <style lang="scss" scoped>
@@ -42,7 +72,7 @@ import { Search } from '@element-plus/icons-vue';
   box-sizing: border-box;
   padding:30px;
   width: 100%;
-  min-height: 760px;
+  height: 100vh;
   background-color: #fff;
 
   .top{

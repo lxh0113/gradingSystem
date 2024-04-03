@@ -4,7 +4,7 @@
       <div class="myParents">
         <div class="avatars">
           <img src="../../../assets/avatar.jpeg" alt="">
-          <img src="../../../assets/avatar.jpeg" alt="">
+          
         </div>
         <div class="text">
           我的孩子

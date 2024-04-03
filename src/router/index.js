@@ -138,7 +138,7 @@ const setRouter=async()=>{
                     path:'papers',
                     name:'studentPapers',
                     component:StudentPapers,
-                    redirect:"/student/papers/on",
+                    redirect:"/student/papers/off",
                     children:[
                       {path:'on',name:'studentPapersOn',component:StudentPapersOn},
                       {path:'off',name:'studentPapersOff',component:StudentPapersOff},
@@ -165,7 +165,7 @@ const setRouter=async()=>{
             {
               path:'/',
               component:Home,
-              redirect:'/parents/home',
+              redirect:'/parents/analysis',
               name:'home',
               children:[
                 {
@@ -183,13 +183,23 @@ const setRouter=async()=>{
                       ]
                     },
                     {
-                      path:'papers',
-                      name:'parentsPapers',
-                      component:()=>import('@/views/parents/childrenPapers/index.vue'),
-                      redirect:'/parents/papers/on',
+                      path: 'papers',
+                      // component: () => import('@/views/parents/childrenPapers/index.vue'),
                       children:[
-                        {path:'on',name:'parentsPapersOn',component:()=>import('@/views/parents/childrenPapers/components/parentsChildrenPapersOn.vue')},
-                        {path:'off',name:'parentsPapersOff',component:()=>import('@/views/parents/childrenPapers/components/parentsChildrenPapersOff.vue')}
+                        { path: ':id',  // 动态参数路由在静态路由之前
+                          name: 'parentsPapers',
+                          component: () => import('@/views/parents/childrenPapers/index.vue'),
+                          redirect: to => {
+                            // 重定向到on页面，并将路由参数id传递给子路由
+                            return { name: 'parentsPapersOff', params: { id: to.params.id } };
+                          },
+                          children: [
+                            { path: 'off', name: 'parentsPapersOff', component: () => import('@/views/parents/childrenPapers/components/parentsChildrenPapersOff.vue') },
+                            { path: 'on', name: 'parentsPapersOn', component: () => import('@/views/parents/childrenPapers/components/parentsChildrenPapersOn.vue') }
+                            
+                          ]
+                        },
+                        // 其他静态路径路由配置
                       ]
                     },
                     {path:'analysis',name:'parentsAnalysis',component:()=>import('@/views/parents/studyAnalysis/index.vue')},

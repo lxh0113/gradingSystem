@@ -5,7 +5,7 @@
       <!-- <el-select class="m-2" placeholder="考试年份" size="large" style="width: 240px;margin-left:30px;" ></el-select> -->
     </div>
     <div class="details">
-      <div class="paper" v-for="item in paperList" :key="item.id" @click="toPaper(item.id)">
+      <div class="paper" v-for="(item,index) in paperList" :key="item.id" @click="toPaper(item.id,index)">
         <div class="subject">{{ item.title }}</div>
         <div class="correctors">批改人：xxx老师</div>
         <div class="text">您的试卷正在批改中，请耐心等待！</div>
@@ -27,11 +27,13 @@ import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 import {studentGetAllExamAPI,studentGetAllExamByKeyAPI} from '@/apis/examPaper.js'
 import { useRoute,useRouter } from 'vue-router';
+import { useTeacherPaperStore } from '@/stores/teacherPaperStore';
 
 const route=useRoute()
 const router=useRouter()
 const paperList=ref([])
 const searchInput=ref('')
+const teacherPaperStore=useTeacherPaperStore()
 
 const pageData=ref({
     current:1,
@@ -107,7 +109,11 @@ const getAllExaminationByKey=async(page,key)=>{
     }
 }
 
-const toPaper=(id)=>{
+const toPaper=(id,index)=>{
+
+  //把数据放入到
+  teacherPaperStore.setTeacherPaperList(index,paperList.value)
+
   router.push('/paper/'+id)
 }
 

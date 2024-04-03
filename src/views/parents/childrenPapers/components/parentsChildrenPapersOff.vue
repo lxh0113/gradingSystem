@@ -1,30 +1,47 @@
 <template>
   <div class="bigBox">
     <div class="conditionSearch">
-      <el-select class="m-2" placeholder="请选择孩子" size="large" style="width: 240px;margin-right:30px;" ></el-select>
-      <!-- <el-input style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input> -->
+      <el-input style="max-width: 250px;height:40px;" @keyup.enter="saerch" v-model="searchInput" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
+      <!-- <el-select v-model="value" class="m-2" placeholder="考试年份" size="large" style="width: 240px;margin-left:30px;" ></el-select>
+      <el-select v-model="value" class="m-2" placeholder="考试分数" size="large" style="width: 240px;margin-left:30px;" ></el-select> -->
     </div>
     <div class="details">
-      <div class="paper" v-for="item in paperLis" :key="item.id">
-        <div class="top">
-          <div class="subject">{{ item.title }}</div>
-          <div class="look">错题分析</div>
+      <div class="paper" v-for="(item,index) in paperList" :key="item.id" @click="toPaper(item.id,index)">
+      <div class="top">
+        <div class="subject">{{ item.title }}</div>
+        <div class="look">错题分析</div>
+      </div>
+      
+      <div class="comment" :title="item.comment">
+        <p>
+          {{ item.comment }}
+        </p>
+      </div>
+      <div class="grade">
+        分数：<span>{{ item.scored }}</span>分&nbsp;&nbsp;满分：<span>{{ item.score }}</span>分
+      </div>
+      <!-- <div class="ai">
+          AI智能分析  匹配相似模型&gt;&gt;&gt;
+      </div> -->
+      <div class="status">
+        <div class="text">
+          已结束
         </div>
-        <!-- <div class="correctors">批改人：xxx老师</div> -->
-        <div class="comment">{{ item.comment }}</div>
-        <div class="grade">
-          分数：<span>{{ item.scored }}</span>分&nbsp;&nbsp;满分：<span>{{ item.score }}</span>分
-        </div>
-        <div class="status">
-          <div class="text">
-            已结束
-          </div>
-          <div class="time">
-            {{ item.date }}
-          </div>
+        <div class="time">
+          {{ item.date }}
         </div>
       </div>
     </div>
+    </div>
+
+    <div v-if="paperList.length===0" style="width: 100%;display: flex;justify-content: center;">
+      <el-empty description="无数据" />
+    </div>
+    <div class="page">
+      <el-pagination v-if="paperList.length!==0" prev-text="上一页" next-text="下一页" @prev-click="minusPages" @next-click="addPages" @current-change="changeCurrent" :current-page="pageData.current" layout="prev, pager, next"  :page-count="pageData.totalPage" />
+    </div>
+
+
   </div>
 </template>
 
@@ -32,12 +49,14 @@
 import { onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
-import {studentGetAllExamAPI,studentGetAllExamByKeyAPI} from '@/apis/examPaper.js'
+import {parentsGetChildrenPapersByKeyAPI,parentsGetChildrenPapersAPI} from '@/apis/examPaper.js'
 import { useRoute,useRouter } from 'vue-router';
+import { useTeacherPaperStore } from '@/stores/teacherPaperStore';
 
 const route=useRoute()
 const router=useRouter()
 const paperList=ref([])
+const teacherPaperStore=useTeacherPaperStore()
 const searchInput=ref('')
 
 const pageData=ref({
@@ -101,7 +120,8 @@ const saerch=()=>{
 }
 
 const getAllExaminationByKey=async(page,key)=>{
-    const res=await studentGetAllExamByKeyAPI(page,8,key);
+    let account=route.params.id
+    const res=await parentsGetChildrenPapersByKeyAPI(page,8,key,account);
 
     if(res.data.code===200)
     {
@@ -114,12 +134,15 @@ const getAllExaminationByKey=async(page,key)=>{
     }
 }
 
-const toPaper=(id)=>{
+const toPaper=(id,index)=>{
+  teacherPaperStore.setTeacherPaperList(index,paperList.value)
   router.push('/paper/'+id)
 }
 
 const getMyPapers=async()=>{
-  const res=await studentGetAllExamAPI(pageData.value.current,8);
+  let account=route.params.id
+  
+  const res=await parentsGetChildrenPapersAPI(pageData.value.current,8,account);
   // console.log(res)
   if(res.data.code===200)
   {
@@ -132,12 +155,13 @@ const getMyPapers=async()=>{
   }
 }
 
+watch(() => route.params.id, (newValue, oldValue) => {
+    getMyPapers()
+});
+
 onMounted(()=>{
   getMyPapers()
 })
-
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -146,74 +170,84 @@ onMounted(()=>{
 
   .conditionSearch{
     color:#3A63F3;
-
+    display: flex;
   }
 
   .details {
     // background-color: pink;
     margin-top: 20px;
     display: grid;
-      grid-template-columns: repeat(auto-fill,minmax(480px,750px));
-      gap:20px;
+    grid-template-columns: repeat(auto-fill,minmax(480px,750px));
+    gap:20px;
+   
+    // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
 }
 
 .paper {
-    background-color: #ebeffe;
-    flex: 1;
-    // min-width: 600px;
-    // max-width: 778px;
-    height: 240px;
-    margin-bottom: 20px;
-    border-radius: 20px;
-    box-sizing: border-box;
-    padding:20px;
-    margin-right: 20px;
-    
-    .top{
-      display: flex;
-      justify-content: space-between;
-      .subject {
+  background-color: #ebeffe;
+  flex: 1;
+  // min-width: 600px;
+  // max-width: 778px;
+  height: 240px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding:20px;
+  margin-right: 20px;
+  
+  .top{
+    display: flex;
+    justify-content: space-between;
+    .subject {
+    color:#3A63F3;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 40px;
+    }
+    .look{
       color:#3A63F3;
-      font-weight: bold;
-      font-size: 20px;
+      font-size: 18px;
       line-height: 40px;
-      }
-
-      .look{
-        color:#3A63F3;
-        font-size: 18px;
-        line-height: 40px;
-      }
     }
-
-    .correctors{
-      font-weight: bold;
-      font-size: 18px;
-      line-height: 35px;
+  }
+  .ai{
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 35px;
+  }
+  .comment{
+    p{
+      overflow:hidden;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 5;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
     }
+    
+    height: 110px;
+    
+    // display: -webkit-box;
+    // -webkit-line-clamp: 3;
+    // -webkit-box-orient: vertical;
 
-    .comment{
-      overflow: hidden;
-      height: 75px;
-      color:#787474;
-    }
-
-    .grade{
-      font-weight: bold;
-      font-size: 18px;
-      line-height: 35px;
-    }
-
-    .status{
-      color:#787474;
+    
+    color:#787474;
+  }
+  .grade{
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 35px;
+  }
+  .status{
+    color:#787474;
+    display: flex;
+    justify-content: space-between;
+  }
+  }
+  .page{
       display: flex;
-      justify-content: space-between;
-
-      .time{
-        font-size: 14px;
-      }
-    }
-}
-
+      justify-content: center;
+      align-items: center;
+  }
 }
 </style>

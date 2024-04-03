@@ -123,11 +123,11 @@ const setChartData1=async()=>{
   {
     console.log(res.data.data)
     
-    chartData1.value.xAxis.data=res.data.data.map(item=>{
+    chartData1.value.xAxis.data=res.data.data?.map(item=>{
       return item.title
     })
 
-    chartData1.value.series=res.data.data[0].classScoreList.map(item=>{
+    chartData1.value.series=res.data?.data[0]?.classScoreList?.map(item=>{
       return {
         name: item.name,
         type: 'line',
@@ -147,7 +147,7 @@ const setChartData1=async()=>{
       }
     })
 
-    for(let i=0;i<chartData1.value.series.length;i++)
+    for(let i=0;i<chartData1.value.series?.length;i++)
     {
       chartData1.value.series[i].data=res.data.data.map(item=>{
         return item.classScoreList[i]?.avgScore||0
@@ -171,11 +171,11 @@ const setChartData2=async()=>{
   {
     console.log(res.data.data)
     
-    chartData2.value.xAxis.data=res.data.data.map(item=>{
+    chartData2.value.xAxis.data=res.data?.data?.map(item=>{
       return item.title
     })
 
-    chartData2.value.series=res.data.data[0].classScoreList.map(item=>{
+    chartData2.value.series=res.data?.data[0]?.classScoreList?.map(item=>{
       return {
         name: item.name,
         type: 'bar',
@@ -195,7 +195,7 @@ const setChartData2=async()=>{
       }
     })
 
-    for(let i=0;i<chartData2.value.series.length;i++)
+    for(let i=0;i<chartData2.value.series?.length;i++)
     {
       chartData2.value.series[i].data=res.data.data.map(item=>{
         return item.classScoreList[i]?.avgScore||0

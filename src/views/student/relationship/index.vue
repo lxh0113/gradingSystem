@@ -4,16 +4,16 @@
       <span>关系绑定</span>
     </div>
     <div class="details">
-      <div class="paper" v-for="item in 2">
+      <div class="paper" v-for="item in data">
           <div class="left">
-            <img src="../../../assets/avatar.jpeg">
+            <img :src="item.avatar">
           </div>
           <div class="right">
             <div class="id">
-              id:xxxxxx
+              id:{{ item.parentAccount }}
             </div>
             <div class="relationship">
-              xxx 请求和你绑定家长关系
+              {{ item.name }} 请求和你绑定家长关系
             </div>
             <div class="button">
               <button>同意</button>
@@ -21,12 +21,34 @@
             </div>
           </div>
       </div>
+
+      <div v-if="data.length===0" style="width: 100%;display: flex;justify-content: center;">
+        <el-empty description="无数据" />
+      </div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { studentGetParentsApplicationAPI } from '@/apis/user.js'
+import { ElMessage } from 'element-plus';
+import { onMounted } from 'vue'
 
+const data=ref([])
+
+const getAllApplication=async()=>{
+  const res=await studentGetParentsApplicationAPI();
+
+  if(res.data.code===200)
+  {
+    data.value=res.data.data
+  }
+  else ElMessage.error(res.data.message)
+}
+
+onMounted(()=>{
+  // getAllApplication()
+})
 </script>
 
 <style lang="scss" scoped>

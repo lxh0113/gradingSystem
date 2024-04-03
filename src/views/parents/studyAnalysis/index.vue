@@ -4,9 +4,8 @@
       <span>学情分析</span>
     </div>
     <div class="chooseChildren">
-      <el-select size="large" style="width: 200px" placeholder="请选择孩子">
-        <el-option label="李泽言" value="李泽言" />
-        <el-option label="许墨" value="许墨" />
+      <el-select @change="initChart" v-model="currentChildren" size="large" style="width: 200px" placeholder="请选择孩子">
+        <el-option v-for="item in childrenList" :key="item" :v-else="item.name" :value="item.name" />
       </el-select>
     </div>
     <div class="details">
@@ -20,24 +19,25 @@
 
 <script setup>
 import {onMounted,onUnmounted,getCurrentInstance,ref} from 'vue'
+import { studentGetHistoryExamAPI,studentGetScoreStageAPI } from '@/apis/exam.js'
+import { useUserStore } from '@/stores/userStore';
+import { ElMessage } from 'element-plus';
+import { parentsGetAllChildrenAPI } from '@/apis/user';
 
+const userStore=useUserStore()
 let internalInstance = getCurrentInstance();
 let echarts = internalInstance.appContext.config.globalProperties.$echarts
 
-const setChart=()=>{
-  const dom1 = document.querySelector('.chart1');
-  const myChart1 = echarts.init(dom1);
+const childrenList=ref([])
+const currentChildren=ref('')
 
-  const dom2 = document.querySelector('.chart2');
-  const myChart2 = echarts.init(dom2);
+const currentId=ref(0)
 
-  // 指定图表的配置项和数据
-  var option1 = {
+const chartData1=ref({
     title: {
-      text: '裴雨孜成绩历次分布'
+      text: currentChildren.value+'成绩历次分布'
     },
     legend:{
-
     },
     color:['#748eed','#91cc75','#fac858'],
     tooltip: {},
@@ -47,11 +47,11 @@ const setChart=()=>{
     yAxis: {},
     series: [
       {
-        name: '裴雨孜',
+        name: currentChildren.value,
         type: 'line',
-        data: [60, 70, 67, 80, 77, 76],
+        data: [],
         label: {
-        show: false,
+        show: true,
         position: 'top',
         textStyle: {
           fontSize: 14
@@ -64,13 +64,24 @@ const setChart=()=>{
         }
       }
     ]
-  };
-
-  var option2 = {
+  })
+const chartData2=ref({
     title: {
-      text: '裴雨孜成绩评定状况'
+      text: currentChildren.value+'成绩评定状况'
     },
     legend:{
+      orient: "vertical",//图例的布局，水平布局、垂直布局
+      type:'scroll',//是否添加滚动页码
+      right:15,
+      top:'middle',
+      icon:'circle',
+      itemWidth: 8,//图例宽度
+      itemHeight: 8,//图例高度
+      textStyle: {//图例字体样式
+          color: "#000",
+          fontSize: 14,
+          fontFamily: "微软雅黑"
+      }
 
     },
     color:['#748eed','#91cc75','#fac858','#ee6666','#73c0de','#9a60b4',
@@ -87,27 +98,32 @@ const setChart=()=>{
     {
       type: 'pie',
       data: [
-        {
-          value: 89,
-          name: '优秀'
-        },
-        {
-          value: 87,
-          name: '良好'
-        },
-        {
-          value: 23,
-          name: '及格'
-        },
-        {
-          value: 14,
-          name: '不及格'
-        }
       ],
+      itemStyle:{
+        normal:{
+            label:{
+                show: true,
+                formatter: '{b} : ({d}%)'//显示格式
+            },
+            labelLine :{show:true}
+        }
+      }
       // roseType: 'area'
     }
   ]
-  };
+  })
+
+const setChart=()=>{
+  const dom1 = document.querySelector('.chart1');
+  const myChart1 = echarts.init(dom1);
+
+  const dom2 = document.querySelector('.chart2');
+  const myChart2 = echarts.init(dom2);
+
+  // 指定图表的配置项和数据
+  var option1 = chartData1.value;
+
+  var option2 = chartData2.value;
   
   // 使用刚指定的配置项和数据显示图表。
   myChart1.setOption(option1);
@@ -125,8 +141,75 @@ const setChart=()=>{
   });
 }
 
-onMounted(()=>{
+const initChart=async()=>{
+
+  console.log(currentChildren.value)
+  for(let i=0;i<childrenList.value.length;i++)
+  {
+    if(childrenList.value[i].name===currentChildren.value) 
+    {
+      currentId.value=childrenList.value[i].account
+    }
+  }
+
+  let res=await studentGetHistoryExamAPI(currentId.value)
+
+  if(res.data.code===200)
+  {
+    console.log(res.data.data)
+
+    chartData1.value.xAxis.data=res.data.data.map(item=>{
+      return item.examName
+    })
+
+    chartData1.value.series[0].data=res.data.data.map(item=>{
+      return item.score
+    })
+  }
+  else {
+    ElMessage.error(res.data.message)
+  }
+
+  res=await studentGetScoreStageAPI(currentId.value)
+  
+  if(res.data.code===200)
+  {
+    console.log(res.data.data)
+
+    chartData2.value.series[0].data=res.data.data.map(item=>{
+      return {
+          value: item.value,
+          name: item.name
+        }
+    })
+  }
+  else {
+    ElMessage.error(res.data.message)
+  }
+
   setChart()
+}
+
+const setChildrenList=async()=>{
+  const res=await parentsGetAllChildrenAPI(userStore.getUserInfo().account);
+
+  if(res.data.code===200)
+  {
+    childrenList.value=res.data.data
+    currentChildren.value=res.data.data[0].name
+  }
+  else ElMessage.error(res.data.message)
+}
+
+onMounted(async()=>{
+
+  await setChildrenList()
+
+  await initChart()
+
+  // currentChildren.value=childrenList?.value[0]?.name
+  // setChart()
+  
 })
 </script>
 

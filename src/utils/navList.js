@@ -18,9 +18,10 @@ const teacherNavList=[
 ]
 
 const parentsNavList=[
-    {text:"首页",icon:"iconfont icon-home",to:"/parents/home",isHaveNext:false,childrenList:[]},
     {text:"学情分析",icon:"iconfont icon-analysis",to:"/parents/analysis",isHaveNext:false,childrenList:[]},
-    {text:"孩子试卷",icon:"iconfont icon-paper",to:"/parents/papers",isHaveNext:false,childrenList:[]},
+    // {text:"首页",icon:"iconfont icon-home",to:"/parents/home",isHaveNext:false,childrenList:[]},
+    {text:"孩子试卷",icon:"iconfont icon-paper",to:"/parents/papers",isHaveNext:true,childrenList:[]},
+    
     {text:"关系绑定",icon:"iconfont icon-chart-relationship",to:"/parents/relationship",isHaveNext:false,childrenList:[]}
 ]
 

@@ -108,7 +108,8 @@ const getAllExaminationByKey=async(page,key)=>{
 }
 
 const toPaper=(id)=>{
-  router.push('/papers/'+id)
+  teacherPaperStore.setTeacherPaperList(index,paperList.value)
+  router.push('/paper/'+id)
 }
 
 const getMyPapers=async()=>{

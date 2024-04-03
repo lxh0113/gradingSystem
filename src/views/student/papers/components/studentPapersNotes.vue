@@ -17,7 +17,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">
+          <el-button type="primary" @click="addNotes">
             确认
           </el-button>
         </div>
@@ -31,7 +31,7 @@
             <span>&nbsp;&nbsp;&nbsp;我的错题集</span>
         </div>
         <div class="notes">
-            <router-link v-for="item in examList" :key="item" to="/student/papers/notes/1">
+            <router-link v-for="(item,index) in examList" :key="item" :to="`/student/papers/notes/${index}`">
                 <div>
                     <el-icon style="color:#3a63f3"><Notebook /></el-icon>
                     <span class="wrongBookTitle">
@@ -99,6 +99,20 @@ const getAllExam=async()=>{
     ElMessage.error(res.data.message)
   }
 }
+
+const addNotes=()=>{
+
+  if(currentExamList.value.length===0)
+  {
+    //说明
+  }
+  else {
+
+  }
+  dialogVisible = false
+}
+
+
 
 onMounted(()=>{
   getAllExam()

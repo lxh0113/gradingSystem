@@ -53,3 +53,34 @@ export const studentGetAllParentsAPI=()=>{
         method:'GET'
     })
 }
+
+export const parentsGetAllChildrenAPI=()=>{
+    return http({
+        url:'/user/getMyChildren',
+        method:'GET'
+    })
+}
+
+export const parentsSearchChildrenAPI=(condition)=>{
+    return http({
+        url:'/user/searchChild',
+        method:'GET',
+        params:{
+            condition
+        }
+    })
+}
+
+export const studentGetSchoolAPI=()=>{
+    return http({
+        url:'/user/getSchoolInf',
+        method:'GET'
+    })
+}
+
+export const studentGetParentsApplicationAPI=()=>{
+    return http({
+        url:'/user/getMyParents',
+        method:'GET'
+    })
+}

@@ -2,11 +2,11 @@
   <div class="backBox">
     <div class="top">
       试卷&nbsp;&nbsp;&nbsp;&gt;&gt;
+         <router-link to="/student/papers/off">
+          已结束
+        </router-link>
         <router-link to="/student/papers/on">
           进行中
-        </router-link>
-        <router-link to="/student/papers/off">
-          已结束
         </router-link>
         <router-link to="/student/papers/mistakes">
           错题集

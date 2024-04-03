@@ -45,12 +45,11 @@
                     <div class="homeMenu" v-for="item in leftList" :key="item">
                         <el-sub-menu v-if="item.isHaveNext" :index="item.to">
                             <template #title>
-                                
                                 <span :class="item.icon"></span>
                                 &nbsp;&nbsp;&nbsp;
                                 <span v-if="!isCollapse">{{ item.text }}</span>
                             </template>
-                            <el-menu-item v-for="i in item.childrenList" :index="item.to +'/'+i.id" :key="i" @click="classOneClick(i.id)">
+                            <el-menu-item v-for="(i,iIndex) in navList" :index="item.to +'/'+i.id" :key="i.id" @click="classOneClick(i.id,iIndex)">
                                 <span>{{ i.name }}</span>
                             </el-menu-item>
                         </el-sub-menu>
@@ -179,6 +178,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 import {useUserStore} from '@/stores/userStore.js'
 import {useClassStore} from '@/stores/classStore.js'
+import { useNavStore } from '@/stores/navStore.js'
 
 import { bindEmailAPI, changeAvatarAPI, changeNameAPI } from '@/apis/user'
 
@@ -187,9 +187,11 @@ import { genFileId } from 'element-plus';
 import { useRoute,useRouter } from 'vue-router'
 
 const currentPath=ref('')
+const navList=ref([])
 
 const route=useRoute()
 const router=useRouter()
+const navStore=useNavStore()
 let upload = ref();
 let file=null
 
@@ -336,10 +338,14 @@ const getCurrentPath=()=>{
 }
 
 //教师端点击班级事件
-function classOneClick(classId){
+const classOneClick=(id,index)=>{
     //获取班级学生
-
-    router.push('/teacher/management/'+classId)
+    // alert(id)
+    if(userStore.getUserInfo().identity==='parents')
+    {
+        router.push('/parents/papers/'+navList.value[index].account)
+    }
+    else if(userStore.getUserInfo().identity==='teacher') router.push('/teacher/management/'+id)
     
 }
 
@@ -354,18 +360,8 @@ onMounted(async()=>{
 
     getCurrentPath()
 
-    //判断是否是教师端，需要获取全部班级，用于点击班级管理
-    if(isGet===false)
-    {
-        if(userInfoForm.value.identity==="teacher")
-        {
-            const res=await getMyClassAPI(userInfoForm.value.account);
-            console.log(res.data.data)
-            teacherChildrenList.value=res.data.data
-            classStore.setClassList(res.data.data)
-        }
-        isGet=true
-    }
+    navList.value=await navStore.getNavList()
+    console.log(navList.value)
 })
 </script>
   
