@@ -14,7 +14,7 @@
             <el-input size="large" type="textarea" :rows="6" placeholder="请输入评语" v-model="comment" resize="false" style="margin-bottom: 20px;" />
             <div style="text-align: right; margin: 0">
               <el-button size="small" text @click="visible = false">取消</el-button>
-              <el-button size="small" type="primary" @click="visible = false">确认</el-button>
+              <el-button size="small" type="primary" @click="changeComment">确认</el-button>
             </div>
             <template #reference>
               <el-button @click="visible = true" v-if="userStore.user.identity==='teacher'">评语</el-button>
@@ -37,7 +37,7 @@
         </div>
       </div>
       <el-scrollbar>
-        <div class="questions" v-for="item in currentPages" :key="item">
+        <div class="questions" v-for="(item,index) in currentPages" :key="item">
           <div class="kind">
             {{ item.type }}
           </div>
@@ -65,7 +65,7 @@
               学生答案：{{ item.studentResponse }}
             </div>
             <div class="score" v-if="userStore.user.identity==='teacher'">
-              分值：<el-input min="0" max="3" @change="" style="width: 60px" placeholder="0-3" :value="item.score" />
+              分值：<el-input min="0" max="3" @change="updateScore(index)" style="width: 60px" placeholder="0-3" v-model="scoreList[index]" />
             </div>
             <div class="score" v-else>
               分值：{{ item.score }}
@@ -76,7 +76,7 @@
               学生答案：{{ item.studentResponse }}
             </div>
             <div class="score" v-if="userStore.user.identity==='teacher'">
-              分值：<el-input min="0" max="3" @change="" style="width: 60px" placeholder="0-3" :value="item.score" />
+              分值：<el-input min="0" max="3" @change="" style="width: 60px" placeholder="0-3" v-model="scoreList[index]" />
             </div>
             <div class="score" v-else>
               分值：{{ item.score }}
@@ -86,7 +86,7 @@
             <div class="answer">
             </div>
             <div class="score" v-if="userStore.user.identity==='teacher'">
-              分值：<el-input min="0" max="10" style="width: 60px" @change="" placeholder="0-10" :value="item.score" />
+              分值：<el-input min="0" max="10" style="width: 60px" @change="" placeholder="0-10" v-model="scoreList[index]" />
             </div>
             <div class="score" v-else>
               分值：{{ item.score }}
@@ -112,7 +112,7 @@ import { ArrowLeft,ArrowLeftBold,ArrowRight, DArrowLeft, DArrowRight } from '@el
 import { onMounted, ref } from 'vue'
 import { useRoute,useRouter } from "vue-router"
 import { useUserStore } from '@/stores/userStore';
-import { getPaperAPI } from '@/apis/examPaper.js'
+import { getPaperAPI,teacherModifyPapersAPI,teacherModifyCommentAPI } from '@/apis/examPaper.js'
 import { ElMessage } from 'element-plus';
 import { useExamStore } from '@/stores/examStore';
 import { useTeacherPaperStore } from '@/stores/teacherPaperStore';
@@ -123,6 +123,7 @@ const visible = ref(false)
 const comment=ref('')
 const userStore=useUserStore()
 const examStore=useExamStore()
+const scoreList=ref([])
 
 const router=useRouter()
 const route = useRoute();
@@ -135,6 +136,52 @@ const paperList=ref([])
 const currentPages=ref([])
 
 // const currentPaperIndex=ref()
+
+const updateScore=async(index) => {
+    console.log(scoreList.value[index])
+    console.log(currentPages.value[index].score)
+
+    // currentPages.value[index].score=scoreList.value
+    let newList=teacherPaperStore.getTeacherPaperList().list;
+
+    let score = parseInt(newList[teacherPaperStore.getTeacherPaperList().index].score) + (scoreList.value[index] - parseInt(currentPages.value[index].score));
+
+    let content=JSON.stringify(currentPages.value)
+
+    const res = await teacherModifyPapersAPI(route.params.id,currentIndex.value,score,content);
+
+    if(res.data.code===200)
+    {
+        ElMessage.success('修改分数成功')
+        currentPages.value[index].score=scoreList.value[index]
+        newList[teacherPaperStore.getTeacherPaperList().index].score+=scoreList.value[index]-currentPages.value[index].score;
+    }
+    else return ElMessage.error(res.data.message)
+
+}
+
+const changeComment=async()=>{
+
+  if(comment.value.trim()===teacherPaperStore.getTeacherPaperList().list[teacherPaperStore.getTeacherPaperList().index].comment)
+  {
+    ElMessage.error('您未做出任何修改')
+    return 
+  }
+  // TODO 这里少一个 试卷id 
+  const res = await teacherModifyCommentAPI(1,comment.value.trim())
+
+  if(res.data.code===200)
+  {
+    ElMessage.success('修改成功')
+    teacherPaperStore.getTeacherPaperList().list[teacherPaperStore.getTeacherPaperList().index].comment=comment.value
+  }
+  else 
+  {
+    ElMessage.error(res.data.message)
+  }
+  visible.value = true
+}
+
 
 const getScore=()=>{
   if(userStore.getUserInfo().identity==='student'||userStore.getUserInfo().identity==='parents')
@@ -163,6 +210,9 @@ const setAddIndex=()=>{
   let newStr=paperList.value[currentIndex.value].content.replaceAll('\n','');
   newStr=paperList.value[currentIndex.value].content.replaceAll('\'','\"');
   currentPages.value=JSON.parse(newStr)
+  scoreList.value=currentPages.value.map(item=>{
+    return item.score
+  })
   console.log(currentPages)
 }
 
@@ -177,6 +227,9 @@ const setMinusIndex=()=>{
   let newStr=paperList.value[currentIndex.value].content.replaceAll('\n','');
   newStr=paperList.value[currentIndex.value].content.replaceAll('\'','\"');
   currentPages.value=JSON.parse(newStr)
+  scoreList.value=currentPages.value.map(item=>{
+    return item.score
+  })
   console.log(currentPages)
 }
 
@@ -195,6 +248,9 @@ const getPaperDetails=async()=>{
     newStr=paperList.value[currentIndex.value].content.replaceAll('\'','\"');
     console.log(newStr)
     currentPages.value=JSON.parse(newStr)
+    scoreList.value=currentPages.value.map(item=>{
+      return item.score
+    })
     console.log(currentPages)
   }
   else {

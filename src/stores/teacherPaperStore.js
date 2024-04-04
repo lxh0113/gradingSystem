@@ -22,10 +22,15 @@ export const useTeacherPaperStore = defineStore('teacherPaperStore', () => {
         teacherPaperList.value.index=index
     }
 
+    const changeList=(data)=>{
+        teacherPaperList.value.list=data
+    }
+
     return {
         getTeacherPaperList,
         setTeacherPaperList,
-        changeIndex
+        changeIndex,
+        changeList
     }
 
 },{

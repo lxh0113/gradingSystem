@@ -43,13 +43,13 @@
             <div class="homeLeft wow slideInLeft">
                 <el-menu router :default-active="getCurrentPath()" class="el-menu-vertical-demo" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
                     <div class="homeMenu" v-for="item in leftList" :key="item">
-                        <el-sub-menu v-if="item.isHaveNext" :index="item.to">
+                        <el-sub-menu :class="{subActive:getCurrentPath()==item.to}" v-if="item.isHaveNext" :index="item.to">
                             <template #title>
                                 <span :class="item.icon"></span>
                                 &nbsp;&nbsp;&nbsp;
                                 <span v-if="!isCollapse">{{ item.text }}</span>
                             </template>
-                            <el-menu-item v-for="(i,iIndex) in navList" :index="item.to +'/'+i.id" :key="i.id" @click="classOneClick(i.id,iIndex)">
+                            <el-menu-item v-for="(i,iIndex) in navList" :class="{active:i.id===currentId}" :index="item.to +'/'+i.id" :key="i.id" @click="classOneClick(i.id,iIndex)">
                                 <span>{{ i.name }}</span>
                             </el-menu-item>
                         </el-sub-menu>
@@ -170,7 +170,7 @@
 </template>
   
 <script setup>
-import { onMounted, ref, h, shallowReactive } from 'vue'
+import { onMounted, ref, h, shallowReactive, watch } from 'vue'
 import WOW from 'wow.js'
 import axios from 'axios'
 import { Bell } from '@element-plus/icons-vue'
@@ -186,6 +186,7 @@ import { uploadAvatarAPI } from '@/apis/upload'
 import { genFileId } from 'element-plus';
 import { useRoute,useRouter } from 'vue-router'
 
+const currentId=ref('')
 const currentPath=ref('')
 const navList=ref([])
 
@@ -328,12 +329,13 @@ const initData=()=>{
 const getCurrentPath=()=>{
     let currentPath=route.path.split('/')
 
-
     for(let i=0;i<leftList.value.length;i++)
     {
         let path=leftList.value[i].to.split('/')
         
-        if(path[2]==currentPath[2]) return leftList.value[i].to
+        if(path[2]==currentPath[2]) {
+            return leftList.value[i].to
+        }
     }
 }
 
@@ -343,11 +345,31 @@ const classOneClick=(id,index)=>{
     // alert(id)
     if(userStore.getUserInfo().identity==='parents')
     {
+        currentId.value=navList.value[index].account
         router.push('/parents/papers/'+navList.value[index].account)
     }
-    else if(userStore.getUserInfo().identity==='teacher') router.push('/teacher/management/'+id)
+    else if(userStore.getUserInfo().identity==='teacher') {
+        currentId.value=id
+        router.push('/teacher/management/'+id)
+    }
     
 }
+
+watch(()=>route.params,()=>{
+    if(userStore.getUserInfo().identity==='parents')
+    {
+        if(route.params.id===undefined)
+        {
+            currentId.value=-1
+        }
+    }
+    else if(userStore.getUserInfo().identity==='teacher') {
+        if(route.params.classId===undefined)
+        {
+            currentId.value=-1
+        }
+    }
+})
 
 onMounted(async()=>{
 
@@ -367,6 +389,8 @@ onMounted(async()=>{
   
 <style lang="scss">
   //   @import url("@/styles/project/index.scss");
+
+//   --el-menu-text-color:#3A63F3;
   
   :root{
       --el-menu-item-height: 80px;
@@ -388,6 +412,20 @@ onMounted(async()=>{
   .el-menu--collapse  .el-sub-menu__title .el-sub-menu__icon-arrow{
       display: none;
   }
+
+    
+
+    .active{
+      color:#3A63F3;
+      font-weight: bold;
+      font-size: 16px;
+    //   background-color: #eceffe;
+    }
+    .subActive{
+        color: #3a63f3!important;;
+        // font-weight: bold;
+        background-color: #eceffe;
+    }
   
   .homeBackBox{
       @media screen and (min-width: 1440px) and (max-width: 1920px){

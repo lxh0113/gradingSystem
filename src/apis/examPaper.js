@@ -118,3 +118,23 @@ export const parentsGetChildrenPapersByKeyAPI=(page,pageSize,condition,account)=
         }
     })
 }
+
+export const teacherModifyPapersAPI=(examPaperId,pageId,score,content)=>{
+    return http({
+        url:'/examPaper/revContentSE',
+        method:'POST',
+        data:{
+            examPaperId,pageId,score,content
+        }
+    })
+}
+
+export const teacherModifyCommentAPI=(studentId,comment)=>{
+    return http({
+        url:'/examPaper/editComment',
+        method:'GET',
+        params:{
+            studentId,comment
+        }
+    })
+}

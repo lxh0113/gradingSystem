@@ -53,7 +53,7 @@
 
 <script setup>
 import { Plus } from '@element-plus/icons-vue';
-import { onMounted, ref, watch } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { studentGetHistoryExamAPI } from '@/apis/exam';
 import { ElMessage } from 'element-plus';
@@ -100,15 +100,17 @@ const getAllExam=async()=>{
   if(res.data.code===200)
   {
     console.log(res.data.data)
-    examList.value=res.data.data
+    // examList.value=res.data.data
 
-    examList.value=examList.value.map(item=>{
-      return {
-        examName:item.examName,
+    examList.value=[]
+    for(let i=0;i<res.data.data.length;i++)
+    {
+      examList.value.push({
+        examName:res.data.data[i].examName,
         notes:getData()
-      }
-    })
-
+      })
+    }
+    
     console.log(examList.value)
 
   }
@@ -119,7 +121,7 @@ const getAllExam=async()=>{
 
 const addNotes=()=>{
 
-  // console.log(currentExamList.value)
+  console.log(currentExamList.value)
   if(currentExamList.value.length===0)
   {
     examList.value.push({
@@ -134,7 +136,6 @@ const addNotes=()=>{
     })
   }
 
-  
 
   let index=examList.value.length-1
   router.push('/student/papers/notes/'+index)
@@ -147,15 +148,30 @@ const addNotes=()=>{
 }
 
 watch(() => route.params.id, () => {
-    editorStore.setValue(examList.value[route.params.id].notes)
+  // console('lzy')
+    
+    examList.value=JSON.parse(JSON.stringify(examList.value))
+    console.log(examList.value)
+    if(route.params.id>=0&&route.params.id<examList.value.length)
+      editorStore.setValue(examList.value[route.params.id].notes)
 });
 
 const deleteExam=(i)=>{
-  examList.value=examList.value.map((item,index)=>{
-    if(i!==index) return item
+  examList.value = examList.value.map((item, index) => {
+    if (i !== index) {
+      return item;
+    } else {
+      return null; // 或者使用 undefined
+    }
+  }).filter(item => item !== null);
+
+  console.log(examList.value.length)
+
+  nextTick(()=>{
+    if(examList.value.length!==0) router.push('/student/papers/notes/0')
+    else router.push('/student/papers/notes')
   })
 
-  router.push('student/papers/notes/0')
 }
 
 
