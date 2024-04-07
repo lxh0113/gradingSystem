@@ -2,7 +2,6 @@ import {defineStore} from "pinia";
 import {h, ref} from 'vue'
 import {useUserStore} from "@/stores/userStore";
 import {ElMessage, ElNotification} from "element-plus";
-import {messageTitle} from "@/utils/MessageTitle";
 
 export const useWsStore=defineStore("ws",()=>{
 
@@ -30,23 +29,21 @@ export const useWsStore=defineStore("ws",()=>{
             })
         }
 
-        ws=new WebSocket("ws://localhost:8081/api/websocket"+'/'+userStore.user.id)
+        ws=new WebSocket("ws://10.251.23.120:8085/webSocket"+'/'+'login'+'/'+userStore.user.account)
         console.log("ws连接已经建立")
 
         ws.onmessage=(event)=>{
             console.log("收到了消息"+event.data)
 
-            const {messageType,receiverId,t}={...JSON.parse(event.data)}
+            const {to,from,type,content}={...JSON.parse(event.data)}
 
-            if(receiverId!==userStore.user.id)
+            if(to!==userStore.user.account)
             {
                 return
             }
 
             message.value=JSON.parse(event.data)
 
-            // if(messageType)
-            open1(messageTitle[messageType])
         }
 
         ws.onerror=()=>{
@@ -58,10 +55,10 @@ export const useWsStore=defineStore("ws",()=>{
         }
     }
 
-    const sendMessage=(type,receiverId,data)=>{
+    const sendMessage=(type,to,content)=>{
         if(ws&&ws.readyState===WebSocket.OPEN)
         {
-            ws.send(JSON.stringify({messageType:type,receiverId,t:data}))
+            ws.send(JSON.stringify({type,to,content,from:userStore.getUserInfo().account}))
         }
         else
         {

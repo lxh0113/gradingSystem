@@ -10,24 +10,20 @@
             <div class="homeUserInfo">
                 <el-dropdown trigger="click">
                     <span class="el-dropdown-link">
-                        <el-badge is-dot class="HomeItem">
+                        <el-badge :is-dot="isDot" class="HomeItem">
                             <el-button class="share-button" :icon="Bell" type="primary" />
                         </el-badge>
                     </span>
                     <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item class="clearfix">
-                                commentssadfasdfasdfsadf
-                            <!--  <el-badge class="mark" :value="3"/> 可以增加数字红点 -->
-                                <el-badge class="mark"/>
-                            </el-dropdown-item>
-                            <el-dropdown-item class="clearfix">
-                                replies
-                                <el-badge class="mark" :value="1"/>
+                        <el-dropdown-menu style="width: 320px;">
+                            <el-dropdown-item v-for="(item,index) in newsList" :key="index" class="clearfix" @click="dealRelationship(index)">
+                                <span>{{ item.from }}</span>请求与你绑定<span>{{ item.type==='father'?'父亲':'母亲' }}关系</span>
+                                <el-badge v-if="item.state===0" class="mark" value="1"/>
                             </el-dropdown-item>
                         </el-dropdown-menu>
-                        <div class="shareDropdown">
-                            <span class="shareDropdownSpan">一键已读</span>
+                        <div style="height:20px"></div>
+                        <div v-if="newsList.length===0" style="width: 100%;display: flex;justify-content: center;align-items: center;">
+                            <el-empty description="无数据" />
                         </div>
                     </template>
                 </el-dropdown>
@@ -167,38 +163,58 @@
           </div>
         </el-dialog>
   </el-dialog>
+
+  <el-dialog v-model="relationshipVisible" title="绑定关系" width="500">
+    <div class="bindBox">
+        <div class="left">
+            <img :src="currentParentInfo.avatar" alt="">
+        </div>
+        <div class="right">
+            <span>{{ currentParentInfo.name }}</span>请求与你绑定<span>{{ currentMessage.type==='father'?'父亲':'母亲' }}</span>关系
+        </div>
+    </div>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="bindParents(3)">拒绝</el-button>
+        <el-button type="primary" @click="bindParents(2)">
+          同意
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
   
 <script setup>
 import { onMounted, ref, h, shallowReactive, watch } from 'vue'
 import WOW from 'wow.js'
-import axios from 'axios'
 import { Bell } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-
 import {useUserStore} from '@/stores/userStore.js'
 import {useClassStore} from '@/stores/classStore.js'
 import { useNavStore } from '@/stores/navStore.js'
-
-import { bindEmailAPI, changeAvatarAPI, changeNameAPI } from '@/apis/user'
-
+import { bindEmailAPI, changeAvatarAPI, changeNameAPI,getBindParentsInfoAPI,messageKnowAPI } from '@/apis/user'
 import { uploadAvatarAPI } from '@/apis/upload'
 import { genFileId } from 'element-plus';
 import { useRoute,useRouter } from 'vue-router'
+import { useWsStore } from '@/stores/wsStore'
+import { getNewsAPI } from '@/apis/news.js'
+import { bindParentsAPI } from '@/apis/user.js'
+import { getNavList } from '@/utils/navList.js'
 
+const relationshipVisible=ref(false)
 const currentId=ref('')
 const currentPath=ref('')
 const navList=ref([])
+const wsStore=useWsStore()
+const currentParentInfo=ref({})
+const isDot=ref(false)
 
 const route=useRoute()
 const router=useRouter()
 const navStore=useNavStore()
 let upload = ref();
 let file=null
-
-import {studentGetStudents} from '@/mock/teacher/classManagement.js'
-import { getMyClassAPI } from '@/apis/exam'
-import { getNavList } from '@/utils/navList.js'
+const currentMessage=ref({})
 
 const outerVisible = ref(false)
 const innerVisible = ref(false)
@@ -208,9 +224,7 @@ const modifyUserInfoStatus=ref(1)
 const userStore=useUserStore()
 const classStore=useClassStore()
 
-var teacherChildrenList=ref([])
-var studentList=ref([])
-var isGet=false;
+const newsList=ref([])
 
 //学生左边导航选项
 
@@ -230,14 +244,10 @@ const handleExceed = (files) => {
   upload.value.handleStart(file);
 };
 
-const submitUpload = () => {
-  console.log(upload.value)
-};
 
 const changeAvatarOperation=(uploadFiles)=>{
     file=uploadFiles
 }
-
 
 const changeName=async()=>{
     const res=await changeNameAPI(newName.value)
@@ -292,7 +302,7 @@ const collapseOperation = () => {
         width: window.innerWidth,
         hight: window.innerHeight
     }
-    console.log(windowInfo);
+    // console.log(windowInfo);
     if(windowInfo.width<=900){
         isCollapse.value=true
     }
@@ -355,6 +365,80 @@ const classOneClick=(id,index)=>{
     
 }
 
+const getNews=async()=>{
+    const res=await getNewsAPI();
+
+    if(res.data.code===200)
+    {
+        newsList.value=res.data.data.map(item=>{
+          if(item.to===userStore.getUserInfo().account)
+          {
+            return item
+          }
+        })
+
+        isDot.value=false
+        for(let i=0;i<newsList.value.length;i++)
+        {
+            if(newsList.value[i].state===0) isDot.value=true
+        }
+
+    }
+}
+
+const bindParents=async(state)=>{
+    const res = await bindParentsAPI(currentMessage.value.id,state);
+
+    if(res.data.code===200)
+    {
+        ElMessage.success('操作成功')
+
+        router.push('/')
+
+        isDot.value=false;
+        for(let i=0;i<newsList.value.length;i++)
+        {
+            if(newsList.value[i].state===0) isDot.value=true
+        }
+
+    }
+    else ElMessage.error(res.data.message)
+
+    relationshipVisible.value = false
+}
+
+const dealRelationship=async(index)=>{
+
+    if(newsList.value[index].state===2||newsList.value[index]===3) return 
+
+    currentMessage.value=newsList.value[index];
+
+    //获取家长信息 和 标记改消息已读
+    let res=await messageKnowAPI(newsList.value[index].id);
+
+    if(res.data.code===200)
+    {
+        newsList.value[index].state=1;
+
+        isDot.value=false;
+        for(let i=0;i<newsList.value.length;i++)
+        {
+            if(newsList.value[i].state===0) isDot.value=true
+        }
+    }
+    else ElMessage.error(res.data.message)
+
+    res = await getBindParentsInfoAPI(newsList.value[index].from)
+
+    if(res.data.code===200)
+    {
+        currentParentInfo.value=res.data.data
+    }
+    else ElMessage.error(res.data.message)
+
+    relationshipVisible.value=true
+}
+
 watch(()=>route.params,()=>{
     if(userStore.getUserInfo().identity==='parents')
     {
@@ -371,6 +455,15 @@ watch(()=>route.params,()=>{
     }
 })
 
+watch(()=>wsStore.message,()=>{
+  console.log(wsStore.message)
+
+  newsList.value.push(wsStore.message)
+
+},{
+  deep:true
+})
+
 onMounted(async()=>{
 
     leftList.value=getNavList()
@@ -383,7 +476,10 @@ onMounted(async()=>{
     getCurrentPath()
 
     navList.value=await navStore.getNavList()
-    console.log(navList.value)
+
+    wsStore.wsInit()
+
+    getNews()
 })
 </script>
   
@@ -654,5 +750,30 @@ onMounted(async()=>{
             justify-content: left;
           }
       }
+  }
+
+  .bindBox{
+    display: flex;
+    box-sizing: border-box;
+    padding:20px;
+
+    .left{
+
+        img{
+            width: 60px;
+            height:60px;
+            border-radius: 50%;
+        }
+    }
+
+    .right{
+        flex:1;
+        margin-left: 30px;
+        // background: #3a63f3;
+
+        display: flex;
+        align-items: center;
+        font-size:18px;;
+    }
   }
 </style>

@@ -9,7 +9,7 @@
       <div class="paper" v-for="item in paperList" :key="item.id" @click="toPaper(item.id)">
       <div class="top">
         <div class="subject">{{ item.title }}</div>
-        <div class="look">错题分析</div>
+        <!-- <div class="look">错题分析</div> -->
       </div>
       
       <div class="comment" :title="item.comment">
@@ -56,7 +56,7 @@ const searchInput=ref('')
 
 const pageData=ref({
     current:1,
-    totalPage:0
+    totalPage:1
 })
 
 const changeCurrent=(number)=>{
@@ -121,7 +121,6 @@ const getAllExaminationByKey=async(page,key)=>{
     {
         paperList.value=res.data.data.list
         pageData.value.totalPage=res.data.data.totalPage
-
     }
     else {
         ElMessage.error(res.data.message)
@@ -140,6 +139,7 @@ const getMyPapers=async()=>{
   {
     console.log(res.data.data)
     paperList.value=res.data.data.list
+    pageData.value.totalPage=res.data.data.totalPage
     // ElMessage.success("获取成功")
   }
   else {

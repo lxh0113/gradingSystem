@@ -84,3 +84,40 @@ export const studentGetParentsApplicationAPI=()=>{
         method:'GET'
     })
 }
+
+export const studentGetSchoolInfoAPI=()=>{
+    return http({
+        url:'/user/getSchoolInf',
+        method:'GET'
+    })
+}
+
+export const messageKnowAPI=(newId)=>{
+    return http({
+        url:'/user/updateState',
+        method:'GET',
+        params:{
+            newId
+        }
+    })
+}
+
+export const getBindParentsInfoAPI=(account)=>{
+    return http({
+        url:'/user/getParentsInfo',
+        method:"GET",
+        params:{
+            account
+        }
+    })
+}
+
+export const bindParentsAPI=(newId,state)=>{
+    return http({
+        url:'/user/parentalBinding',
+        method:'POST',
+        params:{
+            newId,state
+        }
+    })
+}

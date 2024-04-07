@@ -148,13 +148,15 @@ const updateScore=async(index) => {
 
     let content=JSON.stringify(currentPages.value)
 
-    const res = await teacherModifyPapersAPI(route.params.id,currentIndex.value,score,content);
+    let pageId=paperList.value[currentIndex.value].id;
+
+    const res = await teacherModifyPapersAPI(route.params.id,pageId,score,content);
 
     if(res.data.code===200)
     {
         ElMessage.success('修改分数成功')
         currentPages.value[index].score=scoreList.value[index]
-        newList[teacherPaperStore.getTeacherPaperList().index].score+=scoreList.value[index]-currentPages.value[index].score;
+        newList[teacherPaperStore.getTeacherPaperList().index].score=score;
     }
     else return ElMessage.error(res.data.message)
 
@@ -168,7 +170,7 @@ const changeComment=async()=>{
     return 
   }
   // TODO 这里少一个 试卷id 
-  const res = await teacherModifyCommentAPI(1,comment.value.trim())
+  const res = await teacherModifyCommentAPI(route.params.id,comment.value.trim())
 
   if(res.data.code===200)
   {

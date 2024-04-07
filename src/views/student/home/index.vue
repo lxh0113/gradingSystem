@@ -16,10 +16,10 @@
       <div class="userInfo">
           <div class="leftInfo">
             <div class="school">
-              XX市第一中学
+              {{ schoolData.schoolName }}
             </div>
             <div class="class">
-              初一三班 XXX
+              {{ schoolData.className }} {{ userStore.getUserInfo().name }}
             </div>
           </div>
           <div class="rightImage">
@@ -53,10 +53,17 @@ import { onMounted,ref } from "vue";
 import { studentGetAllParentsAPI } from '@/apis/user.js'
 import { ElMessage } from "element-plus";
 import { useRoute,useRouter } from "vue-router";
+import { studentGetSchoolInfoAPI } from '@/apis/user.js'
+import { useUserStore } from "@/stores/userStore.js";
 
 const router=useRouter()
 const route=useRoute()
+const userStore=useUserStore()
 const parentsList=ref([])
+const schoolData=ref({
+  schoolName:'',
+  className:''
+})
 
 const setImage=()=>{
   let images = document.querySelectorAll('.avatars img')
@@ -81,11 +88,24 @@ const getParents=async()=>{
   }
 }
 
+const getSchoolInfo=async()=>{
+  const res = await studentGetSchoolInfoAPI();
+
+  if(res.data.code===200)
+  {
+    console.log(res.data.data)
+    schoolData.value=res.data.data
+  }
+  else ElMessage.error(res.data.message)
+}
+
 
 onMounted(()=>{
 
   getParents()
   setImage()
+
+  getSchoolInfo()
 
 })
 </script>
@@ -127,6 +147,7 @@ onMounted(()=>{
 
     .avatars{
       display: flex;
+      min-width: 300px;
       justify-content: center;
       // position:relative;
 
@@ -158,6 +179,7 @@ onMounted(()=>{
     
     .leftInfo{
       display: flex;
+      
       margin-left: 80px;
       flex-direction: column;
       justify-content: space-around;
@@ -171,6 +193,7 @@ onMounted(()=>{
 
       .class{
         font-weight: bold;
+        font-size: 16px;
       }
     }
   }

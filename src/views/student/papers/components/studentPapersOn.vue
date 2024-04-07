@@ -37,7 +37,7 @@ const teacherPaperStore=useTeacherPaperStore()
 
 const pageData=ref({
     current:1,
-    totalPage:0
+    totalPage:1
 })
 
 const changeCurrent=(number)=>{
@@ -124,6 +124,7 @@ const getMyPapers=async()=>{
   {
     console.log(res.data.data)
     paperList.value=res.data.data.list
+    pageData.value.totalPage=res.data.data.totalPage
     // ElMessage.success("获取成功")
   }
   else {

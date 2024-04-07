@@ -100,7 +100,6 @@ const getAllExam=async()=>{
   if(res.data.code===200)
   {
     console.log(res.data.data)
-    // examList.value=res.data.data
 
     examList.value=[]
     for(let i=0;i<res.data.data.length;i++)

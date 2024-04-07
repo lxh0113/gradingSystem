@@ -19,13 +19,16 @@
 
 <script setup>
 
-import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
+import { onBeforeUnmount,watch, ref, shallowRef, onMounted } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { useEditorStore } from '@/stores/editorStore';
+import { useRoute,useRouter } from 'vue-router';
 
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef()
 const editorStore=useEditorStore()
+const router=useRouter()
+const route=useRoute()
 
 // 内容 HTML
 const valueHtml = ref('')
@@ -59,8 +62,8 @@ const handleCreated = (editor) => {
     editorRef.value = editor // 记录 editor 实例，重要！
 }
 
-watch(() => editorStore.value, () => {
-    console.log(editorStore.getValue())
+watch(() => route.params.id, () => {
+    console.error('想死')
     valueHtml.value=editorStore.getValue()
 },{
     deep:true

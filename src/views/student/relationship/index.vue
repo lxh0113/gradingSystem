@@ -4,25 +4,25 @@
       <span>关系绑定</span>
     </div>
     <div class="details">
-      <div class="paper" v-for="item in data">
+      <div class="paper" v-for="(item,index) in newsList">
           <div class="left">
             <img :src="item.avatar">
           </div>
           <div class="right">
             <div class="id">
-              id:{{ item.parentAccount }}
+              id:{{ item.from }}
             </div>
             <div class="relationship">
               {{ item.name }} 请求和你绑定家长关系
             </div>
             <div class="button">
-              <button>同意</button>
-              <button>拒绝</button>
+              <button @click="bindParents(index,2)">同意</button>
+              <button @click="bindParents(index,3)">拒绝</button>
             </div>
           </div>
       </div>
 
-      <div v-if="data.length===0" style="width: 100%;display: flex;justify-content: center;">
+      <div v-if="newsList.length===0" style="width: 100%;display: flex;justify-content: center;">
         <el-empty description="无数据" />
       </div>
     </div>
@@ -30,24 +30,77 @@
 </template>
 
 <script setup>
-import { studentGetParentsApplicationAPI } from '@/apis/user.js'
+import { studentGetParentsApplicationAPI,getBindParentsInfoAPI } from '@/apis/user.js'
 import { ElMessage } from 'element-plus';
+import { getNewsAPI } from '@/apis/news.js'
 import { onMounted } from 'vue'
+import { useUserStore } from '@/stores/userStore';
+import { bindParentsAPI } from '@/apis/user.js'
 
-const data=ref([])
+const newsList=ref([])
+const userStore=useUserStore()
 
-const getAllApplication=async()=>{
-  const res=await studentGetParentsApplicationAPI();
-
-  if(res.data.code===200)
+const getAllParentsInfo=async()=>{
+  for(let i=0;i<newsList.value.length;i++)
   {
-    data.value=res.data.data
+    const res=await getBindParentsInfoAPI(newsList.value[i].account);
+
+    if(res.data.code===200)
+    {
+      newsList.value[i]={
+        ...newsList.value[i],
+        avatar:res.data.data.avatar,
+        name:res.data.data.name
+      }
+    }
   }
-  else ElMessage.error(res.data.message)
+
+  console.log(newsList.value)
+}
+
+const getNews=async()=>{
+    const res=await getNewsAPI();
+
+    if(res.data.code===200)
+    {
+        newsList.value=res.data.data.map(item=>{
+          if(item.to===userStore.getUserInfo().account&&item.state!==2&&item.state!==3)
+          {
+            return item
+          }
+        })
+
+       await getAllParentsInfo();
+    }
+    else ElMessage.error(res.data.message)
+}
+
+const bindParents=async(index,state)=>{
+    let res = await bindParentsAPI(newsList.value[index],state);
+
+    if(res.data.code===200)
+    {
+        ElMessage.success('操作成功')
+
+        router.push('/student/relationship')
+
+    }
+    else ElMessage.error(res.data.message)
+
+    if(newsList.value[index].state!==0) return 
+
+    res=await messageKnowAPI(newsList.value[index].id);
+
+    if(res.data.code===200)
+    {
+        newsList.value[index].state=1;
+    }
+    else ElMessage.error(res.data.message)
+
 }
 
 onMounted(()=>{
-  // getAllApplication()
+  getNews()
 })
 </script>
 

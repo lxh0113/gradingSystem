@@ -128,7 +128,7 @@ const setRouter=async()=>{
                     path:'home',
                     name:'studentHome',
                     component:StudentHome,
-                    redirect:"/student/home/on",
+                    redirect:"/student/home/off",
                     children:[
                       {path:'on',name:'studentHomePaperOn',component:StudentHomePaperOn},
                       {path:'off',name:'studentHomePaperOff',component:StudentHomePaperOff}
