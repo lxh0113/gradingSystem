@@ -128,7 +128,7 @@ const scoreList=ref([])
 const router=useRouter()
 const route = useRoute();
 
-let url = ref(['https://yuejuanpt.oss-cn-zhangjiakou.aliyuncs.com/%E9%BB%98%E8%AE%A4.png']);
+let url = ref(['']);
 
 const showViewer = ref(false);
 const currentIndex=ref(0);

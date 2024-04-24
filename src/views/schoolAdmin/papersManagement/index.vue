@@ -154,8 +154,8 @@ onMounted(()=>{
     }
 
     .right{
-      max-height: 100px;
-      min-width: 700px;
+      max-height: 700px;
+      min-width: 100px;
       display: flex;
       flex-wrap: wrap;
     }
@@ -209,6 +209,7 @@ onMounted(()=>{
         // position: fixed;
         bottom:20px;
         display: flex;
+        margin-top:30px;
         // margin-left: 50%;
         // transform: translateX(-50%);
         justify-content: center;

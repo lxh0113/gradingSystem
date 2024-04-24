@@ -4,9 +4,9 @@
         <el-button :icon="Delete" size="large">
           删除
         </el-button>
-        <el-button :icon="Delete" size="large">
+        <!-- <el-button :icon="Delete" size="large">
           查看我的错题记录
-        </el-button>
+        </el-button> -->
       </div>
       <div class="details">
         <table>
@@ -31,28 +31,144 @@
             </td>
           </thead>
           <tbody>
-            <td>
-              <el-checkbox size="large" />
-            </td>
-            <td>
-              xx市第一次模拟测试
-            </td>
-            <td>
-              ……
-            </td>
-            <td>
-              B
-            </td>
-            <td>A</td>
-            <td>
-              5
-            </td>
+            <tr>
+              <td>
+                <el-checkbox size="large" />
+              </td>
+              <td>
+                操作系统第一次测试
+              </td>
+              <td>
+                串联文件适合于什么存取？
+              </td>
+              <td>
+                A
+              </td>
+              <td>B</td>
+              <td>
+                3
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <el-checkbox size="large" />
+              </td>
+              <td>
+                操作系统第一次测试
+              </td>
+              <td>
+                信号量的值？
+              </td>
+              <td>
+                A
+              </td>
+              <td>D</td>
+              <td>
+                3
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <el-checkbox size="large" />
+              </td>
+              <td>
+                操作系统第一次测试
+              </td>
+              <td>
+                某页式管理系统中，地址寄存器的低9位表示页内地址，则页面大小？
+              </td>
+              <td>
+                A
+              </td>
+              <td>C</td>
+              <td>
+                3
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <el-checkbox size="large" />
+              </td>
+              <td>
+                操作系统第一次测试
+              </td>
+              <td>
+                进程的同步与互斥是由于程序的什么引起的？
+              </td>
+              <td>
+                A
+              </td>
+              <td>D</td>
+              <td>
+                3
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <el-checkbox size="large" />
+              </td>
+              <td>
+                操作系统第一次测试
+              </td>
+              <td>
+                进程的同步与互斥是由于程序的什么引起的？
+              </td>
+              <td>
+                A
+              </td>
+              <td>D</td>
+              <td>
+                3
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <el-checkbox size="large" />
+              </td>
+              <td>
+                操作系统第二次测试
+              </td>
+              <td>
+                飞机定票系统是一个（ ）
+              </td>
+              <td>
+                C
+              </td>
+              <td>A</td>
+              <td>
+                3
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <el-checkbox size="large" />
+              </td>
+              <td>
+                操作系统第二次测试
+              </td>
+              <td>
+                操作系统中，被调度和分派资源的基本单位，并可独立执行的实体是（ ）
+              </td>
+              <td>
+                A
+              </td>
+              <td>C</td>
+              <td>
+                3
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
-      <!-- <div class="page">
-        <el-pagination prev-text="上一页" next-text="下一页" :page-size="20" :pager-count="11" layout="prev, pager, next"  :total="1000" />
-      </div> -->
+      <div class="page">
+        <el-pagination prev-text="上一页" next-text="下一页" :page-size="2" :pager-count="11" layout="prev, pager, next"  :total="8" />
+      </div>
     </div>
   </template>
   
@@ -98,6 +214,29 @@
         text-align: center;
         
       }
+
+
+      td:nth-child(3)
+      {
+        max-width: 300px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-break: break-all;
+        white-space: nowrap;
+      }
+
+      td:nth-child(4)
+      {
+        color:#3A63F3;
+        font-weight: bold;
+      }
+
+      td:nth-child(5)
+      {
+        color:red;
+        font-weight: bold;
+      }
+
      
       // justify-content: space-between; /* 将这里的 justify-content 修改为 flex-start */
   }
@@ -141,6 +280,7 @@
     }
 
     .page{
+        margin-top: 40px;
         display: flex;
         justify-content: center;
         align-items: center;

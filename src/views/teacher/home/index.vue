@@ -57,12 +57,13 @@
       <div class="nav">
         <div class="left">
             试卷&nbsp;&nbsp;&nbsp;&gt;&gt;
-          <router-link to="/teacher/home/on">
-            进行中
-          </router-link>
           <router-link to="/teacher/home/off">
             已结束
           </router-link>
+          <router-link to="/teacher/home/on">
+            进行中
+          </router-link>
+         
       </div>
       <div class="button">
         
@@ -96,7 +97,7 @@ const setChart=()=>{
     color:'#748eed',
     tooltip: {},
     xAxis: {
-      data: ['2024/1/1', '2024/1/2', '2024/1/3', '2024/1/4', '2024/1/5', '2024/1/6']
+      data: ['2024/4/1', '2024/4/2', '2024/4/3', '2024/4/4', '2024/4/5', '2024/4/6']
     },
     yAxis: {},
     series: [

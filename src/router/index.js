@@ -69,7 +69,7 @@ import AdminAccountManagementAll from "@/views/admin/accountManagement/component
 import AdminAccountManagementUnderway from "@/views/admin/accountManagement/components/adminAccountManagementUnderway.vue";
 import AdminAccountManagementExamine from "@/views/admin/accountManagement/components/adminAccountManagementExamine.vue";
 
-import Test from '@/mock/test.vue';
+import Test from '@/views/test/test.vue';
 
 // 公共部分
 import PaperView from '@/views/common/paperView.vue';
@@ -229,7 +229,7 @@ const setRouter=async()=>{
                       path:'home',
                       component:()=>import('@/views/teacher/home/index.vue'),
                       name:'teacherHome',
-                      redirect:'/teacher/home/on',
+                      redirect:'/teacher/home/off',
                       children:[
                         {path:'on',name:'teacherHomeOn',component:()=>import('@/views/teacher/home/components/teacherHomeOn.vue')},
                         {path:'off',name:'teacherHomeOff',component:()=>import('@/views/teacher/home/components/teacherHomeOff.vue')}
@@ -298,7 +298,7 @@ const setRouter=async()=>{
                       children:[
                         {path:'on',name:'schoolAdminHomeOn',component:()=>import('@/views/schoolAdmin/home/components/schoolAdminHomeOn.vue')},
                         {path:'off',name:'schoolAdminHomeOff',component:()=>import('@/views/schoolAdmin/home/components/schoolAdminHomeOff.vue')},
-                        {path:'will',name:'schoolAdminHomeWill',component:()=>import('@/views/schoolAdmin/home/components/schoolAdminHomeWill.vue')}
+                        {path:'will',name:'schoolAdminHomeWill',component:()=>import('@/views/schoolAdmin/home/components/schoolAdminHomeWill.vue')}                        
                       ]
                     },
                     {
@@ -321,7 +321,8 @@ const setRouter=async()=>{
                       path:'papers/:id',name:'schoolAdminPaperDetails',component:()=>import('@/views/schoolAdmin/papersManagement/components/schoolAdminPaperDetails.vue')
                     }
                   ]
-                }
+                },
+                {path:'scan',name:'schoolAdminScan',component:()=>import('@/views/scan/index.vue')}
               ]
             }
           )

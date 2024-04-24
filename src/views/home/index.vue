@@ -45,7 +45,7 @@
                                 &nbsp;&nbsp;&nbsp;
                                 <span v-if="!isCollapse">{{ item.text }}</span>
                             </template>
-                            <el-menu-item v-for="(i,iIndex) in navList" :class="{active:i.id===currentId}" :index="item.to +'/'+i.id" :key="i.id" @click="classOneClick(i.id,iIndex)">
+                            <el-menu-item v-for="(i,iIndex) in navList" class="hover" :class="{active:i.id===currentId}" :index="item.to +'/'+i.id" :key="i.id" @click="classOneClick(i.id,iIndex)">
                                 <span>{{ i.name }}</span>
                             </el-menu-item>
                         </el-sub-menu>
@@ -123,6 +123,19 @@
                     </td>
                     <td class="td">
                         <el-button @click="()=>{innerVisible=true;modifyUserInfoStatus=2}">{{ userInfoForm.email?"修改":"绑定" }}</el-button>
+                    </td>
+                </tr>
+
+                <tr class="tr" style="display: flex;justify-content: space-evenly">
+                    <td class="td" style="display: flex;align-items: center;justify-content: center;">
+                        <el-button type="primary">去登录</el-button>
+                    </td>
+                    <td class="td" style="display: flex;align-items: center;justify-content: center">
+                        <el-button type="danger">退出登录</el-button>
+                    </td>
+                    <td></td>
+                    <td class="td" style="display: flex;align-items: center;justify-content: center">
+                        <el-button type="success">注销账号</el-button>
                     </td>
                 </tr>
 
@@ -352,7 +365,7 @@ const getCurrentPath=()=>{
 //教师端点击班级事件
 const classOneClick=(id,index)=>{
     //获取班级学生
-    // alert(id)
+    // alert(navList.value[index].account)
     if(userStore.getUserInfo().identity==='parents')
     {
         currentId.value=navList.value[index].account
@@ -370,12 +383,12 @@ const getNews=async()=>{
 
     if(res.data.code===200)
     {
-        newsList.value=res.data.data.map(item=>{
-          if(item.to===userStore.getUserInfo().account)
-          {
-            return item
-          }
-        })
+        newsList.value = res.data.data.filter(item => {
+          return item.to === userStore.getUserInfo().account;
+        });
+        
+
+        console.log(newsList.value)
 
         isDot.value=false
         for(let i=0;i<newsList.value.length;i++)
@@ -409,7 +422,7 @@ const bindParents=async(state)=>{
 
 const dealRelationship=async(index)=>{
 
-    if(newsList.value[index].state===2||newsList.value[index]===3) return 
+    if(newsList.value[index].state===2||newsList.value[index].state===3) return 
 
     currentMessage.value=newsList.value[index];
 
@@ -446,11 +459,17 @@ watch(()=>route.params,()=>{
         {
             currentId.value=-1
         }
+        else {
+            currentId.value=route.params.id
+        }
     }
     else if(userStore.getUserInfo().identity==='teacher') {
         if(route.params.classId===undefined)
         {
             currentId.value=-1
+        }
+        else {
+            currentId.value=route.params.classId
         }
     }
 })
@@ -510,6 +529,10 @@ onMounted(async()=>{
   }
 
     
+
+  .hover:hover{
+    color:#3A63F3;
+  }
 
     .active{
       color:#3A63F3;

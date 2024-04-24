@@ -12,7 +12,7 @@ const route=useRoute()
 
 const http = axios.create({
     baseURL: 'http://10.251.23.167:8079',
-    timeout: 5000
+    timeout: 60*1000
 })
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 axios.defaults.withCredentials = true;

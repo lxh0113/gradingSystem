@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted,ref,watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 import {parentsGetChildrenPapersByKeyAPI,parentsGetChildrenPapersAPI} from '@/apis/examPaper.js'
@@ -135,12 +135,16 @@ const getAllExaminationByKey=async(page,key)=>{
 }
 
 const toPaper=(id,index)=>{
+  //alert(id)
   teacherPaperStore.setTeacherPaperList(index,paperList.value)
   router.push('/paper/'+id)
+  
 }
 
 const getMyPapers=async()=>{
   let account=route.params.id
+
+  // if(account!==undefined)
   
   const res=await parentsGetChildrenPapersAPI(pageData.value.current,8,account);
   // console.log(res)
@@ -157,8 +161,11 @@ const getMyPapers=async()=>{
   }
 }
 
-watch(() => route.params.id, () => {
-    getMyPapers()
+watch(() => route.params, () => {
+    if(route.params.id!==undefined)
+    {
+      getMyPapers()
+    }
 }, { immediate: false });
 
 onMounted(()=>{

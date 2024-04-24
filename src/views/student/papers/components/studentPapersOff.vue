@@ -6,7 +6,7 @@
       <el-select v-model="value" class="m-2" placeholder="考试分数" size="large" style="width: 240px;margin-left:30px;" ></el-select> -->
     </div>
     <div class="details">
-      <div class="paper" v-for="(item,index) in paperList" :key="item.id" @click="toPaper(item.id,index)">
+      <div class="paper" v-for="(item,index) in paperList" :key="index" @click="toPaper(item.id,index)">
       <div class="top">
         <div class="subject">{{ item.title }}</div>
         <!-- <div class="look">错题分析</div> -->
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted,ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 import {studentGetAllExamAPI,studentGetAllExamByKeyAPI} from '@/apis/examPaper.js'
@@ -140,6 +140,8 @@ const getMyPapers=async()=>{
   {
     console.log(res.data.data)
     paperList.value=res.data.data.list
+    pageData.value.totalPage=res.data.data.totalPage
+
     // ElMessage.success("获取成功")
   }
   else {

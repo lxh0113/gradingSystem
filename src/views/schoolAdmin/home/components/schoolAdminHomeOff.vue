@@ -7,9 +7,9 @@
       <div class="paper"v-for="(item,index) in examList" @click="router.push('/schoolAdmin/papers/'+item.id)">
         <div class="top">
           <div class="title">{{ item.title }}</div>
-          <div class="look">
+          <!-- <div class="look">
             分析
-          </div>
+          </div> -->
         </div>
         <div class="correctors">批改人：{{ item.examMarker.map(item=>{return item}).join(',') }}</div>
         <!-- <div class="class">班级：初二一班</div> -->

@@ -12,9 +12,6 @@
                       xx市第一次模拟试卷
                   </div>
               </div>
-              <div class="operation">
-                  错题分析
-              </div>
           </div>
           <div class="content">
               <div class="text">

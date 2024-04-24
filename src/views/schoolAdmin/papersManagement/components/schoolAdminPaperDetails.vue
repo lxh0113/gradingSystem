@@ -3,7 +3,7 @@
       <div class="bigBox">
         <div class="nav">
           <div class="left">
-              xx市第一次月考
+              第一次月考
           </div>
       </div>
       <div class="paper">
@@ -52,10 +52,12 @@ import { useRoute,useRouter } from 'vue-router';
 import { schoolAdminGetAllExamAPI } from '@/apis/examPaper.js'
 import { ElMessage } from 'element-plus';
 import { useExamStore } from '@/stores/examStore';
+import { useTeacherPaperStore } from '@/stores/teacherPaperStore';
 
 const route=useRoute()
 const router=useRouter()
 const examStore=useExamStore()
+const teacherPaperStore=useTeacherPaperStore()
 
 const studentList=ref([])
 
@@ -77,6 +79,7 @@ const getExam=async()=>{
 const toPaper=(id,index)=>{
 
   examStore.setExamData(studentList.value[index])
+  teacherPaperStore.setTeacherPaperList(index,studentList.value)
 
   router.push('/paper/'+id)
 }

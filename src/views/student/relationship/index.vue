@@ -13,7 +13,7 @@
               id:{{ item.from }}
             </div>
             <div class="relationship">
-              {{ item.name }} 请求和你绑定家长关系
+              {{ item.name }} 请求和你绑定{{ item.type==='father'?'父亲':'母亲' }}家长关系
             </div>
             <div class="button">
               <button @click="bindParents(index,2)">同意</button>
@@ -43,8 +43,9 @@ const userStore=useUserStore()
 const getAllParentsInfo=async()=>{
   for(let i=0;i<newsList.value.length;i++)
   {
-    const res=await getBindParentsInfoAPI(newsList.value[i].account);
+    const res=await getBindParentsInfoAPI(newsList.value[i].from);
 
+    console.log(res.data.data)
     if(res.data.code===200)
     {
       newsList.value[i]={
@@ -63,6 +64,7 @@ const getNews=async()=>{
 
     if(res.data.code===200)
     {
+        // newsList.value=res.data.data
         newsList.value=res.data.data.map(item=>{
           if(item.to===userStore.getUserInfo().account&&item.state!==2&&item.state!==3)
           {

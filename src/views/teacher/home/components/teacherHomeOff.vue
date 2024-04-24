@@ -10,9 +10,9 @@
               <div>
                   <div class="title">{{ item.title }}</div>
               </div>
-              <div class="operation">
+              <!-- <div class="operation">
                   错题分析
-              </div>
+              </div> -->
                 </div>
                 <div class="content">
                     <div class="text">

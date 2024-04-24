@@ -4,16 +4,34 @@
         <el-input style="max-width: 300px;height:40px;" :prefix-icon="Search" placeholder="按名称搜索"></el-input>
       </div>
       <div class="details">
-        <div class="paper" v-for="(item,index) in examList" @click="router.push('/schoolAdmin/papers/'+item.id)">
+        <div class="paper" v-for="(item,index) in 1" @click="router.push('/schoolAdmin/papers/'+663)">
+          <div class="top">
+            <div class="title">第三次月考</div>
+            <div class="look">查看</div>
+          </div>
+          <div class="correctors">批改人：高启强</div>
+          <div class="text">试卷正在批改中，请耐心等待！</div>
+          <div class="bottom">
+              <el-progress :text-inside="false" style="width: 40%;" percentage="13" />
+              <div class="time">
+                  2024/4/11
+              </div>
+          </div>
+        </div>
+        <!-- <div class="paper" v-for="(item,index) in examList" @click="router.push('/schoolAdmin/papers/'+item.id)">
           <div class="top">
             <div class="title">{{ item.title }}</div>
             <div class="look">查看</div>
           </div>
           <div class="correctors">批改人：{{ item.examMarker.map(item=>{return item}).join(',') }}</div>
-          <!-- <div class="class">班级：初二一班</div> -->
           <div class="text">试卷正在批改中，请耐心等待！</div>
-          <div class="status">进行中92%</div>
-        </div>
+          <div class="bottom">
+              <el-progress :text-inside="false" style="width: 40%;" :percentage="getPercent(item.amount)" />
+              <div class="time">
+                  {{ item.date }}
+              </div>
+          </div>
+        </div> -->
       </div>
   
       <div class="page">
@@ -82,6 +100,17 @@ const getAllExam=async()=>{
     ElMessage.error(res.data.message)
   }
 }
+
+
+const getPercent=(amount)=>{
+
+console.log(amount)
+if((amount.gradedNumber&&amount.total)&&amount.gradedNumber===0||amount.total===0) return 0;
+else {
+    return amount.gradedNumber/amount.total*100
+}
+}
+
 
 onMounted(()=>{
   getAllExam()
@@ -153,6 +182,19 @@ onMounted(()=>{
       line-height: 60px;
       font-size: 18px;
     }
+
+    .bottom{
+            display: flex;
+            justify-content: space-between;
+            // margin-right: 30px;
+            font-size: 18px;
+            line-height: 30px;
+            color:#9e8b8b;
+
+            .time{
+                font-size: 16px;
+            }
+        }
 
     .status{
       color:#787474;

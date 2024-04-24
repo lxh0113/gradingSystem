@@ -10,11 +10,11 @@
           <div class="bottomPeople">
             <div class="teacher">
               <div class="row1">老师</div>
-              <div class="row2">432</div>
+              <div class="row2">50</div>
             </div>
             <div class="student">
               <div class="row1">学生</div>
-              <div class="row2">1700</div>
+              <div class="row2">300</div>
             </div>
           </div>
         </div>
@@ -28,7 +28,7 @@
                 待批改
               </div>
               <div class="row2">
-                998
+                {{ awaitMarkText }}
               </div>
             </div>
           </div>
@@ -36,7 +36,7 @@
             <div class="text">
               导入试卷
             </div>
-            <button @click="dialogVisible = true" class="button" >
+            <button @click="chooseDialog = true" class="button" >
               导入
             </button>
           </div>
@@ -87,23 +87,14 @@
             <el-input v-model="uploadPaper.title" size="large" style="width: 200px;height: 40px;" placeholder="请输入标题"></el-input>
           </td>
         </tr>
-        <!-- <tr>
-          <td>
-            考试对象
-          </td>
-          <td></td>
-          <td>
-            <el-input size="large" style="width: 300px;height: 40px;" placeholder="请输入标题"></el-input>
-          </td>
-        </tr> -->
         <tr>
           <td>空白试卷</td>
           <td>
             示例
           </td>
           <td>
-            <el-upload ref="blankPapers" :on-change="changeBlankPapers" class="upload-demo" action="#"
-              :limit="1" :on-exceed="handleExceed" :auto-upload="false">
+            <el-upload v-model:file-list="fileList" multiple ref="blankPapers" :on-preview="handlePreview" :on-remove="handleRemove" :on-change="changeBlankPapers" class="upload-demo" action="#"
+              :limit="10" :on-exceed="handleExceed" :auto-upload="false">
               <template v-slot:trigger>
                 <el-button type="primary">选择文件</el-button>
               </template>
@@ -136,6 +127,20 @@
       </div>
     </template>
   </el-dialog>
+
+  <el-dialog v-model="chooseDialog" title="导入试卷方式选择" width="500">
+    <div style="height:20px;color:red">
+      请选择导入试卷的方式
+    </div>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="()=>{chooseDialog = false;router.push('/scan')}">扫描上传</el-button>
+        <el-button type="primary" @click="()=>{chooseDialog = false;dialogVisible = true}">
+          手动上传
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -149,27 +154,9 @@ import { useRouter,useRoute } from 'vue-router'
 
 const route=useRoute()
 const router=useRouter()
+const awaitMarkText=ref(300)
 
-const uploadPaper=ref({
-  title:'',
-  blankPapers:null,
-  zip:null
-})
-
-const blankPapers = ref(null)
-const zip=ref(null)
-
-let internalInstance = getCurrentInstance();
-let echarts = internalInstance.appContext.config.globalProperties.$echarts
-const dialogVisible = ref(false)
-
-const setChart=()=>{
-  const dom1 = document.querySelector('.center');
-  const myChart1 = echarts.init(dom1);
-  const dom2 = document.querySelector('.right');
-  const myChart2 = echarts.init(dom2);
-  // 指定图表的配置项和数据
-  var option1 = {
+const chartData1=ref({
   title: {
     text: '批阅情况'
   },
@@ -184,37 +171,29 @@ const setChart=()=>{
           value:345,name:'批阅'
         },
         {
-          value:654,name:'未批阅'
+          value:332,name:'未批阅'
         }
       ]
     }
   ]
-  };
-  var option2 = {
+  })
+const chartData2=ref({
   title: {
     text: '一周内批阅情况'
   },
-  // dataZoom: [{
-  //     type: 'slider', //1平移 缩放
-  //     throttle: '50', //设置触发视图刷新的频率。单位为毫秒（ms）。
-  //     minValueSpan: 6, //用于限制窗口大小的最小值,在类目轴上可以设置为 5 表示 5 个类目
-  //     start: 1, //数据窗口范围的起始百分比 范围是：0 ~ 100。表示 0% ~ 100%。
-  //     end: 50, //数据窗口范围的结束百分比。范围是：0 ~ 100。
-  //     zoomLock: false, //如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
-  // }],
   legend:{
   },
   color:['#e85368'],
   tooltip: {},
   xAxis: {
-    data: ['2024/1/1', '2024/1/2', '2024/1/3', '2024/1/4', '2024/1/5', '2024/1/6','2024/1/7']
+    data: ['2024/4/5', '2024/4/6', '2024/4/7', '2024/4/8', '2024/4/9', '2024/4/10','2024/4/11']
   },
   yAxis: {},
   series: [
     {
       name: '批阅数量',
       type: 'bar',
-      data: [123, 0, 56, 70, 94, 0,80],
+      data: [123, 0, 56, 70, 94, 0,0],
       label: {
       show: true,
       position: 'top',
@@ -229,7 +208,42 @@ const setChart=()=>{
       }
     }
   ]
-  };
+  })
+
+const fileList = ref([
+  ])
+
+const uploadPaper=ref({
+  title:'',
+  blankPapers:null,
+  zip:null
+})
+
+const blankPapers = ref(null)
+const zip=ref(null)
+
+const handleRemove = (file, uploadFiles) => {
+  console.log(file, uploadFiles);
+};
+
+const handlePreview = (uploadFile) => {
+  console.log(uploadFile);
+};
+
+
+let internalInstance = getCurrentInstance();
+let echarts = internalInstance.appContext.config.globalProperties.$echarts
+const dialogVisible = ref(false)
+const chooseDialog = ref(false)
+
+const setChart=()=>{
+  const dom1 = document.querySelector('.center');
+  const myChart1 = echarts.init(dom1);
+  const dom2 = document.querySelector('.right');
+  const myChart2 = echarts.init(dom2);
+  // 指定图表的配置项和数据
+  var option1 = chartData1.value;
+  var option2 = chartData2.value;
 
     // 使用刚指定的配置项和数据显示图表。
     myChart1.setOption(option1);
@@ -255,6 +269,7 @@ const handleExceed = (files) => {
 }
 
 const changeBlankPapers=(uploadFile)=>{
+  // console.log(uploadFile)
   uploadPaper.value.blankPapers=uploadFile
   console.log(uploadFile)
 }
@@ -285,13 +300,40 @@ const submitUpload = async() => {
     return ;
   }
 
+  setTimeout(()=>{
+
+    ElMessage.success('上传成功')
+
+    dialogVisible.value = false
+
+    awaitMarkText.value=512
+
+    chartData1.value.series[0].data[1].value+=300;
+
+    chartData2.value.series[0].data=[123, 0, 56, 70, 94, 0,30];
+
+    setChart()
+  },2000)
+
+  return 
+
   let testPaperId;
   let md5=await calculateFileMD5(uploadPaper.value.zip.raw);
   console.log(md5)
 
   // 上传空白试卷
   let data=new FormData()
-  data.append('blankTestPaper',uploadPaper.value.blankPapers.raw)
+
+  fileList.value.forEach(file => { 
+      data.append('blankTestPaper', file.raw)		
+  })  
+
+  console.log(data)
+
+  // return 
+    // data.append('categoryDirectory', this.filedata.categoryDirectory)
+
+  // data.append('blankTestPaper',fil)
   const res=await uploadBlankPapersAPI(uploadPaper.value.title,data)  
   if(res.data.code===200)
   { 
@@ -325,9 +367,12 @@ const submitUpload = async() => {
     }
     
   })
-
   
   dialogVisible.value = false
+
+  chartData1.value.series.data[1].value+=300;
+
+  chartData2.value.series[0].data=[123, 0, 56, 70, 94, 0,30];
 }
 
 

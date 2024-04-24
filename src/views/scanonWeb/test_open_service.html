@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>测试拉起托盘服务程序</title>
+</head>
+
+<body>
+	<form>
+		<div>
+			本示例用于测试在扫描托盘程序已安装但是未启动的情况下,用户点击连接拉起扫描托盘服务程序
+		</div>
+		<div>
+			<a href="SCANONWEBH5://devname=hp M128mf&clearall=true&color=rgb&dpix=301&dpiy=302&useadf=false&hidebtnupload=true&tmp_data=1" id="run_app_link">运行扫描托盘程序</a>
+			<!-- devname 	  扫描设备名称,如hp M128mf  
+				clearall 	  true代表清空所有已经存在的图像,false不清空原有扫描结果图像
+				color  		  rgb代表彩色 gray 代表灰度 bw代表黑白
+				dpix     	  300  dpi 代表每英寸点数,一般300就足够用了
+				dpiy     	  300  dpi 代表每英寸点数
+				useadf   	  true 代表使用自动进纸器
+				hidebtnupload true 代表隐藏上传按钮
+			 -->
+			<input type="button" value="拉起托盘服务程序" onclick="runServiceApp()" />
+		</div>
+	</form>
+	<script type="text/javascript">
+		function runServiceApp() {
+			document.getElementById("run_app_link").click();
+		}
+	</script>
+</body>
+
+</html>
