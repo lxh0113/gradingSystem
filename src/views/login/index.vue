@@ -150,7 +150,6 @@ const login=async()=>{
     setTimeout(()=>{
       router.push('/')
 
-      // console.log('kkkk')
     },3000)
   }
   else{

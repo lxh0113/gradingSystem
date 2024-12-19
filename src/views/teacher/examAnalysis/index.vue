@@ -5,10 +5,8 @@
     </div> -->
     <div class="chart">
       <div class="firstChart">
-        
       </div>
       <div class="secondChart">
-      
       </div>
     </div>
   </div>

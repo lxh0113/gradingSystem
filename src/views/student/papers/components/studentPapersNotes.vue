@@ -3,6 +3,9 @@
         <el-button size="large" :icon="Plus" @click="dialogVisible = true">
             添加错题本
         </el-button>
+        <el-button size="large" :icon="Promotion" @click="$router.push('/mistakes')">
+            生成错题报告
+        </el-button>
     </div>
     <el-dialog v-model="dialogVisible" title="新建错题本" width="400" :before-close="handleClose">
         <el-input size="large" v-model="title" style="width:320px;margin:20px;" placeholder="请输入标题"></el-input>
@@ -53,7 +56,7 @@
 </template>
 
 <script setup>
-import { Plus } from '@element-plus/icons-vue';
+import { Plus,Promotion } from '@element-plus/icons-vue';
 import { nextTick, onMounted, ref, watch } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { studentGetHistoryExamAPI } from '@/apis/exam';

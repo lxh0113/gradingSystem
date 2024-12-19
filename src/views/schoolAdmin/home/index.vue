@@ -339,15 +339,12 @@ const submitUpload = async() => {
   { 
     testPaperId=res.data.data
     console.log(res.data.data)
-    // ElMessage.success('上传成功')
   }
   else {
     ElMessage.error('上传出错')
 
     return
   }
-
-  
 
   //发送请求过去
 
